@@ -4,40 +4,48 @@
  */
 package model;
 
+import java.time.LocalDateTime;
+import java.util.Date;
+
 /**
  *
  * @author lenovo
  */
 public class Account {
-    private int id, role;
-    private String username, password, displayname,gender,phone,email,bd;
+    private int account_id;
+    private String username;
+    private String password;
+    private String name;
+    private String email;
+    private String phoneNumber;
+    private String address;
+    private String date_of_birth;
+    private boolean active_status = true;
+    private String profile_picture;
+    private String role;
+    private LocalDateTime created_at = LocalDateTime.now();
+    private LocalDateTime updated_at = LocalDateTime.now();
 
-    public Account(int id, int role, String username, String password, String displayname, String gender, String phone, String email, String bd) {
-        this.id = id;
-        this.role = role;
+    public Account(int account_id, String username, String password, String name, String email,String phoneNumber, String address, String date_of_birth, String profile_picture, String role, boolean active_status) {
+        this.account_id = account_id;
         this.username = username;
         this.password = password;
-        this.displayname = displayname;
-        this.gender = gender;
-        this.phone = phone;
+        this.name = name;
         this.email = email;
-        this.bd = bd;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public int getRole() {
-        return role;
-    }
-
-    public void setRole(int role) {
+        this.phoneNumber = phoneNumber;
+        this.address = address;
+        this.date_of_birth = date_of_birth;
+        this.profile_picture = profile_picture;
         this.role = role;
+        this.active_status = active_status;
+    }
+
+    public int getAccount_id() {
+        return account_id;
+    }
+
+    public void setAccount_id(int account_id) {
+        this.account_id = account_id;
     }
 
     public String getUsername() {
@@ -56,28 +64,12 @@ public class Account {
         this.password = password;
     }
 
-    public String getDisplayname() {
-        return displayname;
+    public String getName() {
+        return name;
     }
 
-    public void setDisplayname(String displayname) {
-        this.displayname = displayname;
-    }
-
-    public String getGender() {
-        return gender;
-    }
-
-    public void setGender(String gender) {
-        this.gender = gender;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getEmail() {
@@ -88,17 +80,73 @@ public class Account {
         this.email = email;
     }
 
-    public String getBd() {
-        return bd;
+    public String getAddress() {
+        return address;
     }
 
-    public void setBd(String bd) {
-        this.bd = bd;
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getDate_of_birth() {
+        return date_of_birth;
+    }
+
+    public void setDate_of_birth(String date_of_birth) {
+        this.date_of_birth = date_of_birth;
+    }
+
+    public boolean isActive_status() {
+        return active_status;
+    }
+
+    public void setActive_status(boolean active_status) {
+        this.active_status = active_status;
+    }
+
+    public String getProfile_picture() {
+        return profile_picture;
+    }
+
+    public void setProfile_picture(String profile_picture) {
+        this.profile_picture = profile_picture;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    public LocalDateTime getCreated_at() {
+        return created_at;
+    }
+
+    public void setCreated_at(LocalDateTime created_at) {
+        this.created_at = created_at;
+    }
+
+    public LocalDateTime getUpdated_at() {
+        return updated_at;
+    }
+
+    public void setUpdated_at(LocalDateTime updated_at) {
+        this.updated_at = updated_at;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 
     @Override
     public String toString() {
-        return "Account{" + "id=" + id + ", role=" + role + ", username=" + username + ", password=" + password + ", displayname=" + displayname + ", gender=" + gender + ", phone=" + phone + ", email=" + email + ", bd=" + bd + '}';
+        return "Account{" + "account_id=" + account_id + ", username=" + username + ", password=" + password + ", name=" + name + ", email=" + email + ", address=" + address + ", date_of_birth=" + date_of_birth + ", active_status=" + active_status + ", profile_picture=" + profile_picture + ", role=" + role + ", created_at=" + created_at + ", updated_at=" + updated_at + '}';
     }
     
     

@@ -11,11 +11,10 @@ import java.util.ArrayList;
  * @author lenovo
  */
 public class AccountManager {
-
     ArrayList<Account> List;
 
     public AccountManager() {
-        List = AccountDAO.getAllAccounts();
+        List = AccountDao.getAllAccounts();
     }
 
     public Account Login(String u, String p) {
@@ -29,7 +28,7 @@ public class AccountManager {
     
     public Account getAccountById(int id) {
         for (Account facc : List) {
-            if (id == facc.getId()) {
+            if (id == facc.getAccount_id()) {
                 return facc;
             }
         }
@@ -47,18 +46,5 @@ public class AccountManager {
         }
 
         return true;
-    }
-
-    public static void main(String[] args) {
-        AccountManager am = new AccountManager();
-        if (am.checkUsername("hai")) {
-            System.out.println("chua ton tai");
-        } else {
-            System.out.println("da ton tai");
-        }
-        
-//        for (Account facc : am.List) {
-//            System.out.println(facc);
-//        }
     }
 }
