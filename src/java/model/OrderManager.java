@@ -11,7 +11,7 @@ import java.util.ArrayList;
  * @author PC
  */
 public class OrderManager {
-     ArrayList<Order> List;
+    private ArrayList<Order> List;
 
     public OrderManager() {
         List = OrderDao.getAllOrders();
@@ -25,5 +25,16 @@ public class OrderManager {
             
         }
         return null;
+    }
+
+    public ArrayList<Order> getList() {
+        return List;
+    }
+    
+    public static void main(String[] args) {
+        OrderManager om = new OrderManager();
+        for(Order od : om.getList()){
+            System.out.println(od);
+        }
     }
 }

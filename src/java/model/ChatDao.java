@@ -61,4 +61,7 @@ public class ChatDao {
         }
         return ChatList;
     }
+    public static void addChat(){
+        
+    }
 }

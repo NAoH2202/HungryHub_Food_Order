@@ -22,7 +22,8 @@ import java.util.logging.Logger;
 public class OrderItemDao {
     public static ArrayList<OrderItem> getAllOrderItems() {
         ArrayList<OrderItem> OrderItemList = new ArrayList<>();
-        AccountManager am = new AccountManager();
+        OrderManager om = new OrderManager();
+        DishManager dm = new DishManager();
         ConnectDB db = ConnectDB.getInstance();
         Connection conn = null;
         PreparedStatement statement = null;
@@ -35,12 +36,14 @@ public class OrderItemDao {
             while (rs.next()) {
                  int order_item_id = rs.getInt("order_item_id");
                 int order_id = rs.getInt("order_id");
+                Order order = om.getOderById(order_id);
                 int dish_id = rs.getInt("dish_id");
+                Dish dish = dm.getDishById(dish_id);
                 int quantity = rs.getInt("quantity");
                 double price = rs.getDouble("price");
                 Date created_at = rs.getTimestamp("created_at");
                 Date updated_at = rs.getTimestamp("updated_at");
-                OrderItem orderItem = new OrderItem(order_item_id, order_id, dish_id, quantity, price);
+                OrderItem orderItem = new OrderItem(order_item_id, order, dish, quantity, price);
                 orderItem.setCreated_at(created_at);
                 orderItem.setUpdated_at(updated_at);
                 OrderItemList.add(orderItem);

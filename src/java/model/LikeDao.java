@@ -23,6 +23,7 @@ public class LikeDao {
 
     public static ArrayList<Like> getAllLikes() {
         ArrayList<Like> LikeList = new ArrayList<>();
+        FoodAdManager fam = new FoodAdManager();
         AccountManager am = new AccountManager();
         ConnectDB db = ConnectDB.getInstance();
         Connection conn = null;
@@ -36,8 +37,10 @@ public class LikeDao {
             while (rs.next()) {
                 int likeID = rs.getInt("likeID");
                 int postID = rs.getInt("postID");
+                FoodAd post = fam.getFoodAdById(postID);
                 int userID = rs.getInt("userID");
-                LikeList.add(new Like(likeID, postID, userID));
+                Account acc = am.getAccountById(userID);
+                LikeList.add(new Like(likeID, post, acc));
             }
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(LikeDao.class.getName()).log(Level.SEVERE, null, ex);

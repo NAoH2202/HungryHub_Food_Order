@@ -12,17 +12,17 @@ import java.util.Date;
  */
 public class OrderItem {
     private int order_item_id;
-    private int order_id;
-    private int dish_id;
+    private Order order;
+    private Dish dish;
     private int quantity;
     private double price;
     private Date created_at = new Date();
     private Date updated_at = new Date();
 
-    public OrderItem(int order_item_id, int order_id, int dish_id, int quantity, double price) {
+    public OrderItem(int order_item_id, Order order, Dish dish, int quantity, double price) {
         this.order_item_id = order_item_id;
-        this.order_id = order_id;
-        this.dish_id = dish_id;
+        this.order = order;
+        this.dish = dish;
         this.quantity = quantity;
         this.price = price;
     }
@@ -35,21 +35,23 @@ public class OrderItem {
         this.order_item_id = order_item_id;
     }
 
-    public int getOrder_id() {
-        return order_id;
+    public Order getOrder() {
+        return order;
     }
 
-    public void setOrder_id(int order_id) {
-        this.order_id = order_id;
+    public void setOrder(Order order) {
+        this.order = order;
     }
 
-    public int getDish_id() {
-        return dish_id;
+    public Dish getDish() {
+        return dish;
     }
 
-    public void setDish_id(int dish_id) {
-        this.dish_id = dish_id;
+    public void setDish(Dish dish) {
+        this.dish = dish;
     }
+
+    
 
     public int getQuantity() {
         return quantity;
@@ -85,7 +87,6 @@ public class OrderItem {
 
     @Override
     public String toString() {
-        return "OrderItem{" + "order_item_id=" + order_item_id + ", order_id=" + order_id + ", dish_id=" + dish_id + ", quantity=" + quantity + ", price=" + price + ", created_at=" + created_at + ", updated_at=" + updated_at + '}';
+        return "OrderItem{" + "order_item_id=" + order_item_id + ", order=" + order + ", dish=" + dish + ", quantity=" + quantity + ", price=" + price + ", created_at=" + created_at + ", updated_at=" + updated_at + '}';
     }
-    
 }

@@ -11,6 +11,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -22,6 +23,7 @@ import model.AccountManager;
  *
  * @author lenovo
  */
+@WebServlet(name = "LoginServlet", urlPatterns = {"/LoginServlet"})
 public class LoginServlet extends HttpServlet {
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
@@ -67,7 +69,7 @@ public class LoginServlet extends HttpServlet {
                 session.setAttribute("password", password);
             }
             session.setAttribute("account", account);
-            response.sendRedirect("PageHome");
+            response.sendRedirect("index.jsp");
         }
 //------------------------------------------------------------------------------------------------------------
     }

@@ -4,6 +4,7 @@
     Author     : PC
 --%>
 
+<%@page import="model.Account"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html><!DOCTYPE html>
 <html>
@@ -68,7 +69,19 @@
                                     <a class="nav-link" href="menu.jsp">Menu</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="about.jsp">About</a>
+                                    <%
+                                        Account acc = (Account) session.getAttribute("account");
+                                        String url, name;
+                                        if (acc == null) {
+                                            url = "about.jsp";
+                                            name  = "about";
+                                        } else{
+                                        url = "Order.jsp";
+                                        name = acc.getName()+"'s Order";
+                                        }
+                                        
+                                    %>
+                                    <a class="nav-link" href="<%=url%>"><%=name%></a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link" href="book.jsp">Book Table</a>
@@ -133,17 +146,17 @@
                                     </svg>
                                 </a>
                                 <form class="form-inline">
-                                <div class="menu">
-                                    <form action="SearchServlet" method="get">
-                                        <input type="text" name="nameMovie" placeholder="Search...">
-                                        <button style="background-color: #ff9900;"><i class="fa fa-search"></i></button>
-                                   </form>
-                                </div> 
-                                 </form>
+                                    <div class="menu">
+                                        <form action="SearchServlet" method="get">
+                                            <input type="text" name="nameMovie" placeholder="Search...">
+                                            <button style="background-color: #ff9900;"><i class="fa fa-search"></i></button>
+                                        </form>
+                                    </div> 
+                                </form>
                                 <a href="login.jsp" class="order_online">
                                     Login
                                 </a>
-                                
+
                             </div>
                         </div>
                     </nav>

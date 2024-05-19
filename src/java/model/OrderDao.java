@@ -35,14 +35,17 @@ public class OrderDao {
             while (rs.next()) {
                 int order_id = rs.getInt("order_id");
                 int customer_id = rs.getInt("customer_id");
+                Account customer = am.getAccountById(customer_id);
                 int diner_id = rs.getInt("diner_id");
+                Account diner = am.getAccountById(diner_id);
                 int shipper_id = rs.getInt("shipper_id");
+                Account shipper = am.getAccountById(shipper_id);
                 String order_status = rs.getString("order_status");
                 String payment_method = rs.getString("payment_method");
-                double total_price = rs.getDouble("total_price");
                 LocalDateTime created_at = rs.getTimestamp("created_at").toLocalDateTime();
                 LocalDateTime updated_at = rs.getTimestamp("updated_at").toLocalDateTime();
-                Order order = new Order(order_id, customer_id, diner_id, shipper_id, order_status, payment_method, total_price);
+                int total_price =0;
+                Order order = new Order(order_id, customer, diner, shipper, order_status, payment_method, total_price);
                 order.setCreated_at(created_at);
                 order.setUpdated_at(updated_at);
                 OrderList.add(order);

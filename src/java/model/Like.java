@@ -10,13 +10,13 @@ package model;
  */
 public class Like {
     private int likeID;
-    private int postID;
-    private int userID;
+    private FoodAd post;
+    private Account user;
 
-    public Like(int likeID, int postID, int userID) {
+    public Like(int likeID, FoodAd post, Account user) {
         this.likeID = likeID;
-        this.postID = postID;
-        this.userID = userID;
+        this.post = post;
+        this.user = user;
     }
 
     public int getLikeID() {
@@ -27,25 +27,27 @@ public class Like {
         this.likeID = likeID;
     }
 
-    public int getPostID() {
-        return postID;
+    public FoodAd getPost() {
+        return post;
     }
 
-    public void setPostID(int postID) {
-        this.postID = postID;
+    public void setPost(FoodAd post) {
+        this.post = post;
     }
 
-    public int getUserID() {
-        return userID;
+    public Account getUser() {
+        return user;
     }
 
-    public void setUserID(int userID) {
-        this.userID = userID;
+    public void setUser(Account user) {
+        this.user = user;
     }
+
+    
 
     @Override
     public String toString() {
-        return "Like{" + "likeID=" + likeID + ", postID=" + postID + ", userID=" + userID + '}';
+        return "Like{" + "likeID=" + likeID + ", post=" + post+ ", user=" + user + '}';
     }
     
 }

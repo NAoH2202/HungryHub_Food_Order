@@ -39,7 +39,7 @@ public class AccountDao {
         ResultSet rs = null;
         try {
             conn = db.openConnection();
-            String query = "SELECT * FROM [Account]";
+            String query = "SELECT * FROM Account";
             statement = conn.prepareStatement(query);
             rs = statement.executeQuery();
             while (rs.next()) {
@@ -74,5 +74,12 @@ public class AccountDao {
             }
         }
         return AccountList;
+    }
+    public static void main(String[] args) {
+        ArrayList<Account> test = AccountDao.getAllAccounts();
+        for(Account ac : test)
+        {
+            System.out.println(ac);
+        }
     }
 }

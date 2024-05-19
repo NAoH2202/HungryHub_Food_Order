@@ -17,12 +17,12 @@ public class Voucher {
     private double discount_percentage;
     private Date valid_from;
     private Date valid_to;
-    private int created_by;
+    private Account created_by;
     private Date expiration_date;
     private LocalDateTime created_at = LocalDateTime.now();
     private LocalDateTime updated_at = LocalDateTime.now();
 
-    public Voucher(int voucher_id, String code, double discount_percentage, Date valid_from, Date valid_to, int created_by, Date expiration_date) {
+    public Voucher(int voucher_id, String code, double discount_percentage, Date valid_from, Date valid_to, Account created_by, Date expiration_date) {
         this.voucher_id = voucher_id;
         this.code = code;
         this.discount_percentage = discount_percentage;
@@ -72,11 +72,11 @@ public class Voucher {
         this.valid_to = valid_to;
     }
 
-    public int getCreated_by() {
+    public Account getCreated_by() {
         return created_by;
     }
 
-    public void setCreated_by(int created_by) {
+    public void setCreated_by(Account created_by) {
         this.created_by = created_by;
     }
 
