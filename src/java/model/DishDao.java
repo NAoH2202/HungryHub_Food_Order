@@ -19,7 +19,7 @@ import java.util.logging.Logger;
  * @author lenovo
  */
 public class DishDao {
-    public static ArrayList<Dish> getAllAccounts() {
+    public static ArrayList<Dish> getAllDishs() {
         ArrayList<Dish> DishtList = new ArrayList<>();
         AccountManager am = new AccountManager();
         ConnectDB db = ConnectDB.getInstance();
@@ -36,13 +36,14 @@ public class DishDao {
                 int account_id = rs.getInt("account_id");
                 Account account = am.getAccountById(account_id);
                 String name = rs.getString("name");
+                String picture = rs.getString("Picture");
                 String description = rs.getString("description");
                 double price = rs.getDouble("price");
                 String type = rs.getString("type");
                 String ingredients = rs.getString("ingredients");
                 LocalDateTime created_at = rs.getTimestamp("created_at").toLocalDateTime();
                 LocalDateTime updated_at = rs.getTimestamp("updated_at").toLocalDateTime();
-                Dish dish = new Dish(dish_id, account, name, description, price, type, ingredients);
+                Dish dish = new Dish(dish_id, account, name,picture, description, price, type, ingredients);
                 dish.setCreated_at(created_at);
                 dish.setUpdated_at(updated_at);
 
@@ -66,4 +67,5 @@ public class DishDao {
         }
         return DishtList;
     }
+    
 }
