@@ -14,7 +14,7 @@ public class DishManager {
     ArrayList<Dish> List;
 
     public DishManager() {
-        List = DishDao.getAllAccounts();
+        List = DishDao.getAllDishs();
     }
     
     public Dish getDishById(int id) {

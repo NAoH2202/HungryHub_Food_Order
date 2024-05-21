@@ -15,6 +15,7 @@ public class Dish {
     private int dish_id;
     private Account account;
     private String name;
+    private String picture; //new
     private String description;
     private double price;
     private String type;
@@ -22,8 +23,9 @@ public class Dish {
     private LocalDateTime created_at = LocalDateTime.now();
     private LocalDateTime updated_at = LocalDateTime.now();
 
-    public Dish(int dish_id, Account account, String name, String description, double price, String type, String ingredients) {
+    public Dish(int dish_id, Account account, String name,String picture, String description, double price, String type, String ingredients) {
         this.dish_id = dish_id;
+        this.picture = picture;
         this.account = account;
         this.name = name;
         this.description = description;
@@ -104,9 +106,17 @@ public class Dish {
         this.updated_at = updated_at;
     }
 
+    public String getPicture() {
+        return picture;
+    }
+
+    public void setPicture(String picture) {
+        this.picture = picture;
+    }
+
     @Override
     public String toString() {
-        return "Dish{" + "dish_id=" + dish_id + ", account=" + account + ", name=" + name + ", description=" + description + ", price=" + price + ", type=" + type + ", ingredients=" + ingredients + ", created_at=" + created_at + ", updated_at=" + updated_at + '}';
+        return "Dish{" + "dish_id=" + dish_id + ", account=" + account + ", name=" + name + ", picture=" + picture + ", description=" + description + ", price=" + price + ", type=" + type + ", ingredients=" + ingredients + ", created_at=" + created_at + ", updated_at=" + updated_at + '}';
     }
 
 }

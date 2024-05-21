@@ -17,7 +17,7 @@ public class Account {
     private String password;
     private String name;
     private String email;
-    private String phoneNumber;
+    private String phoneNumber; //new
     private String address;
     private String date_of_birth;
     private boolean active_status = true;
