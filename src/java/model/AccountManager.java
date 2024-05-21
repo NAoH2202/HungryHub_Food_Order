@@ -19,7 +19,7 @@ public class AccountManager {
 
     public Account Login(String u, String p) {
         for (Account facc : List) {
-            if (u.equalsIgnoreCase(facc.getUsername()) && p.equalsIgnoreCase(facc.getPassword())) {
+            if ((u.equalsIgnoreCase(facc.getUsername())||u.equalsIgnoreCase(facc.getEmail()) )&& p.equalsIgnoreCase(facc.getPassword())) {
                 return facc;
             }
         }
@@ -41,6 +41,19 @@ public class AccountManager {
 
         for (Account facc : List) {
             if (usernameIn.equalsIgnoreCase(facc.getUsername())) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+    public boolean checkGmail(String gmailIn) {
+        if (List.isEmpty()) {
+            return true;
+        }
+
+        for (Account facc : List) {
+            if (gmailIn.equalsIgnoreCase(facc.getEmail())) {
                 return false;
             }
         }

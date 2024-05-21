@@ -25,6 +25,9 @@ public class Account {
     private String role;
     private LocalDateTime created_at = LocalDateTime.now();
     private LocalDateTime updated_at = LocalDateTime.now();
+    private String maxacthuc;
+    private boolean trangthaixacthuc;
+    private String thiangianhieuluc;
 
     public Account(int account_id, String username, String password, String name, String email,String phoneNumber, String address, String date_of_birth, String profile_picture, String role, boolean active_status) {
         this.account_id = account_id;
@@ -40,6 +43,23 @@ public class Account {
         this.active_status = active_status;
     }
 
+    public Account(int account_id, String username, String password, String name, String email, String phoneNumber, String address, String date_of_birth, String profile_picture, String role, String maxacthuc, boolean trangthaixacthuc, String thiangianhieuluc) {
+        this.account_id = account_id;
+        this.username = username;
+        this.password = password;
+        this.name = name;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.address = address;
+        this.date_of_birth = date_of_birth;
+        this.profile_picture = profile_picture;
+        this.role = role;
+        this.maxacthuc = maxacthuc;
+        this.trangthaixacthuc = trangthaixacthuc;
+        this.thiangianhieuluc = thiangianhieuluc;
+    }
+
+    
     public int getAccount_id() {
         return account_id;
     }
@@ -144,10 +164,32 @@ public class Account {
         this.phoneNumber = phoneNumber;
     }
 
+    public String getMaxacthuc() {
+        return maxacthuc;
+    }
+
+    public void setMaxacthuc(String maxacthuc) {
+        this.maxacthuc = maxacthuc;
+    }
+
+    public boolean isTrangthaixacthuc() {
+        return trangthaixacthuc;
+    }
+
+    public void setTrangthaixacthuc(boolean trangthaixacthuc) {
+        this.trangthaixacthuc = trangthaixacthuc;
+    }
+
+    public String getThiangianhieuluc() {
+        return thiangianhieuluc;
+    }
+
+    public void setThiangianhieuluc(String thiangianhieuluc) {
+        this.thiangianhieuluc = thiangianhieuluc;
+    }
+
     @Override
     public String toString() {
-        return "Account{" + "account_id=" + account_id + ", username=" + username + ", password=" + password + ", name=" + name + ", email=" + email + ", address=" + address + ", date_of_birth=" + date_of_birth + ", active_status=" + active_status + ", profile_picture=" + profile_picture + ", role=" + role + ", created_at=" + created_at + ", updated_at=" + updated_at + '}';
-    }
-    
-    
+        return "Account{" + "account_id=" + account_id + ", username=" + username + ", password=" + password + ", name=" + name + ", email=" + email + ", phoneNumber=" + phoneNumber + ", address=" + address + ", date_of_birth=" + date_of_birth + ", active_status=" + active_status + ", profile_picture=" + profile_picture + ", role=" + role + ", created_at=" + created_at + ", updated_at=" + updated_at + ", maxacthuc=" + maxacthuc + ", trangthaixacthuc=" + trangthaixacthuc + ", thiangianhieuluc=" + thiangianhieuluc + '}';
+    }    
 }

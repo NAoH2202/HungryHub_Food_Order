@@ -69,11 +69,18 @@ public class LoginServlet extends HttpServlet {
                 session.setAttribute("password", password);
             }
             session.setAttribute("account", account);
-            response.sendRedirect("index.jsp");
+            if (account.getRole().equalsIgnoreCase("Admin")) {
+                response.sendRedirect("AdminMainPage.jsp");
+            } else if (account.getRole().equalsIgnoreCase("DinerManager")) {
+                response.sendRedirect("DinerMainPage.jsp");
+            } else if (account.getRole().equalsIgnoreCase("Shipper")) {
+                response.sendRedirect("ShipperMainPage.jsp");
+            } else {
+                response.sendRedirect("index.jsp");
+            }
         }
 //------------------------------------------------------------------------------------------------------------
     }
-
 
     @Override
     public String getServletInfo() {

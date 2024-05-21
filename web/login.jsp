@@ -60,7 +60,7 @@
                                 <div class="input-group-prepend">
                                     <span class="input-group-text"><i class="fas fa-user"></i></span>
                                 </div>
-                                <input type="text" class="form-control" name="username" placeholder="username" value="<%= username%>">
+                                <input type="text" class="form-control" name="username" placeholder="username or email" value="<%= username%>">
 
                             </div>
                             <div class="input_error password_error" ></div>
@@ -81,7 +81,7 @@
                     </div>
                     <div class="card-footer ">
                         <div class="d-flex justify-content-center links">
-                            Don't have an account?<a href="SignUpServlet">Sign Up</a>
+                            Don't have an account?<a href="ChosseRolePage">Sign Up</a>
                         </div>
                     </div>
                 </div>

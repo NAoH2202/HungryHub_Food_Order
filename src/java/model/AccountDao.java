@@ -75,11 +75,86 @@ public class AccountDao {
         }
         return AccountList;
     }
+
+    public static boolean updateAccount(Account account) {
+        ConnectDB db = ConnectDB.getInstance();
+        Connection conn = null;
+        PreparedStatement statement = null;
+        try {
+            conn = db.openConnection();
+            String query = "UPDATE Account SET username = ?, password = ?, name = ?, email = ?, PhoneNumber = ?, address = ?, date_of_birth = ?, profile_picture = ?, role = ?, active_status = ? WHERE account_id = ?";
+            statement = conn.prepareStatement(query);
+            statement.setString(1, account.getUsername());
+            statement.setString(2, account.getPassword());
+            statement.setString(3, account.getName());
+            statement.setString(4, account.getEmail());
+            statement.setString(5, account.getPhoneNumber());
+            statement.setString(6, account.getAddress());
+            statement.setString(7, account.getDate_of_birth());
+            statement.setString(8, account.getProfile_picture());
+            statement.setString(9, account.getRole());
+            statement.setBoolean(10, account.isActive_status());
+            statement.setInt(11, account.getAccount_id());
+            int rowsUpdated = statement.executeUpdate();
+            return rowsUpdated > 0;
+        } catch (ClassNotFoundException | SQLException ex) {
+            Logger.getLogger(AccountDao.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if (statement != null) {
+                    statement.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                Logger.getLogger(AccountDao.class.getName()).log(Level.SEVERE, null, e);
+            }
+        }
+        return false;
+    }
+
+    public static boolean addAccount(Account account) {
+        ConnectDB db = ConnectDB.getInstance();
+        Connection conn = null;
+        PreparedStatement statement = null;
+        try {
+            conn = db.openConnection();
+            String query = "INSERT INTO Account (username, password, name, email, PhoneNumber, address, date_of_birth, profile_picture, role, active_status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            statement = conn.prepareStatement(query);
+            statement.setString(1, account.getUsername());
+            statement.setString(2, account.getPassword());
+            statement.setString(3, account.getName());
+            statement.setString(4, account.getEmail());
+            statement.setString(5, account.getPhoneNumber());
+            statement.setString(6, account.getAddress());
+            statement.setString(7, account.getDate_of_birth());
+            statement.setString(8, account.getProfile_picture());
+            statement.setString(9, account.getRole());
+            statement.setBoolean(10, account.isActive_status());
+            int rowsInserted = statement.executeUpdate();
+            return rowsInserted > 0;
+        } catch (ClassNotFoundException | SQLException ex) {
+            Logger.getLogger(AccountDao.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if (statement != null) {
+                    statement.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                Logger.getLogger(AccountDao.class.getName()).log(Level.SEVERE, null, e);
+            }
+        }
+        return false;
+    }
+
     public static void main(String[] args) {
         ArrayList<Account> test = AccountDao.getAllAccounts();
-        for(Account ac : test)
-        {
-            System.out.println(ac);
-        }
+        Account sc = test.get(0);
+        sc.setPhoneNumber("091111111111");
+        AccountDao.updateAccount(sc);
     }
 }
