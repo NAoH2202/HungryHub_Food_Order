@@ -12,6 +12,7 @@ import java.util.Date;
  * @author lenovo
  */
 public class Account {
+
     private int account_id;
     private String username;
     private String password;
@@ -29,7 +30,7 @@ public class Account {
     private boolean trangthaixacthuc;
     private String thiangianhieuluc;
 
-    public Account(int account_id, String username, String password, String name, String email,String phoneNumber, String address, String date_of_birth, String profile_picture, String role, boolean active_status) {
+    public Account(int account_id, String username, String password, String name, String email, String phoneNumber, String address, String date_of_birth, String profile_picture, String role, boolean active_status) {
         this.account_id = account_id;
         this.username = username;
         this.password = password;
@@ -41,6 +42,13 @@ public class Account {
         this.profile_picture = profile_picture;
         this.role = role;
         this.active_status = active_status;
+    }
+
+    public Account(String name, String email, String phoneNumber, String address) {
+        this.name = name;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.address = address;
     }
 
     public Account(int account_id, String username, String password, String name, String email, String phoneNumber, String address, String date_of_birth, String profile_picture, String role, String maxacthuc, boolean trangthaixacthuc, String thiangianhieuluc) {
@@ -59,7 +67,6 @@ public class Account {
         this.thiangianhieuluc = thiangianhieuluc;
     }
 
-    
     public int getAccount_id() {
         return account_id;
     }
@@ -191,5 +198,5 @@ public class Account {
     @Override
     public String toString() {
         return "Account{" + "account_id=" + account_id + ", username=" + username + ", password=" + password + ", name=" + name + ", email=" + email + ", phoneNumber=" + phoneNumber + ", address=" + address + ", date_of_birth=" + date_of_birth + ", active_status=" + active_status + ", profile_picture=" + profile_picture + ", role=" + role + ", created_at=" + created_at + ", updated_at=" + updated_at + ", maxacthuc=" + maxacthuc + ", trangthaixacthuc=" + trangthaixacthuc + ", thiangianhieuluc=" + thiangianhieuluc + '}';
-    }    
+    }
 }

@@ -11,7 +11,7 @@ import java.util.ArrayList;
  * @author PC
  */
 public class OrderItemManager {
-         ArrayList<OrderItem> List;
+         private  ArrayList<OrderItem> List;
 
     public OrderItemManager() {
         List = OrderItemDao.getAllOrderItems();
@@ -24,5 +24,8 @@ public class OrderItemManager {
             
         }
         return null;
+    }
+     public ArrayList<OrderItem> getList() {
+        return List;
     }
 }

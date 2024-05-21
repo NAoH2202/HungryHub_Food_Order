@@ -11,7 +11,7 @@ import java.util.ArrayList;
  * @author lenovo
  */
 public class AccountManager {
-    ArrayList<Account> List;
+  private ArrayList<Account> List;
 
     public AccountManager() {
         List = AccountDao.getAllAccounts();
@@ -25,8 +25,10 @@ public class AccountManager {
         }
         return null;
     }
-    
-    public Account getAccountById(int id) {
+     public ArrayList<Account> getList() {
+        return List;
+    }
+      public Account getAccountById(int id) {
         for (Account facc : List) {
             if (id == facc.getAccount_id()) {
                 return facc;
