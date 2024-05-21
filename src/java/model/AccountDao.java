@@ -75,6 +75,28 @@ public class AccountDao {
         }
         return AccountList;
     }
+    public static void edit(Account ac) {
+        String sql = """
+                    UPDATE contacts
+                    SET Name=?, Email=?, Adress = ?, PhoneNumber=?
+                    WHERE id = ?""";
+        ConnectDB db = ConnectDB.getInstance();
+        try {
+            Connection con = db.openConnection();
+            PreparedStatement statement = con.prepareStatement(sql);
+            statement.setString(1, ac.getName());
+            statement.setString(2, ac.getEmail());
+            statement.setString(3, ac.getAddress());
+            statement.setString(4, ac.getPhoneNumber());
+            statement.setInt(5, ac.getAccount_id());
+            statement.executeUpdate();
+            statement.close();
+            con.close();
+        } catch (Exception ex) {
+            Logger.getLogger(AccountDao.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
     public static void main(String[] args) {
         ArrayList<Account> test = AccountDao.getAllAccounts();
         for(Account ac : test)

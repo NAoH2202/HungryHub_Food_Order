@@ -39,7 +39,12 @@ public class Account {
         this.role = role;
         this.active_status = active_status;
     }
-
+ public Account(String name, String email, String phoneNumber, String address) {
+        this.name = name;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.address = address;
+    }
     public int getAccount_id() {
         return account_id;
     }
