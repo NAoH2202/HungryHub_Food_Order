@@ -20,7 +20,7 @@ public class Account {
     private String email;
     private String phoneNumber; //new
     private String address;
-    private String date_of_birth;
+    private Date date_of_birth;
     private boolean active_status = true;
     private String profile_picture;
     private String role;
@@ -41,7 +41,7 @@ public class Account {
 
     
     
-    public Account(int account_id, String username, String password, String name, String email, String phoneNumber, String address, String date_of_birth, String profile_picture, String role, boolean active_status) {
+    public Account(int account_id, String username, String password, String name, String email, String phoneNumber, String address, Date date_of_birth, String profile_picture, String role, boolean active_status) {
         this.account_id = account_id;
         this.username = username;
         this.password = password;
@@ -71,7 +71,7 @@ public class Account {
     }
 
 
-    public Account(int account_id, String username, String password, String name, String email, String phoneNumber, String address, String date_of_birth, String profile_picture, String role, String maxacthuc, boolean trangthaixacthuc, LocalDateTime thoigianhieuluc) {
+    public Account(int account_id, String username, String password, String name, String email, String phoneNumber, String address, Date date_of_birth, String profile_picture, String role, String maxacthuc, boolean trangthaixacthuc, LocalDateTime thoigianhieuluc) {
         this.account_id = account_id;
         this.username = username;
         this.password = password;
@@ -85,6 +85,10 @@ public class Account {
         this.maxacthuc = maxacthuc;
         this.trangthaixacthuc = trangthaixacthuc;
         this.thoigianhieuluc = thoigianhieuluc;
+    }
+
+    public Account() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
 
@@ -137,11 +141,11 @@ public class Account {
         this.address = address;
     }
 
-    public String getDate_of_birth() {
+    public Date getDate_of_birth() {
         return date_of_birth;
     }
 
-    public void setDate_of_birth(String date_of_birth) {
+    public void setDate_of_birth(Date date_of_birth) {
         this.date_of_birth = date_of_birth;
     }
 

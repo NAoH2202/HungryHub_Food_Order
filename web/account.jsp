@@ -1,3 +1,4 @@
+<%@page import="java.util.Date"%>
 <%@page import="model.Account"%>
 <%@page import="model.AccountManager"%>
 <!DOCTYPE html>
@@ -18,7 +19,7 @@
 
 
 
-        
+
         <style>
             .login{
                 background-color: #FFD700;
@@ -160,122 +161,146 @@
 
 
     <body>
-
-
+        <%
+            Account acc = (Account) request.getSession().getAttribute("account");
+            AccountManager am = new AccountManager();
+            Account account = am.getAccountById(acc.getAccount_id());
+            if (account == null) {
+                response.sendRedirect("index.jsp");
+            }
+            int id = account.getAccount_id();
+            String name = account.getName();
+            String phone = account.getPhoneNumber();
+            String email = account.getEmail();
+            Date dob = account.getDate_of_birth();
+            String adds = account.getAddress();
+            
+        %>
         <div id="site-content" style="background-image: url('dummy/forBG.jpg');">
             <main class="main-content" style="padding-top: 70px">
                 <div class="container">
                     <div class="midContent">
-            <div class="row"style="background-color: white;" >
-                <div class="col-lg-8 col-md-10 mx-auto">
-                    <div class="my-account">
-                        <div class="page-title">
-                            <h1>Information Account</h1>
-                        </div>
-                        <div class="box">
-                            <form action="UpdateAccountServlet" method="post" id="profile-validate"
-                                  class="scaffold-form metiz-edit-account" enctype="multipart/form-data" novalidate="novalidate">
-                                <input type="hidden" name="csrfmiddlewaretoken"
-                                       value="j25B7WamhVani2DNzTqbveuAnqYEz4V56eVICxGq4IeM6pu94eVK3AzS4owP0D13">
-                                <%
-                                    Account account = (Account) session.getAttribute("account");
-                                %>
-                                <div class="row">
-                                    <!-- First Column (col-md-3) -->
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="id">ID</label>
-                                            <input type="text" name="id" id="id" class="form-control custom-input" readonly
-                                                   value="<%=account.getAccount_id()%>">
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="username">Username</label>
-                                            <input type="text" name="username" id="username" class="form-control custom-input"
-                                                   value="<%=account.getUsername()%>">
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="full_name">Name</label>
-                                            <input type="text" name="full_name" id="full_name" class="form-control custom-input"
-                                                   value="<%=account.getName()%>">
-                                        </div>
+                        <div class="row"style="background-color: white;" >
+                            <div class="col-md-3" >
+                                <img src="avt/<%=account.getProfile_picture()%>" style="width: 180px; height: 250px; margin-right: 30px;object-fit: cover;">
+                            </div>
+                            <div class="col-md-9 mx-auto">
+                                <div class="my-account">
+                                    <div class="page-title">
+                                        <h1>Information Account</h1>
                                     </div>
-
-                                    <!-- Second Column (col-md-3) -->
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label>Phone Number</label>
-                                            <div class="form-group " >
-                                                <div class="inline">
-                                                    <div class="country-code"></div>
-                                                    <input type="text" name="phone" id="phone"
-                                                           value="<%=account.getPhoneNumber()%>" class="form-control textPhone custom-input">
+                                    <div class="box">
+                                        <form action="UpdateAccountServlet" method="post" enctype="multipart/form-data" id="profile-validate"
+                                              class="scaffold-form metiz-edit-account">
+                                            <div class="row">
+                                                <!-- First Column (col-md-3) -->
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label for="id">ID</label>
+                                                        <input type="text" name="id" id="id" class="form-control custom-input" readonly
+                                                               value="<%=id%>">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="username">Username</label>
+                                                        <input type="text" name="username" id="username" class="form-control custom-input"
+                                                               value="<%=account.getUsername()%>" disabled>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="full_name">Name</label>
+                                                        <input type="text" name="full_name" id="full_name" class="form-control custom-input"
+                                                               value="<%=name%>">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="avt">Avatar</label>
+                                                        <input type="file" name="avt" id="avt" placeholder="Enter phôt" class="form-control custom-input">
+                                                    </div>
+                                                </div>
+                                                <!-- Second Column (col-md-3) -->
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label>Phone Number</label>
+                                                        <div class="form-group " >
+                                                            <div class="inline">
+                                                                <div class="country-code"></div>
+                                                                <input type="text" name="phone" id="phone"
+                                                                       value="<%=phone%>" class="form-control textPhone custom-input">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label>Email</label>
+                                                        <input type="text" id="email" name="email"
+                                                               value="<%=email%>" class="form-control custom-input">
+                                                    </div>
+                                                    <div class="form-group form-birthday" >
+                                                        <label>Birthday</label>
+                                                        <div class="input-group" >
+                                                            <input type="date" name="birth_date" id="birth_date"
+                                                                   value="<%=dob%>" class="form-control custom-input">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group form-birthday" >
+                                                        <label>Address</label>
+                                                        <div class="input-group" >
+                                                            <input type="text" name="address" id="address"
+                                                                   value="<%=adds%>" class="form-control custom-input">
+                                                        </div>
+                                                    </div> 
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label>Email</label>
-                                            <input type="text" id="email" name="email"
-                                                   value="<%=account.getEmail()%>" class="form-control custom-input">
-                                        </div>
-                                        <div class="form-group form-birthday" >
-                                            <label>Birthday</label>
-                                            <div class="input-group" >
-                                                <input type="date" name="birth_date" id="birth_date"
-                                                       value="<%=account.getDate_of_birth()%>" class="form-control custom-input">
+                                            <c:if test="${not empty message}">
+                                                <div class="alert">
+                                                    ${message}
+                                                </div>
+                                            </c:if>
+                                            <div class="buttons-set metiz-edit-btn">
+                                                <button type="submit" title="Save" class="btn btn-primary"><span><span>Save</span></span></button>
                                             </div>
-                                        </div>
+                                            <div class="buttons-set metiz-edit-btn">
+                                                <a href="changePassword.jsp" class="btn btn-primary">Change Password</a>
+                                            </div>
+                                        </form>
                                     </div>
                                 </div>
-                                <c:if test="${not empty message}">
-                                    <div class="alert">
-                                        ${message}
-                                    </div>
-                                </c:if>
-                                <div class="buttons-set metiz-edit-btn">
-                                    <button type="submit" title="Save" class="btn btn-primary"><span><span>Save</span></span></button>
-                                </div>
-                            </form>
+                            </div>
+                        </div>
+                        <div class="row" style="background-color: white;">
+                            <!--                <div class="col-lg-8 col-md-10 mx-auto">
+                                                <div class="my-account">
+                                                     Existing form code goes here 
+                            
+                                                    <div class="page-title">
+                                                        <h2>Additional Information Table</h2>
+                                                    </div>
+                            
+                                                     Additional table 
+                                                    <table class="table">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>ID</th>
+                                                                <th>ID Phim</th>
+                                                                <th>Xuat Chieu</th>
+                                                                <th>Ma Phong</th>
+                                                                <th>So Luong Ve</th>
+                                                                <th>Thoi Gian</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td></td>
+                                                                <td></td>
+                                                                <td></td>
+                                                                <td></td>
+                                                                <td></td>
+                                                                <td></td>
+                                                            </tr>
+                                                             Add more rows as needed 
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>-->
                         </div>
                     </div>
-                </div>
-            </div>
-            <div class="row" style="background-color: white;">
-                <!--                <div class="col-lg-8 col-md-10 mx-auto">
-                                    <div class="my-account">
-                                         Existing form code goes here 
-                
-                                        <div class="page-title">
-                                            <h2>Additional Information Table</h2>
-                                        </div>
-                
-                                         Additional table 
-                                        <table class="table">
-                                            <thead>
-                                                <tr>
-                                                    <th>ID</th>
-                                                    <th>ID Phim</th>
-                                                    <th>Xuat Chieu</th>
-                                                    <th>Ma Phong</th>
-                                                    <th>So Luong Ve</th>
-                                                    <th>Thoi Gian</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                </tr>
-                                                 Add more rows as needed 
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>-->
-            </div>
-        </div>
                 </div>
             </main>
         </div>

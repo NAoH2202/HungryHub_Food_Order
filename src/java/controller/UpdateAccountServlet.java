@@ -4,8 +4,19 @@
  */
 package controller;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.mail.internet.ParseException;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -13,6 +24,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import model.Account;
 import model.AccountDao;
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileUploadException;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
 /**
  *
@@ -56,37 +71,98 @@ public class UpdateAccountServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // Set character encoding
+        // Thiết lập mã hóa ký tự
         request.setCharacterEncoding("UTF-8");
 
-        // Get parameters from the request
-        String username = request.getParameter("username");
-        String fullName = request.getParameter("full_name");
-        String phoneNumber = request.getParameter("phone");
-        String email = request.getParameter("email");
-        String birthDate = request.getParameter("birth_date");
-//        System.out.println("day la ddd: "+username+fullName+phoneNumber+email);
-        // Get the current account from the session
-        Account currentAccount = (Account) request.getSession().getAttribute("account");
+        // Khởi tạo các biến
+        String fullName = null;
+        String phoneNumber = null;
+        String email = null;
+        String adds = null;
+        String filename = null;
+        Date birthDate = null;
 
-        // Update the account details
-        currentAccount.setUsername(username);
-        currentAccount.setName(fullName);
-        currentAccount.setPhoneNumber(phoneNumber);
-        currentAccount.setEmail(email);
-        currentAccount.setDate_of_birth(birthDate);
+        // Tạo một nhà máy cho các mục tệp dựa trên đĩa
+        DiskFileItemFactory factory = new DiskFileItemFactory();
+        // Cấu hình một kho lưu trữ để đảm bảo vị trí tạm thời an toàn được sử dụng
+        ServletContext servletContext = this.getServletConfig().getServletContext();
+        File repository = (File) servletContext.getAttribute("jakarta.servlet.context.tempdir"); // Hoặc "javax.servlet.context.tempdir" cho javax
+        factory.setRepository(repository);
+        // Tạo một trình xử lý tải tệp mới
+        ServletFileUpload upload = new ServletFileUpload(factory);
 
-        // Update the account in the database
-        boolean isUpdated = AccountDao.updateAccount(currentAccount);
-
-        // Set a message attribute based on the update result
-        if (isUpdated) {
-            request.setAttribute("message", "Account updated successfully!");
-        } else {
-            request.setAttribute("message", "Failed to update account. Please try again.");
+        try {
+            // Phân tích yêu cầu
+            List<FileItem> items = upload.parseRequest(request);
+            for (FileItem item : items) {
+                if (item.isFormField()) {
+                    // Xử lý các trường form thông thường
+                    String fieldName = item.getFieldName();
+                    String fieldValue = item.getString("UTF-8");
+                    switch (fieldName) {
+                        case "full_name":
+                            fullName = fieldValue;
+                            break;
+                        case "phone":
+                            phoneNumber = fieldValue;
+                            break;
+                        case "email":
+                            email = fieldValue;
+                            break;
+                        case "address":
+                            adds = fieldValue;
+                            break;
+                        case "birth_date":
+                            SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+                            if (!fieldValue.isEmpty()) {
+                                birthDate = dateFormat.parse(fieldValue);
+                            }
+                            break;
+                    }
+                } else {
+                    // Xử lý tệp được tải lên
+                    filename = item.getName();
+                    if (filename != null && !filename.isEmpty()) {
+                        Path path = Paths.get(filename);
+                        String storePath = servletContext.getRealPath("/avt");
+                        File uploadFile = new File(storePath + File.separator + path.getFileName());
+                        item.write(uploadFile);
+                    }
+                }
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(UpdateAccountServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        // Forward to the same page or a result page
+        if (birthDate != null) {
+            // Lấy tài khoản hiện tại từ session
+            Account currentAccount = (Account) request.getSession().getAttribute("account");
+            if (currentAccount != null) {
+                // Cập nhật thông tin tài khoản
+                currentAccount.setName(fullName);
+                currentAccount.setPhoneNumber(phoneNumber);
+                currentAccount.setEmail(email);
+                currentAccount.setAddress(adds);
+                currentAccount.setDate_of_birth(birthDate);
+                currentAccount.setProfile_picture(filename);
+
+                // Cập nhật tài khoản trong cơ sở dữ liệu
+                boolean isUpdated = AccountDao.updateAccount(currentAccount);
+
+                // Thiết lập thông báo kết quả
+                if (isUpdated) {
+                    request.setAttribute("message", "Account updated successfully!");
+                } else {
+                    request.setAttribute("message", "Failed to update account. Please try again.");
+                }
+            } else {
+                request.setAttribute("message", "Account not found in session.");
+            }
+        } else {
+            request.setAttribute("message", "Failed to update account. Please provide a valid birth date.");
+        }
+
+        // Chuyển tiếp đến trang account.jsp để hiển thị thông báo
         request.getRequestDispatcher("account.jsp").forward(request, response);
     }
 

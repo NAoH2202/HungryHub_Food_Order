@@ -31,7 +31,7 @@ public class AccountDao {
         String email;
         String phoneNumber;
         String address;
-        String date_of_birth;
+        Date date_of_birth;
         boolean active_status;
         String profile_picture;
         String role;
@@ -53,7 +53,7 @@ public class AccountDao {
                 phoneNumber = rs.getString("PhoneNumber");
                 address = rs.getString("address");
                 role = rs.getString("role");
-                date_of_birth = rs.getString("date_of_birth");
+                date_of_birth = rs.getDate("date_of_birth");
                 active_status = rs.getBoolean("active_status");
                 profile_picture = rs.getString("profile_picture");
                 String maxacthuc = rs.getString("maxacthuc");
@@ -94,19 +94,17 @@ public class AccountDao {
         PreparedStatement statement = null;
         try {
             conn = db.openConnection();
-            String query = "UPDATE Account SET username = ?, password = ?, name = ?, email = ?, PhoneNumber = ?, address = ?, date_of_birth = ?, profile_picture = ?, role = ?, active_status = ? WHERE account_id = ?";
+            String query = "UPDATE Account SET name = ?, email = ?, PhoneNumber = ?, address = ?, date_of_birth = ?, profile_picture = ?, role = ?, active_status = ? WHERE account_id = ?";
             statement = conn.prepareStatement(query);
-            statement.setString(1, account.getUsername());
-            statement.setString(2, account.getPassword());
-            statement.setString(3, account.getName());
-            statement.setString(4, account.getEmail());
-            statement.setString(5, account.getPhoneNumber());
-            statement.setString(6, account.getAddress());
-            statement.setString(7, account.getDate_of_birth());
-            statement.setString(8, account.getProfile_picture());
-            statement.setString(9, account.getRole());
-            statement.setBoolean(10, account.isActive_status());
-            statement.setInt(11, account.getAccount_id());
+            statement.setString(1, account.getName());
+            statement.setString(2, account.getEmail());
+            statement.setString(3, account.getPhoneNumber());
+            statement.setString(4, account.getAddress());
+            statement.setDate(5, new java.sql.Date(account.getDate_of_birth().getTime()));
+            statement.setString(6, account.getProfile_picture());
+            statement.setString(7, account.getRole());
+            statement.setBoolean(8, account.isActive_status());
+            statement.setInt(9, account.getAccount_id());
             int rowsUpdated = statement.executeUpdate();
             return rowsUpdated > 0;
         } catch (ClassNotFoundException | SQLException ex) {
@@ -140,7 +138,7 @@ public class AccountDao {
             statement.setString(4, account.getEmail());
             statement.setString(5, account.getPhoneNumber());
             statement.setString(6, account.getAddress());
-            statement.setString(7, account.getDate_of_birth());
+            statement.setDate(7, (java.sql.Date) account.getDate_of_birth());
             statement.setString(8, account.getProfile_picture());
             statement.setString(9, account.getRole());
             statement.setBoolean(10, account.isActive_status());
@@ -237,12 +235,30 @@ public class AccountDao {
         }
         return false;
     }
+    public static boolean updatePassword(int accountId, String newPassword) {
+    ConnectDB db = ConnectDB.getInstance();
+    String query = "UPDATE Account SET password = ? WHERE account_id = ?";
+    
+    try (Connection conn = db.openConnection();
+         PreparedStatement statement = conn.prepareStatement(query)) {
+
+        statement.setString(1, newPassword);
+        statement.setInt(2, accountId);
+        
+        int rowsUpdated = statement.executeUpdate();
+        return rowsUpdated > 0;
+
+    } catch (ClassNotFoundException | SQLException ex) {
+        Logger.getLogger(AccountDao.class.getName()).log(Level.SEVERE, null, ex);
+    }
+    return false;
+}
 
     public static void main(String[] args) {
         ArrayList<Account> test = AccountDao.getAllAccounts();
-//        Account sc = test.get(0);
-//        sc.setPhoneNumber("091111111111");
-//        AccountDao.updateAccount(sc);
+        Account sc = test.get(0);
+        sc.setPhoneNumber("09222222");
+        AccountDao.updateAccount(sc);
 //        for (Account account : test) {
 //            System.out.println(account);
 //        }
