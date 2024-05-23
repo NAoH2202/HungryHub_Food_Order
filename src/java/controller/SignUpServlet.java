@@ -7,6 +7,10 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.RequestDispatcher;
@@ -16,7 +20,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import model.Account;
+import model.AccountDao;
 import model.AccountManager;
+import util.Email;
+import util.NumVerify;
 
 /**
  *
@@ -51,51 +59,42 @@ public class SignUpServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        HttpSession session = request.getSession();
-        String username = request.getParameter("username");
-        String displayName = request.getParameter("displayName");
-        String password = request.getParameter("password");
         String email = request.getParameter("email");
-        String birthdate = request.getParameter("birthdate");
-        String gender = request.getParameter("gender");
-        String phoneNumber = request.getParameter("phone");
+        String password = request.getParameter("password");
+        String confirmPassword = request.getParameter("confirmPassword");
+        String address = request.getParameter("address");
+        String role = request.getParameter("role"); // Default role for new users, adjust as needed
 
-        ConnectDB db = ConnectDB.getInstance();
-        Connection conn = null;
-        PreparedStatement statement = null;
-        ResultSet rs = null;
-        try {
-            conn = db.openConnection();
-            String query = """
-                           INSERT INTO [User] ([username], [password], [name], [Gender], [PhoneNumber], [email], [BirthDay],role)
-                           VALUES (?, ?, ?, ?, ?, ?, ?,1)""";
-            statement = conn.prepareStatement(query);
-            statement.setString(1, username);
-            statement.setString(2, password);
-            statement.setString(3, displayName);
-            statement.setString(4, gender);
-            statement.setString(5, phoneNumber);
-            statement.setString(6, email);
-            statement.setString(7, birthdate);
-            statement.executeUpdate();
-            request.setAttribute("displayName", displayName);
-            RequestDispatcher dispatcher = request.getRequestDispatcher("SignUpSuccessfull.jsp");
+        // Validation
+        if (email == null || password == null || confirmPassword == null || address == null || role == null
+                || email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty() || address.isEmpty() || role.isEmpty()
+                || !password.equals(confirmPassword)) {
+            response.sendRedirect("signup.jsp?error=Invalid input");
+            return;
+        }
+        Account account = new Account(email, email, password, email, role, address);
+        //day so xac thuc
+        String maxacthuc = NumVerify.getNumVerify();
+        //thoi gian hieu luc
+        LocalDateTime thoigianhieuluc = LocalDateTime.now().plusDays(1);
+
+        //Trang thai xac thuc = false
+        boolean trangThaiXacThuc = false;
+        account.setMaxacthuc(maxacthuc);
+        account.setThoigianhieuluc(thoigianhieuluc);
+        account.setTrangthaixacthuc(trangThaiXacThuc);
+        if (AccountDao.addAccount(account)) {
+            String noidung = "<h1 style=\"color: #5e9ca0;\">Ch&agrave;o Mừng bạn đến với <span style=\"color: #33cccc;\">HungryHub</span></h1>\n"
+                    + "<p>vui l&ograve;ng x&aacute;c thực t&agrave;i khoảng của bạn bằng c&aacute;ch nhập m&atilde; <span style=\"color: #ff0000;\"><strong>"+account.getMaxacthuc()+"</strong></span></p>\n"
+                    + "<p>Đ&acirc;y l&agrave; email tự động, vui l&ograve;ng kh&ocirc;ng phản hồi email n&agrave;y.</p>\n"
+                    + "<p>Xin cảm ơn đ&atilde; sử dụng dịch vụ!</p>\n"
+                    + "<p><strong>&nbsp;</strong></p>";
+            Email.SendEmail(account.getEmail(), "Xác thực tài khoảng HungryHub", noidung);
+            request.setAttribute("Account", account);
+            RequestDispatcher dispatcher = request.getRequestDispatcher("Verify.jsp");
             dispatcher.forward(request, response);
-        } catch (ClassNotFoundException | SQLException ex) {
-            Logger.getLogger(SignUpServlet.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            try {
-                if (rs != null) {
-                    rs.close();
-                }
-                if (statement != null) {
-                    statement.close();
-                }
-                if (conn != null) {
-                    conn.close();
-                }
-            } catch (SQLException e) {
-            }
+        } else {
+            response.sendRedirect("sign_up.jsp?error=Account creation failed");
         }
 
     }

@@ -53,12 +53,12 @@
             <div class="d-flex justify-content-center h-100">
                 <div class="card" style="height: 300px; width: 700px;">
                     <div class="card-header d-flex align-items-center justify-content-center" >
-                        <h1>THANK YOU ${displayName} !</h1>
+                        <h1>THANK YOU ${displayname} !</h1>
                     </div>
                     <div class="align-center ">
                         <div>
                             <div >
-                                <p class="wc">Welcome to TTH Cinema, thank you for coming to us. Wish you have a happy movie watching experience <3</p>
+                                <p class="wc">Welcome to HungryHub, thank you for coming to us. Wish you have a happy purchasing experience <3</p>
                                 <p class="ip">Please press the button below to go back and log in!!!</p>
                             </div>
                             <div class="form-group" style="display: flex;justify-content: center;">

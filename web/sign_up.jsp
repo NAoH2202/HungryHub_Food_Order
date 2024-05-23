@@ -48,6 +48,7 @@
                     <div class="main_input card-body align-center ">
                         <div>
                             <form action="SignUpServlet" method="POST" id="form" > 
+                                <input type="hidden" value="<%=role%>" name="role">
                                 <div class="input_error email_error" ></div>
                                 <div class="input-group form-group">
                                     <div class="input-group-prepend">
@@ -112,6 +113,12 @@
                     Confirm_error = document.getElementsByClassName("email_error")[0];
                     Confirm_error.innerHTML = "<span class='rq'>You should input your email !</span>";
                     error += "\nYou should input your email !";
+                }
+                var address = document.getElementsByName("address")[0].value;
+                if (address.length === 0) {
+                    Confirm_error = document.getElementsByClassName("address_error")[0];
+                    Confirm_error.innerHTML = "<span class='rq'>You should input your address !</span>";
+                    error += "\nYou should input your address !";
                 }
                 if (error.length > 0) {
                     return;
