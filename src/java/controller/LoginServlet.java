@@ -64,6 +64,12 @@ public class LoginServlet extends HttpServlet {
             response.sendRedirect("LoginServlet");
         } else {
             account = am.Login(username, password);
+            if (!account.isTrangthaixacthuc()) { // Kiểm tra trạng thái xác thực
+                request.setAttribute("errorMessage", "Account is not verified. Please verify your account.");
+                request.setAttribute("Account", account);
+                request.getRequestDispatcher("Verify.jsp").forward(request, response);
+                return;
+            }
             if (remember != null) {
                 session.setAttribute("username", username);
                 session.setAttribute("password", password);

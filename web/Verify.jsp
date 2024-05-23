@@ -1,3 +1,4 @@
+<%@page import="model.AccountManager"%>
 <%@page import="model.Account"%>
 <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
@@ -43,56 +44,40 @@
                     <div class="card-body">
                         <%
                             Account acc = (Account) request.getAttribute("Account");
-                            
+                            AccountManager am = new AccountManager();
+                            Account account = am.getAccountByEmail(acc.getEmail());
+                            int id; String ma;
+                            if(account != null){
+                                id= account.getAccount_id();
+                                ma = account.getMaxacthuc();
+                            }
+                            else{
+                            id = 0; ma = "";
+                            }
                         %>
                         <form action="VerifyServlet" id="form" method="POST">
-                            <input type="hidden" name="displayname" value="<%=acc.getName()%>">
-                            <input type="hidden" name="maxacthuc" id="maxacthuc"  value="<%=acc.getMaxacthuc()%>">
+                            <input type="hidden" name="accId" value="<%=id%>">
+                            <input type="hidden" name="maxacthuc" id="maxacthuc"  value="<%=ma%>">
+                            <%
+                                String errorMessage = (String) request.getAttribute("errorMessage");
+                                if (errorMessage != null) {
+                            %>
+                            <div class="error-message" style="color: red"><%= errorMessage%></div>
+                            <%
+                                }
+                            %>
                             <div class="input-group form-group">
                                 <input type="text" class="form-control" name="code" placeholder="Verify code">
                             </div>
                             <div class="input_error password_error" ></div>
                             <div class="form-group d-flex justify-content-center">
-                                <button class="btn float-right login_btn" type="button" id="verifyCode" onclick="verifyCode()" > verify </button>
+                                <button class="btn float-right login_btn" type="submit" id="verifyCode" > verify </button>
                                 <!--<input class="btn float-right login_btn" type="submit" value="Login">-->
                             </div>
                         </form>
                     </div>
                 </div>
             </div>
-        </div>
-        <script>
-            function verifyCode()
-            {
-                var code = document.getElementById("verifyCode").value;
-                var ma = document.getElementById("maxacthuc").value;
-                var form = document.getElementById("form");
-
-                // Create a new form data object
-                var formData = new FormData();
-                formData.append("code", code);
-                formData.append("ma", ma);
-
-                // Send the request to the VerifyServlet
-                fetch("VerifyServlet", {
-                    method: "POST",
-                    body: formData
-                })
-                        .then(response => response.text())
-                        .then(data => {
-                            // Process the response
-                            if (data === "success") {
-                                alert("Verification successful!");
-                                // Redirect or perform other actions upon success
-                            } else {
-                                alert("Verification failed. Please check your code and try again.");
-                            }
-                        })
-                        .catch(error => {
-                            console.error("Error:", error);
-                        });
-            }
-
-        </script>           
+        </div>  
     </body>
 </html>

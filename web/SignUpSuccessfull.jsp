@@ -53,7 +53,7 @@
             <div class="d-flex justify-content-center h-100">
                 <div class="card" style="height: 300px; width: 700px;">
                     <div class="card-header d-flex align-items-center justify-content-center" >
-                        <h1>THANK YOU ${displayname} !</h1>
+                        <h1>THANK YOU !</h1>
                     </div>
                     <div class="align-center ">
                         <div>

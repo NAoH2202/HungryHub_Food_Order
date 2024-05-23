@@ -36,6 +36,14 @@ public class AccountManager {
         }
         return null;
     }
+      public Account getAccountByEmail(String email) {
+        for (Account facc : List) {
+            if (email.equalsIgnoreCase(facc.getEmail())) {
+                return facc;
+            }
+        }
+        return null;
+    }
     public boolean checkUsername(String usernameIn) {
         if (List.isEmpty()) {
             return true;

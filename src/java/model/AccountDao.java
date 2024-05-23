@@ -219,6 +219,24 @@ public class AccountDao {
         }
         return false;
     }
+    public static boolean updateVerificationStatusToTrue(int accountId) {
+        ConnectDB db = ConnectDB.getInstance();
+        String query = "UPDATE Account SET trangthaixacthuc = ? WHERE account_id = ?";
+        
+        try (Connection conn = db.openConnection();
+             PreparedStatement statement = conn.prepareStatement(query)) {
+
+            statement.setBoolean(1, true);
+            statement.setInt(2, accountId);
+            
+            int rowsUpdated = statement.executeUpdate();
+            return rowsUpdated > 0;
+
+        } catch (ClassNotFoundException | SQLException ex) {
+            Logger.getLogger(AccountDao.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
 
     public static void main(String[] args) {
         ArrayList<Account> test = AccountDao.getAllAccounts();
