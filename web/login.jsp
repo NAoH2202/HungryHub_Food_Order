@@ -77,6 +77,8 @@
                                 <button class="btn float-right login_btn" type="button" onclick="Sign()" >Login</button>
                                 <!--<input class="btn float-right login_btn" type="submit" value="Login">-->
                             </div>
+                            <a href="https://accounts.google.com/o/oauth2/auth?scope=email profile&redirect_uri=http://localhost:8080/HungryHub_OrderFood/LoginGoogleHandler&response_type=code
+		   &client_id=446753440793-j227if2dn4gtep6g1u7llgf0i15grtm9.apps.googleusercontent.com&approval_prompt=force">Login With Google</a>
                         </form>
                     </div>
                     <div class="card-footer ">
