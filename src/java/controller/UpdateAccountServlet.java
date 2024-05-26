@@ -113,7 +113,7 @@ public class UpdateAccountServlet extends HttpServlet {
                             adds = fieldValue;
                             break;
                         case "birth_date":
-                            SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+                            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
                             if (!fieldValue.isEmpty()) {
                                 birthDate = dateFormat.parse(fieldValue);
                             }

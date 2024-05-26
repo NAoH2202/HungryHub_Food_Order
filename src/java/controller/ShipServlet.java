@@ -54,9 +54,6 @@ public class ShipServlet extends HttpServlet {
             out.println("</html>");
         }
     }
-
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
- 
    
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -65,11 +62,10 @@ public class ShipServlet extends HttpServlet {
     try {
             String theCommand = request.getParameter("command");
             if (theCommand == null) {
-                RequestDispatcher dispatcher = request.getRequestDispatcher("shipIndex.jsp");
+                RequestDispatcher dispatcher = request.getRequestDispatcher("Shipp.jsp");
                 dispatcher.forward(request, response);
             }
             switch (theCommand) {
-                 
                 case "VIEW" ->
                     viewInf(request, response);
                   case "LOAD" ->
@@ -93,7 +89,7 @@ public class ShipServlet extends HttpServlet {
         request.setAttribute("Acc", list);
 
         // send to the JSP page (view)
-        RequestDispatcher dispatcher = request.getRequestDispatcher("ship.jsp");
+        RequestDispatcher dispatcher = request.getRequestDispatcher("Ship.jsp");
         dispatcher.forward(request, response);
     }
        private void load(HttpServletRequest request, HttpServletResponse response) throws Exception {

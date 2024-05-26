@@ -178,7 +178,7 @@
                                         AccountManager am = new AccountManager();
                                         Account account = am.getAccountById(acc.getAccount_id());
                                         if (account == null) {
-                                            response.sendRedirect("index.jsp");
+                                            response.sendRedirect("login.jsp");
                                         }
                                         int id = account.getAccount_id();
                                         String name = account.getName();

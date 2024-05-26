@@ -83,7 +83,7 @@ public class OrderItemServlet extends HttpServlet {
         request.setAttribute("oItList", list);
 
         // send to the JSP page (view)
-        RequestDispatcher dispatcher = request.getRequestDispatcher("listOrder.jsp");
+        RequestDispatcher dispatcher = request.getRequestDispatcher("ShipperListOrder.jsp");
         dispatcher.forward(request, response);
     }
      private void map(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -91,10 +91,10 @@ public class OrderItemServlet extends HttpServlet {
      private void accept(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
      }
      private void view(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-         String itemId = request.getParameter("order_item_id");
-         OrderItemManager oIt = new OrderItemManager();
+        String itemId = request.getParameter("order_item_id");
+        OrderItemManager oIt = new OrderItemManager();
         OrderItem orderItems = oIt.getOderItemById(Integer.parseInt(itemId));
-        RequestDispatcher dispatcher = request.getRequestDispatcher("shipViewOrderItem.jsp");
+        RequestDispatcher dispatcher = request.getRequestDispatcher("ShipViewOrderItem.jsp");
         dispatcher.forward(request, response);
      }
      private void chat(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

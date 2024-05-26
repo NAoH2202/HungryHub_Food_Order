@@ -15,6 +15,10 @@
     <body>
         <%
             Account acc = (Account) session.getAttribute("account");
+            if (acc == null) {
+                response.sendRedirect("login.jsp");
+                return;
+            }
             String name = acc.getName();
             if (acc == null) {
         %><h1>Hello World!</h1>

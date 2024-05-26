@@ -44,11 +44,10 @@
             Account acc = (Account) session.getAttribute("account");
             String name = acc.getName();
             if (acc == null) {
-        %><h1>Hello World!</h1>
-        <%
-        } else {
+                response.sendRedirect("login.jsp");
+                return;
+            }
         %><h1><%=name%>'s Order</h1>
-        <%}%>
         <div>
             <section class="section-yellow " style="border-radius: 20px">
                 <ul class="showing-container">
@@ -82,7 +81,7 @@
                             for (Order od : om.getList()) {
 
                             %>
-                            <a href="Chat.jsp?idO=<%=od.getOrder_id()%>"><%=od.getOrder_id()%></a><br>
+                            <a href="CustomerChatPage?idO=<%=od.getOrder_id()%>"><%=od.getOrder_id()%></a><br>
                             <%
                                 }
                             %></div>
