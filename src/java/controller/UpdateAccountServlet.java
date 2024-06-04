@@ -28,6 +28,7 @@ import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import util.NumVerify;
 
 /**
  *
@@ -65,7 +66,7 @@ public class UpdateAccountServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        doPost(request, response);
     }
 
     @Override
@@ -124,9 +125,22 @@ public class UpdateAccountServlet extends HttpServlet {
                     filename = item.getName();
                     if (filename != null && !filename.isEmpty()) {
                         Path path = Paths.get(filename);
+                        String extension = "";
+
+                        // Lấy phần mở rộng của tệp
+                        int dotIndex = filename.lastIndexOf('.');
+                        if (dotIndex >= 0) {
+                            extension = filename.substring(dotIndex);
+                        }
+
+                        // Tạo tên tệp mới với chuỗi ngẫu nhiên
+                        String newFilename = NumVerify.getNumVerify() + extension;
                         String storePath = servletContext.getRealPath("/avt");
-                        File uploadFile = new File(storePath + File.separator + path.getFileName());
+                        File uploadFile = new File(storePath + File.separator + newFilename);
                         item.write(uploadFile);
+
+                        // Lưu lại tên tệp mới để sử dụng sau này (nếu cần)
+                        filename = newFilename;
                     }
                 }
             }
@@ -163,7 +177,7 @@ public class UpdateAccountServlet extends HttpServlet {
         }
 
         // Chuyển tiếp đến trang account.jsp để hiển thị thông báo
-        request.getRequestDispatcher("account.jsp").forward(request, response);
+        request.getRequestDispatcher("AccountPage").forward(request, response);
     }
 
     /**

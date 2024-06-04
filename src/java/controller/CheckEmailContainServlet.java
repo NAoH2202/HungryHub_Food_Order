@@ -51,13 +51,12 @@ public class CheckEmailContainServlet extends HttpServlet {
         
         // Kiểm tra xem email có tồn tại trong cơ sở dữ liệu không
         boolean isDuplicate = am.checkGmail(email);
-        boolean isDuplicate2 = validation.checkEmail(email);
 
         // Gửi kết quả về client dưới dạng text
         response.setContentType("text/plain");
         response.setCharacterEncoding("UTF-8");
         PrintWriter out = response.getWriter();
-        if (isDuplicate && isDuplicate2) {
+        if (isDuplicate) {
             out.write("unique");
         } else {
             out.write("duplicate");

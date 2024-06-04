@@ -52,7 +52,7 @@ public class LogOutServlet extends HttpServlet {
         if(session.getAttribute("account")!=null){
             session.removeAttribute("account");
         }
-        response.sendRedirect("index.jsp");
+        response.sendRedirect("HomePage");
     }
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)

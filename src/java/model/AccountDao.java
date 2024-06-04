@@ -28,6 +28,7 @@ public class AccountDao {
         String username;
         String password;
         String name;
+        String detail;
         String email;
         String phoneNumber;
         String address;
@@ -49,6 +50,7 @@ public class AccountDao {
                 username = rs.getString("username");
                 password = rs.getString("password");
                 name = rs.getString("name");
+                detail = rs.getString("Detail");
                 email = rs.getString("email");
                 phoneNumber = rs.getString("PhoneNumber");
                 address = rs.getString("address");
@@ -66,7 +68,7 @@ public class AccountDao {
                 }
                 boolean trangthaixacthuc = rs.getBoolean("trangthaixacthuc");
 
-                Account Acc = new Account(account_id, username, password, name, email, phoneNumber, address, date_of_birth, profile_picture, role, maxacthuc, trangthaixacthuc, tghl);
+                Account Acc = new Account(account_id, username, password, name, detail, email, phoneNumber, address, date_of_birth, active_status, profile_picture, role, maxacthuc, trangthaixacthuc, tghl);
                 AccountList.add(Acc);
             }
         } catch (ClassNotFoundException | SQLException ex) {

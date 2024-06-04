@@ -69,6 +69,7 @@
                         <td>${orderItem.getDish().getdish_id()}</td>
                         <td>${orderItem.getQuantity()}</td>
                         <td>${orderItem.getPrice()}</td>
+
                     </tr>
     <div class="map">
         <h2>Map</h2>

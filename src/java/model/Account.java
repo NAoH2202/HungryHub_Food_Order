@@ -17,11 +17,12 @@ public class Account {
     private String username;
     private String password;
     private String name;
+    private String Detail;
     private String email;
     private String phoneNumber; //new
     private String address;
     private Date date_of_birth;
-    private boolean active_status = true;
+    private boolean active_status;
     private String profile_picture;
     private String role;
     private LocalDateTime created_at = LocalDateTime.now();
@@ -37,7 +38,23 @@ public class Account {
         this.thoigianhieuluc = thoigianhieuluc;
     }
 
-    
+    public Account(int account_id, String username, String password, String name, String Detail, String email, String phoneNumber, String address, Date date_of_birth, boolean active_status, String profile_picture, String role, String maxacthuc, boolean trangthaixacthuc, LocalDateTime thoigianhieuluc) {
+        this.account_id = account_id;
+        this.username = username;
+        this.password = password;
+        this.name = name;
+        this.Detail = Detail;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.address = address;
+        this.date_of_birth = date_of_birth;
+        this.active_status = active_status;
+        this.profile_picture = profile_picture;
+        this.role = role;
+        this.maxacthuc = maxacthuc;
+        this.trangthaixacthuc = trangthaixacthuc;
+        this.thoigianhieuluc = thoigianhieuluc;
+    }
 
     
     
@@ -223,8 +240,17 @@ public class Account {
         this.thoigianhieuluc = thoigianhieuluc;
     }
 
+    public String getDetail() {
+        return Detail;
+    }
+
+    public void setDetail(String Detail) {
+        this.Detail = Detail;
+    }
+
     @Override
     public String toString() {
-        return "Account{" + "account_id=" + account_id + ", username=" + username + ", password=" + password + ", name=" + name + ", email=" + email + ", phoneNumber=" + phoneNumber + ", address=" + address + ", date_of_birth=" + date_of_birth + ", active_status=" + active_status + ", profile_picture=" + profile_picture + ", role=" + role + ", created_at=" + created_at + ", updated_at=" + updated_at + ", maxacthuc=" + maxacthuc + ", trangthaixacthuc=" + trangthaixacthuc + ", thoigianhieuluc=" + thoigianhieuluc + '}';
+        return "Account{" + "account_id=" + account_id + ", username=" + username + ", password=" + password + ", name=" + name + ", Detail=" + Detail + ", email=" + email + ", phoneNumber=" + phoneNumber + ", address=" + address + ", date_of_birth=" + date_of_birth + ", active_status=" + active_status + ", profile_picture=" + profile_picture + ", role=" + role + ", created_at=" + created_at + ", updated_at=" + updated_at + ", maxacthuc=" + maxacthuc + ", trangthaixacthuc=" + trangthaixacthuc + ", thoigianhieuluc=" + thoigianhieuluc + '}';
     }
+    
 }

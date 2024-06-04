@@ -17,7 +17,6 @@
             }
             .align-center {
                 display: flex;
-                align-items: center;
                 justify-content: center;
                 height: 100%;
             }
@@ -29,90 +28,143 @@
                 height: 12px;
                 margin-bottom: 5px;
             }
-
+            .alert {
+                position: fixed;
+                top: 5%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                padding: 20px;
+                background-color: #f44336; /* Red */
+                color: white;
+                text-align: center;
+                z-index: 9999; /* Ensure it's above other elements */
+            }
+            .alert.success {
+                background-color: #4CAF50;
+            } /* Green */
+            .alert.info {
+                background-color: #2196F3;
+            } /* Blue */
+            .alert.warning {
+                background-color: #ff9800;
+            } /* Orange */
+            .alert.close {
+                margin-left: 15px;
+                color: white;
+                font-weight: bold;
+                float: right;
+                font-size: 22px;
+                line-height: 20px;
+                cursor: pointer;
+                transition: 0.3s;
+            }
+            .alert.close:hover {
+                color: black;
+            }
         </style>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     </head>
-    <body style="background-image: url('dummy/forBG2.jpg');">
-        <div class="container">
-            <div class="d-flex justify-content-center h-100">
-                <div class="card">
-                    <div class="card-header d-flex justify-content-center">
-                        <h3>Sign In</h3>
-                    </div>
-                    <div class="card-body">
-                        <%
-                            String username = "";
-                            if (session.getAttribute("username") != null) {
-                                username = (String) session.getAttribute("username");
-                            }
-                            String password = "";
-                            if (session.getAttribute("password") != null) {
-                                password = (String) session.getAttribute("password");
-                            }
-                            String error = "";
-                            if (session.getAttribute("Error") != null) {
-                                error = (String) session.getAttribute("Error");
-                            }
-                        %>
-                        <form action="LoginServlet" id="form" method="post">
-                            <div class="input_error username_error" ><span class='rq'><%=error%></span></div>
-                            <div class="input-group form-group">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text"><i class="fas fa-user"></i></span>
-                                </div>
-                                <input type="text" class="form-control" name="username" placeholder="username or email" value="<%= username%>">
+</head>
+<body style="background-image: url('dummy/forBG2.jpg');">
+    <%
+        String message = (String) request.getSession().getAttribute("message");
+        if (message != null && !message.isEmpty()) {
+    %>
+    <div class="alert success">
+        <span class="close" style="margin-left: 10px" onclick="this.parentElement.style.display = 'none';">&times;</span>
+        <%=message%>
+    </div>
+    <%
+            request.getSession().removeAttribute("message");
+        }
+    %>
+    <div class="container">
+        <div class="d-flex justify-content-center h-100">
+            <div class="card" style="height: 400px;">
+                <div class="card-header">
+                    <h3><b>Sign In</b></h3>
+                </div>
+                <div class="d-flex justify-content-end social_icon">
+                    <a href="https://accounts.google.com/o/oauth2/auth?scope=email profile&redirect_uri=http://localhost:8080/HungryHub_OrderFood/LoginGoogleHandler&response_type=code
+                       &client_id=446753440793-j227if2dn4gtep6g1u7llgf0i15grtm9.apps.googleusercontent.com&approval_prompt=force"><span><i class="fab fa-google-plus-square"></i></span></a>
+                </div>
+                <div class="card-body">
+                    <%
+                        String username = "";
+                        if (session.getAttribute("username") != null) {
+                            username = (String) session.getAttribute("username");
+                        }
+                        String password = "";
+                        if (session.getAttribute("password") != null) {
+                            password = (String) session.getAttribute("password");
+                        }
+                        String error = "";
+                        if (session.getAttribute("Error") != null) {
+                            error = (String) session.getAttribute("Error");
+                        }
+                    %>
+                    <form action="LoginServlet" id="form" method="post">
+                        <div class="input_error username_error" ><span class='rq'><%=error%></span></div>
+                        <div class="input-group form-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-user"></i></span>
+                            </div>
+                            <input type="text" class="form-control" name="username" placeholder="username or email" value="<%= username%>">
 
-                            </div>
-                            <div class="input_error password_error" ></div>
-                            <div class="input-group form-group">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text"><i class="fas fa-key"></i></span>
-                                </div>
-                                <input type="password" class="form-control" name="password" placeholder="password" value="<%= password%>">
-                            </div>
-                            <div class="row align-items-center remember">
-                                <input type="checkbox" name="remember">Remember Me
-                            </div>
-                            <div class="form-group d-flex justify-content-center">
-                                <button class="btn float-right login_btn" type="button" onclick="Sign()" >Login</button>
-                                <!--<input class="btn float-right login_btn" type="submit" value="Login">-->
-                            </div>
-                            <a href="https://accounts.google.com/o/oauth2/auth?scope=email profile&redirect_uri=http://localhost:8080/HungryHub_OrderFood/LoginGoogleHandler&response_type=code
-		   &client_id=446753440793-j227if2dn4gtep6g1u7llgf0i15grtm9.apps.googleusercontent.com&approval_prompt=force">Login With Google</a>
-                        </form>
-                    </div>
-                    <div class="card-footer ">
-                        <div class="d-flex justify-content-center links">
-                            Don't have an account?<a href="ChosseRolePage">Sign Up</a>
                         </div>
+                        <div class="input_error password_error" ></div>
+                        <div class="input-group form-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-key"></i></span>
+                            </div>
+                            <input type="password" class="form-control" name="password" placeholder="password" value="<%= password%>">
+                        </div>
+                        <div class="row align-items-center remember">
+                            <input type="checkbox" name="remember">Remember Me
+                        </div>
+                        <div class="form-group d-flex justify-content-center">
+                            <button class="btn float-right login_btn" type="button" onclick="Sign()" >Login</button>
+                            <!--<input class="btn float-right login_btn" type="submit" value="Login">-->
+                        </div>
+                    </form>
+                </div>
+                <div class="card-footer ">
+                    <div class="d-flex justify-content-center links">
+                        Don't have an account?<a href="ChosseRolePage">Sign Up</a>
+                    </div>
+                    <div class="d-flex justify-content-center">
+                        <a href="ForgotPassPage">Forgot your password?</a>
                     </div>
                 </div>
             </div>
         </div>
-                            
-        <script>
-            function Sign() {
+    </div>
 
-                error = "";
-                username = document.getElementsByName("username")[0].value;
-                if (username.length === 0) {
-                    UserName_error = document.getElementsByClassName("username_error")[0];
-                    UserName_error.innerHTML = "<span class='rq'>You should input your username !</span>";
-                    error += "Account name cannot be empty !";
-                }
-                password = document.getElementsByName("password")[0].value;
-                if (password.length === 0) {
-                    password_error = document.getElementsByClassName("password_error")[0];
-                    password_error.innerHTML = "<span class='rq'>You should input your password !</span>";
-                    error += "\nYou should input your displayname !";
-                }
-                if (error.length > 0) {
-                    return;
-                } else {
-                    var form = document.getElementById("form");
-                    form.submit();
-                }
+    <script>
+        function Sign() {
+
+            error = "";
+            username = document.getElementsByName("username")[0].value;
+            if (username.length === 0) {
+                UserName_error = document.getElementsByClassName("username_error")[0];
+                UserName_error.innerHTML = "<span class='rq'>You should input your username !</span>";
+                error += "Account name cannot be empty !";
             }
-        </script>
-    </body>
+            password = document.getElementsByName("password")[0].value;
+            if (password.length === 0) {
+                password_error = document.getElementsByClassName("password_error")[0];
+                password_error.innerHTML = "<span class='rq'>You should input your password !</span>";
+                error += "\nYou should input your displayname !";
+            }
+            if (error.length > 0) {
+                return;
+            } else {
+                var form = document.getElementById("form");
+                form.submit();
+            }
+        }
+    </script>
+</body>
 </html>

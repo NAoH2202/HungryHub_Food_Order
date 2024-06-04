@@ -28,4 +28,10 @@ public class OrderItemManager {
      public ArrayList<OrderItem> getList() {
         return List;
     }
+    public static void main(String[] args) {
+        OrderManager om = new OrderManager();
+        for(Order o : om.getList()){
+            System.out.println(o);
+        }
+    }
 }

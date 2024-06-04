@@ -69,7 +69,7 @@ public class SignUpServlet extends HttpServlet {
         if (email == null || password == null || confirmPassword == null || address == null || role == null
                 || email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty() || address.isEmpty() || role.isEmpty()
                 || !password.equals(confirmPassword)) {
-            response.sendRedirect("signup.jsp?error=Invalid input");
+            response.sendRedirect("Error.jsp?error=Invalid input");
             return;
         }
         Account account = new Account(email, email, password, email, role, address);
@@ -91,7 +91,7 @@ public class SignUpServlet extends HttpServlet {
                     + "<p><strong>&nbsp;</strong></p>";
             Email.SendEmail(account.getEmail(), "Xác thực tài khoảng HungryHub", noidung);
             request.setAttribute("Account", account);
-            RequestDispatcher dispatcher = request.getRequestDispatcher("Verify.jsp");
+            RequestDispatcher dispatcher = request.getRequestDispatcher("VerifyPage");
             dispatcher.forward(request, response);
         } else {
             response.sendRedirect("sign_up.jsp?error=Account creation failed");

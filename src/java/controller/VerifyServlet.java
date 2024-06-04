@@ -81,19 +81,19 @@ public class VerifyServlet extends HttpServlet {
                     // Mã xác thực đã hết hạn
                     request.setAttribute("errorMessage", "Verification code has expired.");
                     request.setAttribute("Account", acc);
-                    request.getRequestDispatcher("Verify.jsp").forward(request, response);
+                    request.getRequestDispatcher("VerifyPage").forward(request, response);
                 }
             } else {
                 // Mã xác thực không đúng
                 request.setAttribute("errorMessage", "Invalid verification code.");
                 request.setAttribute("Account", acc);
-                request.getRequestDispatcher("Verify.jsp").forward(request, response);
+                request.getRequestDispatcher("VerifyPage").forward(request, response);
             }
         } else {
             // Account không tồn tại
             request.setAttribute("errorMessage", "Account not found.");
             request.setAttribute("Account", acc);
-            request.getRequestDispatcher("Verify.jsp").forward(request, response);
+            request.getRequestDispatcher("VerifyPage").forward(request, response);
         }
     }
 

@@ -67,7 +67,7 @@ public class Dish {
     }
 
     public double getPrice() {
-        return price;
+        return price*1000;
     }
 
     public void setPrice(double price) {

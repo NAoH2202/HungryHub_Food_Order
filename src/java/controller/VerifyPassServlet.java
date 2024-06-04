@@ -2,22 +2,25 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-package Path;
+package controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.time.LocalDateTime;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import model.Account;
+import model.AccountManager;
 
 /**
  *
  * @author lenovo
  */
-@WebServlet(name = "EditShipPage", urlPatterns = {"/EditShipPage"})
-public class EditShipPage extends HttpServlet {
+@WebServlet(name = "VerifyPassServlet", urlPatterns = {"/VerifyPassServlet"})
+public class VerifyPassServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -36,10 +39,10 @@ public class EditShipPage extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet EditShipPage</title>");            
+            out.println("<title>Servlet VerifyPassServlet</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet EditShipPage at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet VerifyPassServlet at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -48,20 +51,32 @@ public class EditShipPage extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.getRequestDispatcher("EditShip.jsp").forward(request, response);
+        processRequest(request, response);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        int accId = Integer.parseInt(request.getParameter("accId"));
+        String code = request.getParameter("maxacthuc");
+        String inputCode = request.getParameter("code");
+
+        // Lấy account từ AccountManager
+        AccountManager accountManager = new AccountManager();
+
+        Account acc = accountManager.getAccountById(accId);
+
+        if (inputCode.equals(code)) {
+            request.setAttribute("accountId", accId);
+            request.getRequestDispatcher("ResetPasswordPage").forward(request, response);
+        } else {
+            // Mã xác thực không đúng
+            request.setAttribute("errorMessage", "Invalid verification code.");
+            request.setAttribute("Account", acc);
+            request.getRequestDispatcher("VerifyPassPage").forward(request, response);
+        }
     }
 
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
     @Override
     public String getServletInfo() {
         return "Short description";

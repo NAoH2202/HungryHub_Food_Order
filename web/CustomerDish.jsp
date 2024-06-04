@@ -74,7 +74,7 @@
         <header class="header_section" style="background-color: black">
             <div class="container">
                 <nav class="navbar navbar-expand-lg custom_nav-container ">
-                    <a class="navbar-brand" href="index.jsp">
+                    <a class="navbar-brand" href="HomePage">
                         <span>
                             HungryHub
                         </span>
@@ -99,7 +99,7 @@
                                         url = "about.jsp";
                                         name = "about";
                                     } else {
-                                        url = "Order.jsp";
+                                        url = "CustomerOrderPage";
                                         name = acc.getName() + "'s Order";
                                     }
 

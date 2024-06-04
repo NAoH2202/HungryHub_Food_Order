@@ -4,14 +4,26 @@
  */
 package model;
 
+import com.sun.net.httpserver.Authenticator;
+import dbconnext.ConnectDB;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
  * @author lenovo
  */
 public class AccountManager {
-  private ArrayList<Account> List;
+
+    private ArrayList<Account> List;
 
     public AccountManager() {
         List = AccountDao.getAllAccounts();
@@ -19,16 +31,18 @@ public class AccountManager {
 
     public Account Login(String u, String p) {
         for (Account facc : List) {
-            if ((u.equalsIgnoreCase(facc.getUsername())||u.equalsIgnoreCase(facc.getEmail()) )&& p.equalsIgnoreCase(facc.getPassword())) {
+            if ((u.equalsIgnoreCase(facc.getUsername()) || u.equalsIgnoreCase(facc.getEmail())) && p.equalsIgnoreCase(facc.getPassword())) {
                 return facc;
             }
         }
         return null;
     }
-     public ArrayList<Account> getList() {
+
+    public ArrayList<Account> getList() {
         return List;
     }
-      public Account getAccountById(int id) {
+
+    public Account getAccountById(int id) {
         for (Account facc : List) {
             if (id == facc.getAccount_id()) {
                 return facc;
@@ -36,7 +50,8 @@ public class AccountManager {
         }
         return null;
     }
-      public Account getAccountByEmail(String email) {
+
+    public Account getAccountByEmail(String email) {
         for (Account facc : List) {
             if (email.equalsIgnoreCase(facc.getEmail())) {
                 return facc;
@@ -44,6 +59,123 @@ public class AccountManager {
         }
         return null;
     }
+
+    //quan an
+    public ArrayList<Account> getAllDiner() {
+        ArrayList<Account> listDiner = new ArrayList<>();
+        for (Account facc : List) {
+            if (facc.getRole().equalsIgnoreCase("DinerManager")) {
+                listDiner.add(facc);
+            }
+        }
+        return listDiner;
+    }
+
+    public ArrayList<Dish> getAllDishByDiner(Account acc) {
+        ArrayList<Dish> listDish = new ArrayList<>();
+        DishManager dm = new DishManager();
+        for (Dish dish : dm.getList()) {
+            if (dish.getAccount().getAccount_id() == acc.getAccount_id()) {
+                listDish.add(dish);
+            }
+        }
+        return listDish;
+    }
+
+    public boolean checkDishInDiner(String input, Account acc) {
+        ArrayList<Dish> listDish = getAllDishByDiner(acc);
+        for (Dish dish : listDish) {
+            if (dish.getName().equalsIgnoreCase(input) || dish.getType().equalsIgnoreCase(input) || dish.getDescription().equalsIgnoreCase(input)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public ArrayList<Account> searchDiner(String input) {
+        ArrayList<Account> listDiner = getAllDiner();
+        for (Account acc : listDiner) {
+            if (input.equalsIgnoreCase(acc.getName()) || input.equalsIgnoreCase(acc.getAddress()) || checkDishInDiner(input, acc)) {
+                listDiner.add(acc);
+            }
+        }
+        return listDiner;
+    }
+
+    public ArrayList<Account> getNext3Accounts(int amout) {
+        ArrayList<Account> listDiner = new ArrayList<>();
+        int account_id;
+        String username;
+        String password;
+        String name;
+        String detail;
+        String email;
+        String phoneNumber;
+        String address;
+        Date date_of_birth;
+        boolean active_status;
+        String profile_picture;
+        String role;
+        ConnectDB db = ConnectDB.getInstance();
+        Connection conn = null;
+        PreparedStatement statement = null;
+        ResultSet rs = null;
+        try {
+            conn = db.openConnection();
+            String query = """
+                           SELECT *
+                           FROM Account
+                           WHERE role = 'DinerManager'
+                           ORDER BY id
+                           OFFSET ? ROWS 
+                           FETCH NEXT 3 ROWS ONLY;""";
+            statement = conn.prepareStatement(query);
+            statement.setInt(1, amout);
+            rs = statement.executeQuery();
+            while (rs.next()) {
+                account_id = rs.getInt("account_id");
+                username = rs.getString("username");
+                password = rs.getString("password");
+                name = rs.getString("name");
+                detail = rs.getString("Detail");
+                email = rs.getString("email");
+                phoneNumber = rs.getString("PhoneNumber");
+                address = rs.getString("address");
+                role = rs.getString("role");
+                date_of_birth = rs.getDate("date_of_birth");
+                active_status = rs.getBoolean("active_status");
+                profile_picture = rs.getString("profile_picture");
+                String maxacthuc = rs.getString("maxacthuc");
+                Timestamp thoigianhieuluc = rs.getTimestamp("thoigianhieuluc");
+                LocalDateTime tghl;
+                if(thoigianhieuluc != null){
+                tghl = thoigianhieuluc.toLocalDateTime();
+                }else{
+                    tghl =null;
+                }
+                boolean trangthaixacthuc = rs.getBoolean("trangthaixacthuc");
+
+                Account Acc = new Account(account_id, username, password, name, detail, email, phoneNumber, address, date_of_birth, active_status, profile_picture, role, maxacthuc, trangthaixacthuc, tghl);
+                listDiner.add(Acc);
+            }
+        } catch (ClassNotFoundException | SQLException ex) {
+            Logger.getLogger(AccountDao.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if (statement != null) {
+                    statement.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                Logger.getLogger(AccountDao.class.getName()).log(Level.SEVERE, null, e);
+            }
+        }
+        return listDiner;
+    }
+
+    //end quan an
     public boolean checkUsername(String usernameIn) {
         if (List.isEmpty()) {
             return true;
@@ -57,6 +189,7 @@ public class AccountManager {
 
         return true;
     }
+
     public boolean checkGmail(String gmailIn) {
         if (List.isEmpty()) {
             return true;
@@ -69,5 +202,12 @@ public class AccountManager {
         }
 
         return true;
+    }
+
+    public static void main(String[] args) {
+        AccountManager am = new AccountManager();
+        for (Account a : am.getAllDiner()) {
+            System.out.println(a);
+        }
     }
 }

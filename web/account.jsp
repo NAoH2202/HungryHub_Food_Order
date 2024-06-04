@@ -1,6 +1,7 @@
 <%@page import="java.util.Date"%>
 <%@page import="model.Account"%>
 <%@page import="model.AccountManager"%>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -39,7 +40,7 @@
 
             .midContent {
                 font-family: Arial, sans-serif;
-                background-color: white;      /*Màu n?n t?ng th?*/
+                background-color: white;      /*MÃ u n?n t?ng th?*/
             }
 
             .container {
@@ -54,7 +55,7 @@
                 display: flex;
                 flex-wrap: wrap;
                 margin-bottom: 20px;
-                justify-content: center; /* C?n gi?a các dòng */
+                justify-content: center; /* C?n gi?a cÃ¡c dÃ²ng */
             }
             .box{
                 border-bottom: 3px solid #999999;
@@ -111,7 +112,7 @@
             .btn {
                 display: inline-block;
                 padding: 10px 20px;
-                background-color: #007bff;  /*Màu nút*/
+                background-color: #007bff;  /*MÃ u nÃºt*/
                 color: #fff;
                 border: none;
                 border-radius: 5px;
@@ -120,7 +121,7 @@
             }
 
             .btn:hover {
-                background-color: #0056b3;  /*Màu hover c?a nút */
+                background-color: #0056b3;  /*MÃ u hover c?a nÃºt */
             }
 
             Table
@@ -139,14 +140,14 @@
             }
 
             .table th {
-                background-color: #007bff;  /*Màu n?n header c?a b?ng */
+                background-color: #007bff;  /*MÃ u n?n header c?a b?ng */
                 color: #fff;
                 font-weight: bold;
                 text-align: left;
             }
 
             .table td {
-                background-color: #fff;  /*Màu n?n c?a các ô d? li?u */
+                background-color: #fff;  /*MÃ u n?n c?a cÃ¡c Ã´ d? li?u */
             }
 
             /* Responsive */
@@ -158,15 +159,20 @@
             }
         </style>
     </head>
-
-
     <body>
         <%
-            Account acc = (Account) request.getSession().getAttribute("account");
+            Account acc = null;
+            if (request.getSession().getAttribute("account") != null) {
+                acc = (Account) request.getSession().getAttribute("account");
+            } else {
+                response.sendRedirect("LoginServlet");
+                return;
+            }
             AccountManager am = new AccountManager();
             Account account = am.getAccountById(acc.getAccount_id());
             if (account == null) {
-                response.sendRedirect("login.jsp");
+                response.sendRedirect("LoginServlet");
+                return;
             }
             int id = account.getAccount_id();
             String name = account.getName();
@@ -174,8 +180,9 @@
             String email = account.getEmail();
             Date dob = account.getDate_of_birth();
             String adds = account.getAddress();
-            
+
         %>
+        <jsp:include page="path/header.jsp"/>
         <div id="site-content" style="background-image: url('dummy/forBG.jpg');">
             <main class="main-content" style="padding-top: 70px">
                 <div class="container">
@@ -187,7 +194,7 @@
                             <div class="col-md-9 mx-auto">
                                 <div class="my-account">
                                     <div class="page-title">
-                                        <h1>Information Account</h1>
+                                        <h1 style="font-family: Roboto;">Information Account</h1>
                                     </div>
                                     <div class="box">
                                         <form action="UpdateAccountServlet" method="post" enctype="multipart/form-data" id="profile-validate"
@@ -212,7 +219,7 @@
                                                     </div>
                                                     <div class="form-group">
                                                         <label for="avt">Avatar</label>
-                                                        <input type="file" name="avt" id="avt" placeholder="Enter phôt" class="form-control custom-input">
+                                                        <input type="file" name="avt" id="avt" placeholder="Enter phÃ´t" class="form-control custom-input">
                                                     </div>
                                                 </div>
                                                 <!-- Second Column (col-md-3) -->
@@ -257,7 +264,7 @@
                                                 <button type="submit" title="Save" class="btn btn-primary"><span><span>Save</span></span></button>
                                             </div>
                                             <div class="buttons-set metiz-edit-btn">
-                                                <a href="changePassword.jsp" class="btn btn-primary">Change Password</a>
+                                                <a href="ChangePasswordPage" class="btn btn-primary">Change Password</a>
                                             </div>
                                         </form>
                                     </div>

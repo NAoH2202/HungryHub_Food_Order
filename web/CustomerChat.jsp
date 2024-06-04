@@ -16,7 +16,7 @@
         <%
             Account acc = (Account) session.getAttribute("account");
             if (acc == null) {
-                response.sendRedirect("login.jsp");
+                response.sendRedirect("HomePage");
                 return;
             }
             String name = acc.getName();

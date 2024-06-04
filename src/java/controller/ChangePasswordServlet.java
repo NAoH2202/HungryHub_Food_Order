@@ -68,19 +68,19 @@ public class ChangePasswordServlet extends HttpServlet {
         // Kiểm tra mật khẩu cũ
         if(oldPassword==null){
             session.setAttribute("message", "Old password empty.");
-            response.sendRedirect("changePassword.jsp");
+            response.sendRedirect("ChangePasswordPage");
             return;
         }
         if (!acc.getPassword().equals(oldPassword)) {
             session.setAttribute("message", "Old password is incorrect.");
-            response.sendRedirect("changePassword.jsp");
+            response.sendRedirect("ChangePasswordPage");
             return;
         }
         
         // Kiểm tra mật khẩu mới và xác nhận mật khẩu
         if (!newPassword.equals(confirmPassword)) {
             session.setAttribute("message", "New password and Confirm password do not match.");
-            response.sendRedirect("changePassword.jsp");
+            response.sendRedirect("ChangePasswordPage");
             return;
         }
         
@@ -92,7 +92,7 @@ public class ChangePasswordServlet extends HttpServlet {
             session.setAttribute("message", "Failed to change password.");
         }
         
-        response.sendRedirect("changePassword.jsp");
+        response.sendRedirect("ChangePasswordPage");
     }
 
     /**
