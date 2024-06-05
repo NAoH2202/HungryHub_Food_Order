@@ -93,7 +93,7 @@
                                 <a class="nav-link" href="menu.jsp">Menu</a>
                             </li>
                             <li class="nav-item">
-                                <%                                        Account acc = (Account) session.getAttribute("account");
+                                <%  Account acc = (Account) session.getAttribute("account");
                                     String url, name;
                                     if (acc == null) {
                                         url = "about.jsp";
@@ -187,25 +187,25 @@
             </div>
         </div>
         <script>
-        document.getElementById('addToCardButton').addEventListener('click', function() {
-            // Lấy thông tin món ăn và số lượng
-            var dishName = '<%=dish.getName()%>';
-            var quantity = document.getElementById('quantity').value;
+            document.getElementById('addToCardButton').addEventListener('click', function () {
+                // Lấy thông tin món ăn và số lượng
+                var dishName = '<%=dish.getName()%>';
+                var quantity = document.getElementById('quantity').value;
 
-            // Kiểm tra số lượng hợp lệ
-            if (quantity <= 0) {
-                alert('Please enter a valid quantity');
-                return;
-            }
+                // Kiểm tra số lượng hợp lệ
+                if (quantity <= 0) {
+                    alert('Please enter a valid quantity');
+                    return;
+                }
 
-            // Tạo một phần tử mới để hiển thị món ăn và số lượng
-            var cardContent = document.getElementById('cardContent');
-            var newItem = document.createElement('div');
-            newItem.textContent = dishName + ' - Quantity: ' + quantity;
+                // Tạo một phần tử mới để hiển thị món ăn và số lượng
+                var cardContent = document.getElementById('cardContent');
+                var newItem = document.createElement('div');
+                newItem.textContent = dishName + ' - Quantity: ' + quantity;
 
-            // Thêm phần tử mới vào card
-            cardContent.appendChild(newItem);
-        });
-    </script>
+                // Thêm phần tử mới vào card
+                cardContent.appendChild(newItem);
+            });
+        </script>
     </body>
 </html>
