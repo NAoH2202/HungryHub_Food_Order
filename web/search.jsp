@@ -97,7 +97,7 @@
                                             <%=ac.getDetail()%>
                                         </p>
                                         <div class="options">
-                                            <a href="CustomerDishPage?id=1">
+                                            <a href="CustomerDinerPage?id=<%=ac.getAccount_id()%>">
                                                 <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 456.029 456.029" style="enable-background:new 0 0 456.029 456.029;" xml:space="preserve">
                                                 <g>
                                                 <g>
@@ -130,8 +130,11 @@
                             }%>
                     </div>
                     <div class="btn-box">
-                        <a>
+                        <a id="loadMoreBtn">
                             <button onclick="loadMore()" style="border: none;background:none">Xem thêm</button>
+                        </a>
+                        <a id="hideLessBtn">
+                            <button onclick="hideLess()" style="border: none;background:none">Ẩn bớt</button>
                         </a>
                     </div>
                 </div>
@@ -220,17 +223,53 @@
         <!-- footer section -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
         <script>
+                                var amount = document.getElementsByClassName("count").length;
+                                var listLength = <%=listAcc.size()%>;
+                                var loadMoreButton = document.getElementById("loadMoreBtn");
+                                var hideLessButton = document.getElementById("hideLessBtn");
+                                window.onload = function () {
+                                    checkLoadMoreButton();
+                                    hideLessButton.style.display = "none";
+                                };
+                                function checkLoadMoreButton() {
+                                    amount = document.getElementsByClassName("count").length;
+                                    if (listLength <= amount) {
+                                        loadMoreButton.style.display = "none";
+                                    } else {
+                                        loadMoreButton.style.display = "block";
+                                    }
+                                    if (amount > 8) {
+                                        hideLessButton.style.display = "block";
+                                    } else {
+                                        hideLessButton.style.display = "none";
+                                    }
+                                }
+                                function hideLess() {
+                                    var elements = document.getElementsByClassName("count");
+                                    var numToHide = elements.length - 8; // Số phần tử cần ẩn bớt
+                                    for (var i = 0; i < numToHide; i++) {
+                                        elements[i].style.display = "none";
+                                    }
+                                    amount -= numToHide;
+                                    // Ẩn cả nút ẩn bớt đi sau khi đã ẩn bớt các phần tử
+                                    hideLessButton.style.display = "none";
+                                    if (listLength <= amount) {
+                                        loadMoreButton.style.display = "none";
+                                    } else {
+                                        loadMoreButton.style.display = "block";
+                                    }
+                                }
                                 function loadMore() {
-                                    var amount = document.getElementsByClassName("count").length;
                                     $.ajax({
                                         url: "/HungryHub_OrderFood/LoadMoreDiners",
                                         type: "get",
-                                        data:{
-                                            countDiner : amount
+                                        data: {
+                                            countDiner: amount
                                         },
                                         success: function (data) {
                                             var row = document.getElementById("recomend");
                                             row.innerHTML += data;
+                                            checkLoadMoreButton();
                                         },
                                         error: function (xhr) {
                                         }

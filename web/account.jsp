@@ -183,15 +183,15 @@
 
         %>
         <jsp:include page="path/header.jsp"/>
-        <div id="site-content" style="background-image: url('dummy/forBG.jpg');">
-            <main class="main-content" style="padding-top: 70px">
-                <div class="container">
-                    <div class="midContent">
-                        <div class="row"style="background-color: white;" >
-                            <div class="col-md-3" >
-                                <img src="avt/<%=account.getProfile_picture()%>" style="width: 180px; height: 250px; margin-right: 30px;object-fit: cover;">
+        <div id="site-content" style="background-color: #DDDDDD">
+            <main class="main-content" style="padding: 50px;">
+                <div class="container"style="max-width: 1500px;" >
+                    <div class="midContent" style="width: 100%;height: auto;padding: 20px">
+                        <div class="row" style="background-color: white;" >
+                            <div class="col-md-3 d-flex justify-content-center" >
+                                <img src="<%=account.getProfile_picture()%>" style="width: 180px; height: 250px; margin-right: 30px;object-fit: cover;">
                             </div>
-                            <div class="col-md-9 mx-auto">
+                            <div class="col-md-7 mx-auto">
                                 <div class="my-account">
                                     <div class="page-title">
                                         <h1 style="font-family: Roboto;">Information Account</h1>
@@ -311,6 +311,7 @@
                 </div>
             </main>
         </div>
+        <jsp:include page="path/footer.jsp"/>
         <!-- Default snippet for navigation -->
 
         <script src="js/jquery-1.11.1.min.js"></script>

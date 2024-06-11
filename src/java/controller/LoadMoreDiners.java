@@ -46,7 +46,7 @@ public class LoadMoreDiners extends HttpServlet {
         PrintWriter out = response.getWriter();
         
         for(Account ac : listNext){
-            out.print("<div class=\"col-sm-6 col-md-4 col-lg-3 all \">\n" +
+            out.print("<div class=\"count col-sm-6 col-md-4 col-lg-3 all \">\n" +
 "                            <div class=\"box\">\n" +
 "                                <div>\n" +
 "                                    <div class=\"img-box\">\n" +

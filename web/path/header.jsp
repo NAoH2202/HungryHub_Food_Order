@@ -18,6 +18,8 @@
         <!-- bootstrap core css -->
         <link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
 
+        <link rel="stylesheet" href="css/style_1.css">
+        
         <!--owl slider stylesheet -->
         <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
         <!-- nice select  -->
@@ -29,8 +31,10 @@
         <link href="css/style.css" rel="stylesheet" />
         <!-- responsive style -->
         <link href="css/responsive.css" rel="stylesheet" />
-
-    </head>
+        
+        
+        <script src="https://kit.fontawesome.com/ef7e2b893b.js" crossorigin="anonymous"></script>
+</head>
 <header class="header_section"  style="background-color: black">
     <div class="container">
         <nav class="navbar navbar-expand-lg custom_nav-container ">

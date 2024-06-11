@@ -10,7 +10,7 @@
             <a class="nav-link" href="index.jsp">Trang Chủ<span class="sr-only">(current)</span></a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="menu.jsp">Cộng Đồng</a>
+            <a class="nav-link" href="CustomerSocialPage">Cộng Đồng</a>
         </li>
         <li class="nav-item">
             <%
@@ -25,6 +25,7 @@
                     urlacc = "AccountPage";
                     name = acc.getName() + "'s Order";
                 }
+                
             %>
             <a class="nav-link" href="<%=url%>"><%=name%></a>
         </li>
@@ -45,11 +46,52 @@
         <%
         } else {
         %>
-        <a href="LogOutServlet" class="order_online">
-            Logout
-        </a>
+        <div class="profile-image online" onclick="UserSettingToggle()">
+                <img src="<%=acc.getProfile_picture()%>" alt="">
+        </div>
+        <div class="user-settings" style="background-color: white">
+            <div class="profile-darkButton">
+            <div class="user-profile">
+                <img src="<%=acc.getProfile_picture()%>" alt="">
+                <div>
+                    <p> <%=acc.getName()%></p>
+                    <a href="#">See your profile</a>
+                </div>
+            </div>
+            </div>
+            <hr>
+            <div class="user-profile">
+                <img src="images/feedback.png" alt="">
+                <div>
+                    <p> Give Feedback</p>
+                    <a href="#">Help us to improve</a>
+                </div>
+            </div>
+            <hr>
+            <div class="settings-links">
+                <img src="images/setting.png" alt="" class="settings-icon">
+                <a href="#">Settings & Privary <img src="images/arrow.png" alt=""></a>
+            </div>
+
+            <div class="settings-links">
+                <img src="images/help.png" alt="" class="settings-icon">
+                <a href="#">Help & Support <img src="images/arrow.png" alt=""></a>
+            </div>
+
+            <div class="settings-links">
+                <img src="images/Display.png" alt="" class="settings-icon">
+                <a href="#">Display & Accessibility <img src="images/arrow.png" alt=""></a>
+            </div>
+
+            <div class="settings-links">
+                <img src="images/logout.png" alt="" class="settings-icon">
+                <a href="LogOutServlet">Logout <img src="images/arrow.png" alt=""></a>
+            </div>
+
+        </div>
         <%
             }
         %>
     </div>
 </div>
+<script src="js/function.js"></script>

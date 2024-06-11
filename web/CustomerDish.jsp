@@ -1,7 +1,7 @@
 <%@page import="model.Account"%>
 <%@page import="model.Dish"%>
 <%@page import="model.DishManager"%>
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
     <head>
@@ -13,6 +13,11 @@
         <link href="css/font-awesome.min.css" rel="stylesheet" />
 
         <style>
+            *,
+            *::before,
+            *::after {
+                box-sizing: border-box;
+            }
             body, html {
                 margin: 0;
                 padding: 0;
@@ -26,17 +31,16 @@
                 display: flex;
                 justify-content: center;
                 align-content: flex-start;
-                width: 100%;
-                height: 100%;
             }
 
             #content {
                 display: flex;
-                justify-content: center;
+                max-width: 1300px;
                 width: 100%;
+                justify-content: space-between;
             }
 
-            #card {
+            #cart {
                 background-color: white;
                 margin: 50px 20px 0 10px;
                 box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
@@ -44,19 +48,20 @@
                 height: 600px;
                 margin-left: 20px;
                 padding: 20px;
-                border-radius: 20px;
+                position: -webkit-sticky; /* For Safari */
+                position: sticky;
+                top: 10px;
+                margin-bottom: 50px;
             }
 
             #dish {
-                margin: 50px 10px 0 0;
+                margin-top: 50px;
+                margin-bottom: 50px;
                 background-color: white;
-                flex-direction: column;
-                box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
                 width: 70%;
                 padding: 40px;
-                border-radius: 10px;
-                overflow-y: auto;
-                max-height: 1000px;
+                /*border-radius: 10px;*/
+                height: auto;
             }
 
             .pic {
@@ -107,10 +112,10 @@
                 margin-bottom: 20px;
             }
 
-            #cardContent {
+            #cartContent {
                 margin-bottom: 20px;
-
-
+                overflow-y: auto;
+                height: 420px;
             }
 
             #orderForm input[type="submit"] {
@@ -185,7 +190,6 @@
         %>
         <jsp:include page="path/header.jsp"/>
         <div id="container">
-            <a href="index.jsp" style="height: 20px;display: block;margin: 10px ">BACK</a>
             <div id="content">
                 <div id="dish">
                     <div style="display: flex;">
@@ -193,7 +197,7 @@
                         <div id="mota">
                             <h1 id="dishName"><%=dish.getName()%></h1>
                             <p>Description: <%=dish.getDescription()%></p>
-                            <p>Price: <%=dish.getPrice()%></p>
+                            <p>Price: <%=dish.getPrice()%> VNĐ</p>
                             <div>
                                 <label for="quantity">Quantity:</label>
                                 <input type="number" id="quantity" name="quantity" min="1" max="100">
@@ -238,9 +242,9 @@
                     </div>
 
                 </div>
-                <div id="card">
-                    <h2>CARD</h2>
-                    <div id="cardContent"></div>
+                <div id="cart">
+                    <h2>Cart</h2>
+                    <div id="cartContent"></div>
                     <form action="OrderServlet" method="post" id="orderForm" >
                         <input type="hidden" id="dishId" name="dishId" value="<%=id%>" style=" border-radius: 10px 15px 20px 25px; border: 3px solid black;">
                         <input type="hidden" id="dishQuantity" name="dishQuantity">
@@ -249,6 +253,7 @@
                 </div>
             </div>
         </div>
+        <jsp:include page="path/footer.jsp"/>
         <script>
             document.getElementById('addToCartButton').addEventListener('click', function () {
                 var dishId = '<%=id%>';
@@ -289,7 +294,7 @@
             });
 
             function displayCartItems() {
-                var cartContent = document.getElementById('cardContent');
+                var cartContent = document.getElementById('cartContent');
                 cartContent.innerHTML = '';
 
                 var cart = JSON.parse(localStorage.getItem('cart')) || [];

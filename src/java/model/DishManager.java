@@ -25,6 +25,15 @@ public class DishManager {
         }
         return null;
     }
+    public ArrayList<Dish> getDishByDinerId(int id) {
+        ArrayList<Dish> dishList = new ArrayList<>();
+        for (Dish facc : List) {
+            if (id == facc.getAccount().getAccount_id()) {
+                dishList.add(facc);
+            }
+        }
+        return dishList;
+    }
     
     public ArrayList<Dish> getList() {
         return List;
