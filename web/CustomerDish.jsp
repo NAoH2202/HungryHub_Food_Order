@@ -1,3 +1,6 @@
+<%@page import="model.AccountManager"%>
+<%@page import="model.OrderManager"%>
+<%@page import="model.Order"%>
 <%@page import="model.Account"%>
 <%@page import="model.Dish"%>
 <%@page import="model.DishManager"%>
@@ -184,10 +187,13 @@
         </style>
     </head>
     <body>
-        <%int id = Integer.parseInt(request.getParameter("id"));
+        <%
+            int id = Integer.parseInt(request.getParameter("id"));
             DishManager dm = new DishManager();
             Dish dish = dm.getDishById(id);
+            
         %>
+
         <jsp:include page="path/header.jsp"/>
         <div id="container">
             <div id="content">
@@ -209,16 +215,17 @@
                     <div>
                         <h2>COMMENT</h2>
                         <!-- Additional Dishes -->
-                        <div class="commentDish">
+                         <div class="commentDish">
                             <a href="#">
-                                <img src="images/buncha.jpg" alt="Dish 1">
+                                <img src="images/chethai.jpg"  alt="Dish 2">
                                 <div>
-                                    <h3>Dish 1 Name</h3>
-                                    <p>Description: Delicious dish 1 description.</p>
-                                    <p>Price: $10.00</p>
+                                    <h3>Dish 2 Name</h3>
+                                    <p>Description: Delicious dish 2 description.</p>
+                                    <p>Price: $12.00</p>
                                 </div>
                             </a>
                         </div>
+
                         <div class="commentDish">
                             <a href="#">
                                 <img src="images/chethai.jpg"  alt="Dish 2">
@@ -240,14 +247,14 @@
                             </a>
                         </div>
                     </div>
-
                 </div>
                 <div id="cart">
                     <h2>Cart</h2>
                     <div id="cartContent"></div>
-                    <form action="OrderServlet" method="post" id="orderForm" >
-                        <input type="hidden" id="dishId" name="dishId" value="<%=id%>" style=" border-radius: 10px 15px 20px 25px; border: 3px solid black;">
+                    <form action="OrderServlet" method="post" id="orderForm">
+                        <input type="hidden" id="dishId" name="dishId" value="<%=id%>">
                         <input type="hidden" id="dishQuantity" name="dishQuantity">
+                        <input type="hidden" id="totalCost" name="totalCost">
                         <input type="submit" value="Order">
                     </form>
                 </div>
@@ -258,9 +265,11 @@
             document.getElementById('addToCartButton').addEventListener('click', function () {
                 var dishId = '<%=id%>';
                 var dishName = '<%=dish.getName()%>';
+                var dishPrice = parseFloat('<%=dish.getPrice()%>');
+                var dishImage = '<%=dish.getPicture()%>'; // Thêm thuộc tính dishImage
                 var quantityValue = document.getElementById('quantity').value;
 
-                // Check if the quantity input is empty or not a number
+                // Kiểm tra nếu giá trị nhập vào không hợp lệ
                 if (quantityValue === '' || isNaN(quantityValue) || parseInt(quantityValue) <= 0) {
                     alert('Please enter a valid quantity');
                     return;
@@ -271,13 +280,15 @@
                 var cartItem = {
                     dishId: dishId,
                     dishName: dishName,
-                    dishImage: "<%=dish.getPicture()%>",
+                    dishPrice: dishPrice,
+                    dishImage: dishImage, // Thêm thuộc tính dishImage
                     quantity: quantity
                 };
 
                 var cart = JSON.parse(localStorage.getItem('cart')) || [];
                 var itemExists = false;
 
+                // Kiểm tra xem món hàng đã tồn tại trong giỏ hàng chưa
                 cart.forEach(function (item) {
                     if (item.dishId === dishId) {
                         item.quantity += cartItem.quantity;
@@ -298,7 +309,9 @@
                 cartContent.innerHTML = '';
 
                 var cart = JSON.parse(localStorage.getItem('cart')) || [];
-                cart.forEach(function (item) {
+                var totalCost = 0;
+
+                cart.forEach(function (item, index) {
                     var newItem = document.createElement('div');
                     newItem.style.display = "flex";
                     newItem.style.alignItems = "center";
@@ -307,6 +320,7 @@
                     newItem.style.borderRadius = "10px";
                     newItem.style.padding = "10px";
 
+                    // Hiển thị hình ảnh món hàng
                     var dishImage = document.createElement('img');
                     dishImage.src = item.dishImage;
                     dishImage.style.width = "50px";
@@ -314,7 +328,6 @@
                     dishImage.style.objectFit = "cover";
                     dishImage.style.marginRight = "10px";
                     dishImage.style.borderRadius = "5px";
-
                     newItem.appendChild(dishImage);
 
                     var dishDetails = document.createElement('div');
@@ -330,8 +343,41 @@
 
                     newItem.appendChild(dishDetails);
 
+                    // Tính tổng giá tiền của mỗi món hàng và cập nhật vào biến totalCost
+                    var itemCost = item.dishPrice * item.quantity;
+                    totalCost += itemCost;
+
+                    // Hiển thị giá tiền của mỗi món hàng
+                    var cost = document.createElement('div');
+                    cost.textContent = " - Cost: $" + itemCost.toFixed(2);
+                    dishDetails.appendChild(cost);
+
+                    var deleteButton = document.createElement('button');
+                    deleteButton.textContent = 'Delete';
+                    deleteButton.style.marginLeft = '10px';
+                    deleteButton.style.backgroundColor = '#ff9900';
+                    deleteButton.style.color = 'white';
+                    deleteButton.style.border = 'none';
+                    deleteButton.style.padding = '5px 10px';
+                    deleteButton.style.borderRadius = '5px';
+                    deleteButton.addEventListener('click', function () {
+                        deleteCartItem(index);
+                    });
+                    newItem.appendChild(deleteButton);
+
                     cartContent.appendChild(newItem);
                 });
+
+                var totalElement = document.createElement('div');
+                totalElement.textContent = "Total Cost: $" + totalCost.toFixed(2);
+                cartContent.appendChild(totalElement);
+            }
+
+            function deleteCartItem(index) {
+                var cart = JSON.parse(localStorage.getItem('cart')) || [];
+                cart.splice(index, 1);
+                localStorage.setItem('cart', JSON.stringify(cart));
+                displayCartItems();
             }
 
             window.onload = function () {
@@ -368,10 +414,15 @@
                     form.appendChild(inputQuantity);
                 });
 
+                var totalCost = 0;
+                cart.forEach(function (item) {
+                    totalCost += item.dishPrice * item.quantity;
+                });
+
+                document.getElementById('totalCost').value = totalCost.toFixed(2);
                 localStorage.removeItem('cart');
             });
+
         </script>
-
-
     </body>
 </html>

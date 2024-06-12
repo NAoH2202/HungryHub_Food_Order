@@ -1,9 +1,3 @@
-<%-- 
-Document   : Diner
-Created on : May 28, 2024, 1:33:13 AM
-Author     : MSIGAMING
---%>
-
 <%@page import="model.Dish"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="model.DishManager"%>
@@ -106,7 +100,7 @@ Author     : MSIGAMING
                 height: 600px;
                 margin-left: 20px;
                 padding: 20px;
-                position: -webkit-sticky; /* For Safari */
+                position: -webkit-sticky;
                 position: sticky;
                 top: 10px;
                 margin-bottom: 50px;
@@ -159,35 +153,35 @@ Author     : MSIGAMING
                 margin-top: 20px;
             }
             #cartOrder{
-                padding: 10px 20px;
-                border-radius: 5px;
+                margin-bottom: 20px;
+                overflow-y: auto;
+                height: 420px;
             }
             #addToCartButton{
                 height: 30px;
                 width: 30px;
                 text-align: center;
             }
+
         </style>
     </head>
 
     <body>
         <div>
-            <!-- header section strats -->
+            <!-- Include header -->
             <jsp:include page="path/header.jsp"/>
-            <!-- end header section -->
+            <!-- End header section -->
         </div>
         <%
-            int id ;
+            int id;
             if (request.getParameter("id") != null) {
                 id = Integer.parseInt(request.getParameter("id"));
-            }
-            else{
+            } else {
                 response.sendRedirect("HomePage");
                 return;
             }
             AccountManager am = new AccountManager();
-            Account diner = am.getAccountById(id) ;
-            
+            Account diner = am.getAccountById(id);
         %>
         <div style="background-color: #dddddd">
             <a href="index.jsp" class="back-link">BACK</a>
@@ -205,11 +199,11 @@ Author     : MSIGAMING
 
             <div id="container">
                 <div id="content">
-                    <div id="dish" >
+                    <div id="dish">
                         <%
                             DishManager dm = new DishManager();
                             ArrayList<Dish> listDish = dm.getDishByDinerId(id);
-                            for(Dish d : listDish){
+                            for (Dish d : listDish) {
                         %>
                         <div class="dish-detail">
                             <img class="dish-img col-md-2" src="<%=d.getPicture()%>" alt="Dish Image">
@@ -218,10 +212,10 @@ Author     : MSIGAMING
                                     <h3 id="dishName"><a href="CustomerDishPage?id=<%=d.getDish_id()%>" style="color: black"><%=d.getName()%></a></h3>
                                     <p>Price: <span id="dishPrice"><%=d.getPrice()%> VNĐ</span></p>
                                 </div>
-                                
+
                                 <div class="col-md-3" style="align-content: center">
-                                    <input type="number" id="quantity" name="quantity" min="1" max="100">
-                                    <button id="addToCartButton" class="btn2">+</button>
+                                    <input type="number" id="quantity_<%=d.getDish_id()%>" name="quantity" min="1" max="100">
+                                    <button class="btn2" onclick="addToCart('<%=d.getDish_id()%>', '<%=d.getName()%>', '<%=d.getPicture()%>', <%=d.getPrice()%>)">+</button>
                                 </div>
                             </div>
                         </div>
@@ -233,118 +227,166 @@ Author     : MSIGAMING
                             <!-- Comments will go here -->
                         </div>
                     </div>
-                        <div id="cart" style="background-color: #fff;">
+                    <div id="cart">
                         <h2>Cart</h2>
                         <div id="cartContent"></div>
-                        <form action="OrderServlet" method="post">
-                            <button type="submit" class="btn2" id="cartOrder">Order</button>
+                        <form action="OrderServlet" method="post" id="orderForm">
+                            <input type="hidden" id="dishId" name="dishId" value="<%=id%>">
+                            <input type="hidden" id="dishQuantity" name="dishQuantity">
+                            <input type="hidden" id="totalCost" name="totalCost">
+                            <input type="submit" value="Order">                        
                         </form>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- footer section -->
-        <footer class="footer_section">
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-4 footer-col">
-                        <div class="footer_contact">
-                            <h4>
-                                Contact Us
-                            </h4>
-                            <div class="contact_link_box">
-                                <a href="">
-                                    <i class="fa fa-map-marker" aria-hidden="true"></i>
-                                    <span>
-                                        Location
-                                    </span>
-                                </a>
-                                <a href="">
-                                    <i class="fa fa-phone" aria-hidden="true"></i>
-                                    <span>
-                                        Call +01 1234567890
-                                    </span>
-                                </a>
-                                <a href="">
-                                    <i class="fa fa-envelope" aria-hidden="true"></i>
-                                    <span>
-                                        demo@gmail.com
-                                    </span>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4 footer-col">
-                        <div class="footer_detail">
-                            <a href="" class="footer-logo">
-                                Feane
-                            </a>
-                            <p>
-                                Necessary, making this the first true generator on the Internet. It uses a dictionary of over 200 Latin words, combined with
-                            </p>
-                            <div class="footer_social">
-                                <a href="">
-                                    <i class="fa fa-facebook" aria-hidden="true"></i>
-                                </a>
-                                <a href="">
-                                    <i class="fa fa-twitter" aria-hidden="true"></i>
-                                </a>
-                                <a href="">
-                                    <i class="fa fa-linkedin" aria-hidden="true"></i>
-                                </a>
-                                <a href="">
-                                    <i class="fa fa-instagram" aria-hidden="true"></i>
-                                </a>
-                                <a href="">
-                                    <i class="fa fa-pinterest" aria-hidden="true"></i>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4 footer-col">
-                        <h4>
-                            Opening Hours
-                        </h4>
-                        <p>
-                            Everyday
-                        </p>
-                        <p>
-                            10.00 Am -10.00 Pm
-                        </p>
-                    </div>
-                </div>
-                <div class="footer-info">
-                    <p>
-                        &copy; <span id="displayYear"></span> All Rights Reserved By
-                        <a href="https://html.design/">Free Html Templates</a><br><br>
-                        &copy; <span id="displayYear"></span> Distributed By
-                        <a href="https://themewagon.com/" target="_blank">ThemeWagon</a>
-                    </p>
-                </div>
-            </div>
-        </footer>
-        <!-- footer section -->
-        
-        <!-- jQery -->
+        <!-- Include footer -->
+        <jsp:include page="path/footer.jsp"/>
+        <!-- End footer section -->
+
+        <!-- jQuery -->
         <script src="js/jquery-3.4.1.min.js"></script>
-        <!-- popper js -->
-        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous">
+        <!-- Your other JavaScript imports here -->
+        <script>
+                                        var cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+                                        function addToCart(id, name, image, price) {
+                                            var quantity = parseInt(document.getElementById('quantity_' + id).value);
+                                            if (quantity > 0) {
+                                                var existingDish = cart.find(dish => dish.id === id);
+                                                if (existingDish) {
+                                                    existingDish.quantity += quantity;
+                                                } else {
+                                                    var dish = {
+                                                        id: id,
+                                                        name: name,
+                                                        image: image,
+                                                        price: price,
+                                                        quantity: quantity
+                                                    };
+                                                    cart.push(dish);
+                                                }
+                                                updateCart();
+                                            } else {
+                                                alert("Please enter a valid quantity");
+                                            }
+                                        }
+
+                                        function updateCart() {
+                                            var cartContent = document.getElementById('cartContent');
+                                            cartContent.innerHTML = '';
+
+                                            var total = 0;
+
+                                            // Xóa các phần tử ẩn cũ trong biểu mẫu orderForm trước khi thêm phần tử mới
+                                            var orderForm = document.getElementById('orderForm');
+                                            var hiddenInputs = orderForm.querySelectorAll('input[type="hidden"]');
+                                            hiddenInputs.forEach(function (input) {
+                                                orderForm.removeChild(input);
+                                            });
+
+                                            cart.forEach(function (dish, index) {
+                                                var dishElement = document.createElement('div');
+                                                dishElement.classList.add('cart-item');
+                                                dishElement.style.display = "flex";
+                                                dishElement.style.alignItems = "center";
+                                                dishElement.style.marginBottom = "10px";
+                                                dishElement.style.border = "2px solid black";
+                                                dishElement.style.borderRadius = "10px";
+                                                dishElement.style.padding = "10px";
+
+                                                var dishImage = document.createElement('img');
+                                                dishImage.src = dish.image;
+                                                dishImage.alt = dish.name;
+                                                dishImage.style.width = "50px";
+                                                dishImage.style.height = "50px";
+                                                dishImage.style.objectFit = "cover";
+                                                dishImage.style.marginRight = "10px";
+                                                dishImage.style.borderRadius = "5px";
+                                                dishElement.appendChild(dishImage);
+
+                                                var dishInfo = document.createElement('div');
+                                                dishInfo.style.flex = "1";
+                                                dishInfo.textContent = dish.name + " - " + dish.price + " x " + dish.quantity;
+                                                dishElement.appendChild(dishInfo);
+
+                                                var deleteButton = document.createElement('button');
+                                                deleteButton.textContent = 'Delete';
+                                                deleteButton.style.marginLeft = '10px';
+                                                deleteButton.style.backgroundColor = '#ff9900';
+                                                deleteButton.style.color = 'white';
+                                                deleteButton.style.border = 'none';
+                                                deleteButton.style.padding = '5px 10px';
+                                                deleteButton.style.borderRadius = '5px';
+                                                deleteButton.addEventListener('click', function () {
+                                                    deleteCartItem(index);
+                                                });
+                                                dishElement.appendChild(deleteButton);
+
+                                                cartContent.appendChild(dishElement);
+
+                                                total += dish.price * dish.quantity;
+
+                                                // Thêm các phần tử input ẩn chứa thông tin món ăn vào biểu mẫu orderForm
+                                                var inputId = document.createElement('input');
+                                                inputId.type = 'hidden';
+                                                inputId.name = 'dishId' + index;
+                                                inputId.value = dish.id;
+                                                orderForm.appendChild(inputId);
+
+                                                var inputName = document.createElement('input');
+                                                inputName.type = 'hidden';
+                                                inputName.name = 'dishName' + index;
+                                                inputName.value = dish.name;
+                                                orderForm.appendChild(inputName);
+
+                                                var inputQuantity = document.createElement('input');
+                                                inputQuantity.type = 'hidden';
+                                                inputQuantity.name = 'dishQuantity' + index;
+                                                inputQuantity.value = dish.quantity;
+                                                orderForm.appendChild(inputQuantity);
+                                            });
+
+                                            var totalElement = document.createElement('div');
+                                            totalElement.innerHTML = "<h3>Total: " + total + " VNĐ</h3>";
+                                            cartContent.appendChild(totalElement);
+
+                                            // Update the localStorage with the new cart data
+                                            localStorage.setItem('cart', JSON.stringify(cart));
+                                        }
+
+                                        function deleteCartItem(index) {
+                                            cart.splice(index, 1);
+                                            updateCart();
+                                        }
+
+                                        window.onload = function () {
+                                            updateCart();
+                                        };
+
+                                        document.getElementById('orderForm').addEventListener('submit', function (event) {
+                                            if (cart.length === 0) {
+                                                alert('Please add the dish to the cart first');
+                                                event.preventDefault();
+                                                return;
+                                            }
+
+                                            var totalCost = 0;
+                                            cart.forEach(function (item) {
+                                                totalCost += item.price * item.quantity;
+                                            });
+
+                                            var inputTotalCost = document.createElement('input');
+                                            inputTotalCost.type = 'hidden';
+                                            inputTotalCost.name = 'totalCost';
+                                            inputTotalCost.value = totalCost;
+                                            document.getElementById('orderForm').appendChild(inputTotalCost);
+
+                                            // Clear the cart but do not reload the page
+                                            localStorage.removeItem('cart');
+                                        });
         </script>
-        <!-- bootstrap js -->
-        <script src="js/bootstrap.js"></script>
-        <!-- owl slider -->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js">
-        </script>
-        <!-- isotope js -->
-        <script src="https://unpkg.com/isotope-layout@3.0.4/dist/isotope.pkgd.min.js"></script>
-        <!-- nice select -->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-nice-select/1.1.0/js/jquery.nice-select.min.js"></script>
-        <!-- custom js -->
-        <script src="js/custom.js"></script>
-        <!-- Google Map -->
-        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCh39n5U-4IoWpsVGUHWdqB6puEkhRLdmI&callback=myMap">
-        </script>
-        <!-- End Google Map -->
+
     </body>
 </html>
