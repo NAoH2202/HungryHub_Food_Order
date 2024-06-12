@@ -49,7 +49,7 @@
         <div class="profile-image online" onclick="UserSettingToggle()">
                 <img src="<%=acc.getProfile_picture()%>" alt="">
         </div>
-        <div class="user-settings" style="background-color: white">
+        <div class="user-settings" style="background-color: white;right: calc(5% - 60px);">
             <div class="profile-darkButton">
             <div class="user-profile">
                 <img src="<%=acc.getProfile_picture()%>" alt="">

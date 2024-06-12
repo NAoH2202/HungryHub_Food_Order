@@ -18,11 +18,12 @@ import java.util.logging.Logger;
  *
  * @author lenovo
  */
-public class CommentDishDao {
-    public static ArrayList<CommentDish> getAllCommentDishs() {
-        ArrayList<CommentDish> CommentDishList = new ArrayList<>();
+public class CommentDao {
+    public static ArrayList<Comment> getAllComments() {
+        ArrayList<Comment> CommentDishList = new ArrayList<>();
         AccountManager am = new AccountManager();
         DishManager dm = new DishManager();
+        FoodAdManager fam = new FoodAdManager();
         ConnectDB db = ConnectDB.getInstance();
         Connection conn = null;
         PreparedStatement statement = null;
@@ -38,18 +39,22 @@ public class CommentDishDao {
                 Account account = am.getAccountById(account_id);
                 int dish_id = rs.getInt("dish_id");
                 Dish dish = dm.getDishById(dish_id);
+                int diner_id = rs.getInt("diner_id");
+                Account diner = am.getAccountById(diner_id);
+                int Post_id = rs.getInt("Post_id");
+                FoodAd Post = fam.getFoodAdById(Post_id);
                 String content = rs.getString("content");
                 int rating = rs.getInt("rating");
                 LocalDateTime created_at = rs.getTimestamp("created_at").toLocalDateTime();
                 LocalDateTime updated_at = rs.getTimestamp("updated_at").toLocalDateTime();
-                CommentDish comment = new CommentDish(comment_id, account, dish, content, rating);
+                Comment comment = new Comment(comment_id, account, dish, diner, Post, content, rating, created_at, updated_at);
                 comment.setCreated_at(created_at);
                 comment.setUpdated_at(updated_at);
                 
                 CommentDishList.add(comment);                
             }
         } catch (ClassNotFoundException | SQLException ex) {
-            Logger.getLogger(CommentDishDao.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CommentDao.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {
                 if (rs != null) {

@@ -4,6 +4,10 @@ Created on : May 28, 2024, 1:33:13 AM
 Author     : MSIGAMING
 --%>
 
+<%@page import="model.Like"%>
+<%@page import="model.LikeManager"%>
+<%@page import="model.Comment"%>
+<%@page import="model.CommentManager"%>
 <%@page import="model.Dish"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="model.DishManager"%>
@@ -167,6 +171,79 @@ Author     : MSIGAMING
                 width: 30px;
                 text-align: center;
             }
+            /*comment*/
+            .comment {
+                background-color: #fff;
+                border: 1px solid #ddd;
+                border-radius: 5px;
+                padding: 15px;
+                margin-bottom: 15px;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+
+            .comment-header {
+                display: flex;
+                justify-content: space-between;
+                margin-bottom: 10px;
+            }
+
+            .username {
+                font-weight: bold;
+                color: #333;
+            }
+
+            .time {
+                color: #999;
+            }
+
+            .comment-body {
+                margin-bottom: 10px;
+            }
+
+            .comment-body p {
+                margin: 0;
+            }
+
+            .comment-footer {
+                display: flex;
+                align-items: center;
+                justify-content: flex-start;
+            }
+
+            .rating {
+                color: #f39c12;
+                font-size: 1.2em;
+            }
+
+            .btn {
+                margin-left: 10px;
+                background-color: #3498db;
+                color: #fff;
+                border: none;
+                border-radius: 3px;
+                padding: 5px 10px;
+                cursor: pointer;
+                transition: background-color 0.3s;
+            }
+            #cartContent {
+                margin-bottom: 20px;
+                overflow-y: auto;
+                height: 420px;
+            }
+
+            .btn:hover {
+                background-color: #2980b9;
+            }
+            .liked{
+                margin-left: 10px;
+                background-color: #2980b9;
+                color: #fff;
+                border: none;
+                border-radius: 3px;
+                padding: 5px 10px;
+                cursor: pointer;
+                transition: background-color 0.3s;
+            }
         </style>
     </head>
 
@@ -177,17 +254,16 @@ Author     : MSIGAMING
             <!-- end header section -->
         </div>
         <%
-            int id ;
+            int id;
             if (request.getParameter("id") != null) {
                 id = Integer.parseInt(request.getParameter("id"));
-            }
-            else{
+            } else {
                 response.sendRedirect("HomePage");
                 return;
             }
             AccountManager am = new AccountManager();
-            Account diner = am.getAccountById(id) ;
-            
+            Account diner = am.getAccountById(id);
+
         %>
         <div style="background-color: #dddddd">
             <a href="index.jsp" class="back-link">BACK</a>
@@ -209,7 +285,7 @@ Author     : MSIGAMING
                         <%
                             DishManager dm = new DishManager();
                             ArrayList<Dish> listDish = dm.getDishByDinerId(id);
-                            for(Dish d : listDish){
+                            for (Dish d : listDish) {
                         %>
                         <div class="dish-detail">
                             <img class="dish-img col-md-2" src="<%=d.getPicture()%>" alt="Dish Image">
@@ -218,7 +294,7 @@ Author     : MSIGAMING
                                     <h3 id="dishName"><a href="CustomerDishPage?id=<%=d.getDish_id()%>" style="color: black"><%=d.getName()%></a></h3>
                                     <p>Price: <span id="dishPrice"><%=d.getPrice()%> VNĐ</span></p>
                                 </div>
-                                
+
                                 <div class="col-md-3" style="align-content: center">
                                     <input type="number" id="quantity" name="quantity" min="1" max="100">
                                     <button id="addToCartButton" class="btn2">+</button>
@@ -226,14 +302,55 @@ Author     : MSIGAMING
                             </div>
                         </div>
                         <%
-                            }
-                        %>
+                            }%>
                         <div class="comments-section">
                             <h2>Comments</h2>
-                            <!-- Comments will go here -->
+                            <%
+                                ArrayList<Like> likeList = new ArrayList<Like>();
+                                Boolean check = false;
+                                LikeManager lm = new LikeManager();
+                                if (session.getAttribute("account") != null) {
+                                    // Lấy accountId của người dùng từ session
+                                    Account account = (Account) session.getAttribute("account");
+                                    likeList = lm.getLikesByAccountId(account.getAccount_id());
+                                }
+                                CommentManager cm = new CommentManager();
+                                for (Comment comment : cm.getList()) {
+                                    if (comment.getDiner() != null && comment.getDiner().getAccount_id() == id) {
+                                        for (Like l : likeList) {
+                                            if (l.getComment().getCommentId() == comment.getCommentId()) {
+                                                check = true;
+                                            };
+                                        }
+                            %>
+                            <div class="comment">
+                                <div class="comment-header">
+                                    <span class="username"><%=comment.getAccount().getName()%></span>
+                                    <span class="time"><%=comment.getCreated_at()%></span>
+                                </div>
+                                <div class="comment-body">
+                                    <p><%=comment.getContent()%></p>
+                                </div>
+                                <div class="comment-footer">
+                                    <div class="rating" data-rating="<%=comment.getRating()%>"></div>
+                                    <%
+                                        if (check) {
+                                    %>
+                                    <button class="like-btn liked" data-liked="true" disabled>Liked</button>
+                                    <%
+                                        } else {%>
+                                    <button class="btn like-btn" data-liked="false">Like</button>
+                                    <%
+                                        }%>
+                                    <button class="btn rep-btn">Rep</button>
+                                </div>
+                            </div>
+                            <%                                    }
+                                }%>
                         </div>
+
                     </div>
-                        <div id="cart" style="background-color: #fff;">
+                    <div id="cart" style="background-color: #fff;">
                         <h2>Cart</h2>
                         <div id="cartContent"></div>
                         <form action="OrderServlet" method="post">
@@ -245,87 +362,31 @@ Author     : MSIGAMING
         </div>
 
         <!-- footer section -->
-        <footer class="footer_section">
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-4 footer-col">
-                        <div class="footer_contact">
-                            <h4>
-                                Contact Us
-                            </h4>
-                            <div class="contact_link_box">
-                                <a href="">
-                                    <i class="fa fa-map-marker" aria-hidden="true"></i>
-                                    <span>
-                                        Location
-                                    </span>
-                                </a>
-                                <a href="">
-                                    <i class="fa fa-phone" aria-hidden="true"></i>
-                                    <span>
-                                        Call +01 1234567890
-                                    </span>
-                                </a>
-                                <a href="">
-                                    <i class="fa fa-envelope" aria-hidden="true"></i>
-                                    <span>
-                                        demo@gmail.com
-                                    </span>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4 footer-col">
-                        <div class="footer_detail">
-                            <a href="" class="footer-logo">
-                                Feane
-                            </a>
-                            <p>
-                                Necessary, making this the first true generator on the Internet. It uses a dictionary of over 200 Latin words, combined with
-                            </p>
-                            <div class="footer_social">
-                                <a href="">
-                                    <i class="fa fa-facebook" aria-hidden="true"></i>
-                                </a>
-                                <a href="">
-                                    <i class="fa fa-twitter" aria-hidden="true"></i>
-                                </a>
-                                <a href="">
-                                    <i class="fa fa-linkedin" aria-hidden="true"></i>
-                                </a>
-                                <a href="">
-                                    <i class="fa fa-instagram" aria-hidden="true"></i>
-                                </a>
-                                <a href="">
-                                    <i class="fa fa-pinterest" aria-hidden="true"></i>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4 footer-col">
-                        <h4>
-                            Opening Hours
-                        </h4>
-                        <p>
-                            Everyday
-                        </p>
-                        <p>
-                            10.00 Am -10.00 Pm
-                        </p>
-                    </div>
-                </div>
-                <div class="footer-info">
-                    <p>
-                        &copy; <span id="displayYear"></span> All Rights Reserved By
-                        <a href="https://html.design/">Free Html Templates</a><br><br>
-                        &copy; <span id="displayYear"></span> Distributed By
-                        <a href="https://themewagon.com/" target="_blank">ThemeWagon</a>
-                    </p>
-                </div>
-            </div>
-        </footer>
+        <jsp:include page="path/footer.jsp"/>
         <!-- footer section -->
-        
+
+        <!--like-->
+        <!--rating-->
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                const ratings = document.querySelectorAll('.rating');
+
+                ratings.forEach(rating => {
+                    const ratingValue = parseInt(rating.getAttribute('data-rating'), 10);
+                    let stars = '';
+
+                    for (let i = 1; i <= 5; i++) {
+                        if (i <= ratingValue) {
+                            stars += '<span>★</span>'; // Sao đầy
+                        } else {
+                            stars += '<span>☆</span>'; // Sao trống
+                        }
+                    }
+
+                    rating.innerHTML = stars;
+                });
+            });
+        </script>
         <!-- jQery -->
         <script src="js/jquery-3.4.1.min.js"></script>
         <!-- popper js -->

@@ -4,36 +4,43 @@
  */
 package model;
 
-import java.time.LocalDateTime;
-import java.util.Date;
-
 /**
  *
  * @author lenovo
  */
-public class CommentDish {
-    private int comment_id;
+import java.time.LocalDateTime;
+
+public class Comment {
+    private int commentId;
     private Account account;
     private Dish dish;
+    private Account diner;
+    private FoodAd post;
     private String content;
     private int rating;
     private LocalDateTime created_at = LocalDateTime.now();
     private LocalDateTime updated_at = LocalDateTime.now();
-    
-    public CommentDish(int comment_id, Account account, Dish dish, String content, int rating) {
-        this.comment_id = comment_id;
+
+    // Constructor
+    public Comment(int commentId, Account account, Dish dish, Account diner, FoodAd post, String content, int rating, LocalDateTime createdAt, LocalDateTime updatedAt) {
+        this.commentId = commentId;
         this.account = account;
         this.dish = dish;
+        this.diner = diner;
+        this.post = post;
         this.content = content;
         this.rating = rating;
+        this.created_at = createdAt;
+        this.updated_at = updatedAt;
     }
 
-    public int getComment_id() {
-        return comment_id;
+    // Getters and Setters
+    public int getCommentId() {
+        return commentId;
     }
 
-    public void setComment_id(int comment_id) {
-        this.comment_id = comment_id;
+    public void setCommentId(int commentId) {
+        this.commentId = commentId;
     }
 
     public Account getAccount() {
@@ -50,6 +57,22 @@ public class CommentDish {
 
     public void setDish(Dish dish) {
         this.dish = dish;
+    }
+
+    public Account getDiner() {
+        return diner;
+    }
+
+    public void setDiner(Account diner) {
+        this.diner = diner;
+    }
+
+    public FoodAd getPost() {
+        return post;
+    }
+
+    public void setPost(FoodAd post) {
+        this.post = post;
     }
 
 
@@ -87,6 +110,7 @@ public class CommentDish {
 
     @Override
     public String toString() {
-        return "CommentDish{" + "comment_id=" + comment_id + ", account=" + account + ", dish=" + dish + ", content=" + content + ", rating=" + rating + ", created_at=" + created_at + ", updated_at=" + updated_at + '}';
+        return "Comment{" + "commentId=" + commentId + ", account=" + account + ", dish=" + dish + ", diner=" + diner + ", post=" + post + ", content=" + content + ", rating=" + rating + ", created_at=" + created_at + ", updated_at=" + updated_at + '}';
     }
+    
 }

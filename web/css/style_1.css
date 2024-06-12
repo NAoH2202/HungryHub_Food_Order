@@ -28,7 +28,7 @@
 
 .user-settings {
     position: absolute;
-    right: 5%;
+    right: calc(5% - 60px);
     background: var(--bg-color);
     top: 110%;
     max-width: 350px;

@@ -9,21 +9,18 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.apache.tomcat.jni.Library;
 
 /**
  *
- * @author PC
+ * @author lenovo
  */
 public class LikeDao {
-
     public static ArrayList<Like> getAllLikes() {
         ArrayList<Like> LikeList = new ArrayList<>();
-        FoodAdManager fam = new FoodAdManager();
+        CommentManager cm = new CommentManager();
         AccountManager am = new AccountManager();
         ConnectDB db = ConnectDB.getInstance();
         Connection conn = null;
@@ -35,12 +32,12 @@ public class LikeDao {
             statement = conn.prepareStatement(query);
             rs = statement.executeQuery();
             while (rs.next()) {
-                int likeID = rs.getInt("likeID");
-                int postID = rs.getInt("postID");
-                FoodAd post = fam.getFoodAdById(postID);
-                int userID = rs.getInt("userID");
+                int likeID = rs.getInt("LikeID");
+                int commentID = rs.getInt("CommentID");
+                Comment comment = cm.getCommentById(commentID);
+                int userID = rs.getInt("UserID");
                 Account acc = am.getAccountById(userID);
-                LikeList.add(new Like(likeID, post, acc));
+                LikeList.add(new Like(likeID, comment, acc));
             }
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(LikeDao.class.getName()).log(Level.SEVERE, null, ex);
