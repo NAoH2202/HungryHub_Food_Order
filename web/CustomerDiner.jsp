@@ -182,6 +182,10 @@
             }
             AccountManager am = new AccountManager();
             Account diner = am.getAccountById(id);
+            DishManager em = new DishManager();
+            Dish dish = em.getDishById(id);
+            int accountId = dish.getAccount().getAccount_id(); 
+          
         %>
         <div style="background-color: #dddddd">
             <a href="index.jsp" class="back-link">BACK</a>
@@ -234,6 +238,7 @@
                             <input type="hidden" id="dishId" name="dishId" value="<%=id%>">
                             <input type="hidden" id="dishQuantity" name="dishQuantity">
                             <input type="hidden" id="totalCost" name="totalCost">
+                            <input type="hidden" id="accountId" name="accountId" value="<%=accountId%>"> 
                             <input type="submit" value="Order">                        
                         </form>
                     </div>

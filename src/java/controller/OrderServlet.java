@@ -1,4 +1,4 @@
-
+package controller;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import model.Dish;
+import model.DishManager;
 import model.OrderItem;
 
 @WebServlet(name = "OrderServlet", urlPatterns = {"/OrderServlet"})
@@ -42,11 +43,12 @@ public class OrderServlet extends HttpServlet {
         response.setContentType("text/html");
         request.setCharacterEncoding("UTF-8");
         response.setContentType("text/html; charset=UTF-8");
-
+        DishManager dm = new DishManager();
         try {
             int i = 0;
             List<OrderItem> orderItems = new ArrayList<>();
             double totalCost = 0.0; // Khởi tạo tổng chi phí
+            int accountId = 0; // Khởi tạo accountId
 
             while (true) {
                 String dishId = request.getParameter("dishId" + i);
@@ -63,9 +65,10 @@ public class OrderServlet extends HttpServlet {
                     int quantity = Integer.parseInt(dishQuantity);
 
                     if (id > 0 && quantity > 0) {
-
-                        Dish dish = new Dish(id, null, dishName, null, null, 0, null, null);
-                        OrderItem orderItem = new OrderItem(id, null, dish, quantity, 0);
+                        
+                        Dish dish = dm.getDishById(id);
+                        double price = dish.getPrice()*quantity;
+                        OrderItem orderItem = new OrderItem(id, null, dish, quantity, price);
                         orderItems.add(orderItem);
                     }
                 } catch (NumberFormatException e) {
@@ -74,6 +77,18 @@ public class OrderServlet extends HttpServlet {
 
                 }
                 i++;
+            }
+
+            // Lấy account_id từ tham số của request
+            String accountIdParam = request.getParameter("accountId");
+            if (accountIdParam != null) {
+                try {
+                    accountId = Integer.parseInt(accountIdParam);
+                } catch (NumberFormatException e) {
+                    // Log lỗi và đặt accountId về giá trị mặc định
+                    System.err.println("Invalid number format for accountId: " + e.getMessage());
+                    accountId = 0;
+                }
             }
 
             // Lấy tổng chi phí từ tham số của request
@@ -92,9 +107,10 @@ public class OrderServlet extends HttpServlet {
                 throw new Exception("No valid items in the order");
             }
 
-            // Lưu thông tin đơn hàng và tổng chi phí vào request để chuyển đến trang JSP
+            // Lưu thông tin đơn hàng, accountId và tổng chi phí vào request để chuyển đến trang JSP
             request.setAttribute("orderItems", orderItems);
             request.setAttribute("totalCost", totalCost);
+            request.setAttribute("accountId", accountId);
 
             // Chuyển hướng đến trang xác nhận đơn hàng
             request.getRequestDispatcher("orderConfirmation.jsp").forward(request, response);
