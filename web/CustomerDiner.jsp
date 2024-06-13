@@ -110,7 +110,7 @@ Author     : MSIGAMING
                 height: 600px;
                 margin-left: 20px;
                 padding: 20px;
-                position: -webkit-sticky; /* For Safari */
+                position: -webkit-sticky;
                 position: sticky;
                 top: 10px;
                 margin-bottom: 50px;
@@ -160,11 +160,13 @@ Author     : MSIGAMING
             }
 
             .comments-section {
+                width: 100%;
                 margin-top: 20px;
             }
             #cartOrder{
-                padding: 10px 20px;
-                border-radius: 5px;
+                margin-bottom: 20px;
+                overflow-y: auto;
+                height: 420px;
             }
             #addToCartButton{
                 height: 30px;
@@ -217,6 +219,8 @@ Author     : MSIGAMING
 
             .btn {
                 margin-left: 10px;
+                width: 65px;
+                height: 35px;
                 background-color: #3498db;
                 color: #fff;
                 border: none;
@@ -236,6 +240,8 @@ Author     : MSIGAMING
             }
             .liked{
                 margin-left: 10px;
+                width: 65px;
+                height: 35px;
                 background-color: #2980b9;
                 color: #fff;
                 border: none;
@@ -244,14 +250,52 @@ Author     : MSIGAMING
                 cursor: pointer;
                 transition: background-color 0.3s;
             }
+            /*comment reply*/
+            .reply-input{
+                margin-bottom: 10px;
+                display: flex;
+                flex-direction: column;
+            }
+            .reply-comment {
+                width: 100%;
+                max-width: 750px;
+                height: 100px;
+                padding: 10px;
+                font-size: 14px;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+                box-sizing: border-box;
+                resize: vertical;
+                margin-bottom: 5px;
+                align-self: flex-end;
+            }
+
+            .submit-reply-btn {
+                padding: 8px 15px;
+                font-size: 11px;
+                color: #fff;
+                background-color: #007bff;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+                align-self: flex-end;
+            }
+
+            .submit-reply-btn:hover {
+                background-color: #0056b3;
+            }
+
+            .submit-reply-btn:active {
+                background-color: #004494;
+            }
         </style>
     </head>
 
     <body>
         <div>
-            <!-- header section strats -->
+            <!-- Include header -->
             <jsp:include page="path/header.jsp"/>
-            <!-- end header section -->
+            <!-- End header section -->
         </div>
         <%
             int id;
@@ -263,7 +307,6 @@ Author     : MSIGAMING
             }
             AccountManager am = new AccountManager();
             Account diner = am.getAccountById(id);
-
         %>
         <div style="background-color: #dddddd">
             <a href="index.jsp" class="back-link">BACK</a>
@@ -281,7 +324,7 @@ Author     : MSIGAMING
 
             <div id="container">
                 <div id="content">
-                    <div id="dish" >
+                    <div id="dish">
                         <%
                             DishManager dm = new DishManager();
                             ArrayList<Dish> listDish = dm.getDishByDinerId(id);
@@ -296,8 +339,8 @@ Author     : MSIGAMING
                                 </div>
 
                                 <div class="col-md-3" style="align-content: center">
-                                    <input type="number" id="quantity" name="quantity" min="1" max="100">
-                                    <button id="addToCartButton" class="btn2">+</button>
+                                    <input type="number" id="quantity_<%=d.getDish_id()%>" name="quantity" min="1" max="100">
+                                    <button class="btn2" onclick="addToCart('<%=d.getDish_id()%>', '<%=d.getName()%>', '<%=d.getPicture()%>', <%=d.getPrice()%>)">+</button>
                                 </div>
                             </div>
                         </div>
@@ -338,13 +381,15 @@ Author     : MSIGAMING
                                     %>
                                     <button class="like-btn liked" data-liked="true" disabled>Liked</button>
                                     <%
-                                        } else {%>
-                                    <button class="btn like-btn" data-liked="false">Like</button>
+                                    } else {%>
+                                    <button class="like-btn btn" data-like-comment-id="<%=comment.getCommentId()%>" data-comment-id="<%=comment.getCommentId()%>" data-liked="false">Like</button>
                                     <%
                                         }%>
-                                    <button class="btn rep-btn">Rep</button>
+                                    <button class="btn rep-btn" data-rep-comment-id="<%=comment.getCommentId()%>" data-comment-id="<%=comment.getCommentId()%>">Rep</button>
                                 </div>
                             </div>
+                            <div data-rep-comment-id="<%=comment.getCommentId()%>" data-comment-id="<%=comment.getCommentId()%>"></div>
+
                             <%                                    }
                                 }%>
                         </div>
@@ -353,8 +398,11 @@ Author     : MSIGAMING
                     <div id="cart" style="background-color: #fff;">
                         <h2>Cart</h2>
                         <div id="cartContent"></div>
-                        <form action="OrderServlet" method="post">
-                            <button type="submit" class="btn2" id="cartOrder">Order</button>
+                        <form action="OrderServlet" method="post" id="orderForm">
+                            <input type="hidden" id="dishId" name="dishId" value="<%=id%>">
+                            <input type="hidden" id="dishQuantity" name="dishQuantity">
+                            <input type="hidden" id="totalCost" name="totalCost">
+                            <input type="submit" value="Order">                        
                         </form>
                     </div>
                 </div>
@@ -366,6 +414,75 @@ Author     : MSIGAMING
         <!-- footer section -->
 
         <!--like-->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script>
+                                        $(document).ready(function () {
+                                            $('.like-btn').click(function () {
+                                                var commentId = $(this).data('comment-id');
+                                                $.ajax({
+                                                    type: 'POST',
+                                                    url: 'CommentServlet',
+                                                    data: {action: 'like', commentId: commentId},
+                                                    success: function (response) {
+                                                        if (response.status === 'liked') {
+                                                            $('button[data-like-comment-id="' + commentId + '"]').removeClass('btn').addClass('liked').prop('disabled', true).text('Liked');
+                                                        }
+                                                        else{
+                                                            alert(response.message);
+                                                        }
+                                                    }
+                                                });
+                                            });
+
+                                            $(document).on('click', '.rep-btn, .rm-rep-btn', function () {
+                                                var commentId = $(this).data('comment-id');
+                                                var action = $(this).hasClass('rep-btn') ? 'reply' : 'rm-reply';
+                                                $.ajax({
+                                                    type: 'POST',
+                                                    url: 'CommentServlet',
+                                                    data: {action: action, commentId: commentId},
+                                                    success: function (response) {
+                                                        if (response.status === 'reply') {
+                                                            var replyInput = '<div class="reply-input"><textarea class="reply-comment" placeholder="Nhập suy nghĩ của bạn..." ></textarea><button class="submit-reply-btn">Submit</button></div>';
+                                                            $('button[data-rep-comment-id="' + commentId + '"]').removeClass('rep-btn').addClass('rm-rep-btn');
+                                                            $('div[data-rep-comment-id="' + commentId + '"]').append(replyInput);
+                                                        } else if (response.status === 'rm-reply') {
+                                                            $('button[data-rep-comment-id="' + commentId + '"]').removeClass('rm-rep-btn').addClass('rep-btn');
+                                                            $('div[data-rep-comment-id="' + commentId + '"]').find('.reply-input').remove();
+                                                        }else{
+                                                            alert(response.message);
+                                                        }
+                                                    }
+                                                });
+                                            });
+
+                                            $(document).on('click', '.submit-reply-btn', function () {
+                                                var replyContent = $(this).siblings('.reply-comment').val();
+                                                var commentId = $(this).closest('.comment-footer').find('.rep-btn').data('comment-id');
+                                                var dataToSend = {
+                                                    commentId: commentId,
+                                                    replyContent: replyContent
+                                                };
+                                                // Gửi dữ liệu đến RepCommentServlet bằng AJAX
+                                                $.ajax({
+                                                    type: 'POST',
+                                                    url: 'RepCommentServlet', // Điều chỉnh đường dẫn tới Servlet của bạn
+                                                    data: dataToSend,
+                                                    success: function (response) {
+                                                        if (response.status === "success") {
+                                                            
+                                                        } else {
+                                                            // Hiển thị thông báo lỗi nếu status không phải là success
+                                                            alert(response.message);
+                                                        }
+                                                    },
+                                                    error: function (xhr, status, error) {
+                                                        alert("An error occurred: " + error);
+                                                    }
+                                                });
+                                            });
+                                        });
+        </script>
         <!--rating-->
         <script>
             document.addEventListener("DOMContentLoaded", function () {
@@ -389,23 +506,146 @@ Author     : MSIGAMING
         </script>
         <!-- jQery -->
         <script src="js/jquery-3.4.1.min.js"></script>
-        <!-- popper js -->
-        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous">
+        <!-- Your other JavaScript imports here -->
+        <script>
+            var cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+            function addToCart(id, name, image, price) {
+                var quantity = parseInt(document.getElementById('quantity_' + id).value);
+                if (quantity > 0) {
+                    var existingDish = cart.find(dish => dish.id === id);
+                    if (existingDish) {
+                        existingDish.quantity += quantity;
+                    } else {
+                        var dish = {
+                            id: id,
+                            name: name,
+                            image: image,
+                            price: price,
+                            quantity: quantity
+                        };
+                        cart.push(dish);
+                    }
+                    updateCart();
+                } else {
+                    alert("Please enter a valid quantity");
+                }
+            }
+
+            function updateCart() {
+                var cartContent = document.getElementById('cartContent');
+                cartContent.innerHTML = '';
+
+                var total = 0;
+
+                // Xóa các phần tử ẩn cũ trong biểu mẫu orderForm trước khi thêm phần tử mới
+                var orderForm = document.getElementById('orderForm');
+                var hiddenInputs = orderForm.querySelectorAll('input[type="hidden"]');
+                hiddenInputs.forEach(function (input) {
+                    orderForm.removeChild(input);
+                });
+
+                cart.forEach(function (dish, index) {
+                    var dishElement = document.createElement('div');
+                    dishElement.classList.add('cart-item');
+                    dishElement.style.display = "flex";
+                    dishElement.style.alignItems = "center";
+                    dishElement.style.marginBottom = "10px";
+                    dishElement.style.border = "2px solid black";
+                    dishElement.style.borderRadius = "10px";
+                    dishElement.style.padding = "10px";
+
+                    var dishImage = document.createElement('img');
+                    dishImage.src = dish.image;
+                    dishImage.alt = dish.name;
+                    dishImage.style.width = "50px";
+                    dishImage.style.height = "50px";
+                    dishImage.style.objectFit = "cover";
+                    dishImage.style.marginRight = "10px";
+                    dishImage.style.borderRadius = "5px";
+                    dishElement.appendChild(dishImage);
+
+                    var dishInfo = document.createElement('div');
+                    dishInfo.style.flex = "1";
+                    dishInfo.textContent = dish.name + " - " + dish.price + " x " + dish.quantity;
+                    dishElement.appendChild(dishInfo);
+
+                    var deleteButton = document.createElement('button');
+                    deleteButton.textContent = 'Delete';
+                    deleteButton.style.marginLeft = '10px';
+                    deleteButton.style.backgroundColor = '#ff9900';
+                    deleteButton.style.color = 'white';
+                    deleteButton.style.border = 'none';
+                    deleteButton.style.padding = '5px 10px';
+                    deleteButton.style.borderRadius = '5px';
+                    deleteButton.addEventListener('click', function () {
+                        deleteCartItem(index);
+                    });
+                    dishElement.appendChild(deleteButton);
+
+                    cartContent.appendChild(dishElement);
+
+                    total += dish.price * dish.quantity;
+
+                    // Thêm các phần tử input ẩn chứa thông tin món ăn vào biểu mẫu orderForm
+                    var inputId = document.createElement('input');
+                    inputId.type = 'hidden';
+                    inputId.name = 'dishId' + index;
+                    inputId.value = dish.id;
+                    orderForm.appendChild(inputId);
+
+                    var inputName = document.createElement('input');
+                    inputName.type = 'hidden';
+                    inputName.name = 'dishName' + index;
+                    inputName.value = dish.name;
+                    orderForm.appendChild(inputName);
+
+                    var inputQuantity = document.createElement('input');
+                    inputQuantity.type = 'hidden';
+                    inputQuantity.name = 'dishQuantity' + index;
+                    inputQuantity.value = dish.quantity;
+                    orderForm.appendChild(inputQuantity);
+                });
+
+                var totalElement = document.createElement('div');
+                totalElement.innerHTML = "<h3>Total: " + total + " VNĐ</h3>";
+                cartContent.appendChild(totalElement);
+
+                // Update the localStorage with the new cart data
+                localStorage.setItem('cart', JSON.stringify(cart));
+            }
+
+            function deleteCartItem(index) {
+                cart.splice(index, 1);
+                updateCart();
+            }
+
+            window.onload = function () {
+                updateCart();
+            };
+
+            document.getElementById('orderForm').addEventListener('submit', function (event) {
+                if (cart.length === 0) {
+                    alert('Please add the dish to the cart first');
+                    event.preventDefault();
+                    return;
+                }
+
+                var totalCost = 0;
+                cart.forEach(function (item) {
+                    totalCost += item.price * item.quantity;
+                });
+
+                var inputTotalCost = document.createElement('input');
+                inputTotalCost.type = 'hidden';
+                inputTotalCost.name = 'totalCost';
+                inputTotalCost.value = totalCost;
+                document.getElementById('orderForm').appendChild(inputTotalCost);
+
+                // Clear the cart but do not reload the page
+                localStorage.removeItem('cart');
+            });
         </script>
-        <!-- bootstrap js -->
-        <script src="js/bootstrap.js"></script>
-        <!-- owl slider -->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js">
-        </script>
-        <!-- isotope js -->
-        <script src="https://unpkg.com/isotope-layout@3.0.4/dist/isotope.pkgd.min.js"></script>
-        <!-- nice select -->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-nice-select/1.1.0/js/jquery.nice-select.min.js"></script>
-        <!-- custom js -->
-        <script src="js/custom.js"></script>
-        <!-- Google Map -->
-        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCh39n5U-4IoWpsVGUHWdqB6puEkhRLdmI&callback=myMap">
-        </script>
-        <!-- End Google Map -->
+
     </body>
 </html>

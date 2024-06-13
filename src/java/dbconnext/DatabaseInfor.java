@@ -14,5 +14,5 @@ public interface DatabaseInfor {
     String url = "jdbc:sqlserver://127.0.0.1:1433;databaseName=prj_hungryHub;";
 
     String user = "sa";
-    String pass = "123"; 
+    String pass = "vippro123"; 
 }
