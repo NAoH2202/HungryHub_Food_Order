@@ -277,6 +277,10 @@
             int id = Integer.parseInt(request.getParameter("id"));
             DishManager dm = new DishManager();
             Dish dish = dm.getDishById(id);
+<<<<<<< HEAD
+=======
+            int accountId = dish.getAccount().getAccount_id(); 
+>>>>>>> e592d86c81b4fafc13f7f14672e2960543f8cc2d
         %>
 
         <jsp:include page="path/header.jsp"/>
@@ -352,6 +356,7 @@
                         <input type="hidden" id="dishId" name="dishId" value="<%=id%>">
                         <input type="hidden" id="dishQuantity" name="dishQuantity">
                         <input type="hidden" id="totalCost" name="totalCost">
+                        <input type="hidden" id="accountId" name="accountId" value="<%=accountId%>">
                         <input type="submit" value="Order">
                     </form>
                 </div>
