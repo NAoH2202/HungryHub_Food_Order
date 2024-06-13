@@ -57,4 +57,34 @@ public class LikeDao {
         }
         return LikeList;
     }
+    public static boolean addLike(int commentID, int userID) {
+        ConnectDB db = ConnectDB.getInstance();
+        Connection conn = null;
+        PreparedStatement statement = null;
+        boolean isSuccess = false;
+        
+        try {
+            conn = db.openConnection();
+            String query = "INSERT INTO [Likes] (CommentID, UserID) VALUES (?, ?)";
+            statement = conn.prepareStatement(query);
+            statement.setInt(1, commentID);
+            statement.setInt(2, userID);
+            int rowsInserted = statement.executeUpdate();
+            isSuccess = rowsInserted > 0;
+        } catch (ClassNotFoundException | SQLException ex) {
+            Logger.getLogger(LikeDao.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if (statement != null) {
+                    statement.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+            }
+        }
+        
+        return isSuccess;
+    }
 }
