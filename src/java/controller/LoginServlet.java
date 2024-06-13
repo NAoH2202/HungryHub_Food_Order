@@ -80,7 +80,7 @@ public class LoginServlet extends HttpServlet {
             } else if (account.getRole().equalsIgnoreCase("DinerManager")) {
                 response.sendRedirect("DinerMainPage.jsp");
             } else if (account.getRole().equalsIgnoreCase("Shipper")) {
-                response.sendRedirect("ShipperMainPage.jsp");
+                response.sendRedirect("ShipperPage");
             } else {
                 response.sendRedirect("index.jsp");
             }

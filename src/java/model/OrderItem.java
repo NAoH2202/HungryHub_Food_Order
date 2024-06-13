@@ -27,6 +27,14 @@ public class OrderItem {
         this.price = price;
     }
 
+    public OrderItem(int order_item_id, Order order, Dish dish, int quantity) {
+        this.order_item_id = order_item_id;
+        this.order = order;
+        this.dish = dish;
+        this.quantity = quantity;
+    }
+    
+
     public int getOrder_item_id() {
         return order_item_id;
     }

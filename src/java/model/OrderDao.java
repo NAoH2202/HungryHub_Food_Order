@@ -68,4 +68,32 @@ public class OrderDao {
         }
         return OrderList;
     }
+      public void updateOrderStatus(Order order) {
+        ConnectDB db = ConnectDB.getInstance();
+        Connection conn = null;
+        PreparedStatement statement = null;
+        try {
+            conn = db.openConnection();
+            String query = "UPDATE [Order] SET order_status = ? WHERE order_id = ?";
+            statement = conn.prepareStatement(query);
+            statement.setString(1, order.getOrder_status());
+             
+            statement.setInt(2, order.getOrder_id());
+            statement.executeUpdate();
+        } catch (ClassNotFoundException | SQLException ex) {
+            Logger.getLogger(OrderDao.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if (statement != null) {
+                    statement.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                Logger.getLogger(OrderDao.class.getName()).log(Level.SEVERE, null, e);
+            }
+        }
+    }
+    
 }

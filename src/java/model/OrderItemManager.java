@@ -4,7 +4,9 @@
  */
 package model;
 
+import static java.nio.file.Files.list;
 import java.util.ArrayList;
+import static java.util.Collections.list;
 
 /**
  *
@@ -25,9 +27,20 @@ public class OrderItemManager {
         }
         return null;
     }
+     public ArrayList<OrderItem> getOderItemByOrderId(int id) {
+        ArrayList<OrderItem> listOI = new ArrayList<>();
+        for (OrderItem orderItem : List) {
+            if (id == orderItem.getOrder().getOrder_id()) {
+                listOI.add(orderItem);
+            }
+        }
+        return listOI;
+    }
      public ArrayList<OrderItem> getList() {
         return List;
     }
+     
+     
     public static void main(String[] args) {
         OrderManager om = new OrderManager();
         for(Order o : om.getList()){
