@@ -18,10 +18,11 @@
                 margin-top: 20px;
             }
             .card {
-                width: 50%; 
+                width: 50%;
                 padding: 20px;
                 box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
                 border-radius: 10px;
+                margin-bottom: 30px;
             }
             .center-table {
                 margin: 0 auto;
@@ -37,21 +38,21 @@
                 background-color: #f2f2f2;
             }
             .total-cost {
-                font-weight: bold;
+                margin-top: 10px;
             }
             .btn-edit {
-                padding: 5px 10px; 
-                background-color: #007bff; 
+                padding: 5px 10px;
+                background-color: #007bff;
                 border: none;
                 color: white;
             }
             .btn-edit:hover {
-                background-color: #0056b3; 
+                background-color: #0056b3;
             }
             .submit-btn-container {
-                text-align: center; 
+                text-align: center;
             }
-              </style>
+        </style>
         <script>
             function toggleEditAddress() {
                 var addressField = document.getElementById('address');
@@ -75,71 +76,91 @@
         <div class="center-container">
             <div class="card">
                 <h2 class="text-center">Order Confirmation</h2>
-                <form action="VNPAY" method="post">
+                <form action="ChangeAddress" method="POST">
                     <div class="form-group">
-                        <label for="address">Shipping Address:</label>
-                        <input type="text" id="address" name="address" class="form-control" value="<%= request.getAttribute("address") %>" readonly>
-                        <input type="button" id="editAddressButton" value="Edit Address" class="btn btn-primary btn-edit mt-2" onclick="toggleEditAddress()">
+                        <label for="address">Địa chỉ giao hàng:</label>
+                        <input type="text" id="address" name="address" class="form-control" value="<%= request.getAttribute("address")%>" readonly>
+                        <input type="button" id="editAddressButton" value="Thay đổi địa chỉ giao hàng" class="btn btn-primary btn-edit mt-2" onclick="toggleEditAddress()">
                     </div>
-                    <table class="center-table">
-                        <thead>
-                            <tr>
-                                <th>Dish ID</th>
-                                <th>Dish Name</th>
-                                <th>Quantity</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <%
-                                List<OrderItem> orderItems = (List<OrderItem>) request.getAttribute("orderItems");
-                                if (orderItems != null && !orderItems.isEmpty()) {
-                                    for (OrderItem item : orderItems) {
-                            %>
-                            <tr>
-                                <td><%= item.getOrder_item_id() %></td>
-                                <td><%= item.getDish().getName() %></td>
-                                <td><%= item.getQuantity() %></td>
-                            </tr>
-                            <%
-                                    }
-                                } else {
-                            %>
-                            <tr>
-                                <td colspan="3">No items in the order</td>
-                            </tr>
-                            <% } %>
-                        </tbody>
-                    </table>
-                    <!-- Display total cost of the order -->
-                    <p class="total-cost">Total Cost: $<%= request.getAttribute("totalCost") %></p>
-                    <%
-                        if (orderItems != null && !orderItems.isEmpty() && orderItems.size() >= 1) {
-                            OrderItem oi = orderItems.get(0);
-                            if (oi.getDish().getAccount() != null) {
-                    %>
-                    <p>Account ID: <%= oi.getDish().getAccount().getAccount_id() %></p>
-                    <%
-                            } else {
-                                out.println("Required data is missing in the order item.");
+                </form>
+                <table class="center-table">
+                    <thead>
+                        <tr>
+                            <th>Tên món ăn</th>
+                            <th>Số lượng</th>
+                            <th>Giá</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <%
+                            List<OrderItem> orderItems = (List<OrderItem>) request.getAttribute("orderItems");
+                            if (orderItems != null && !orderItems.isEmpty()) {
+                                for (OrderItem item : orderItems) {
+
+                        %>
+                        <tr>
+                            <td><%= item.getDish().getName()%></td>
+                            <td><%= item.getQuantity()%></td>
+                            <td><%=item.getDish().getPrice() * item.getQuantity()%></td>
+                        </tr>
+                        <%
                             }
                         } else {
-                            out.println("Order items list does not have enough elements.");
+                        %>
+                        <tr>
+                            <td colspan="3">Không có món ăn nào được order</td>
+                        </tr>
+                        <% }%>
+                    </tbody>
+                </table>
+                <!-- Display total cost of the order -->
+                <p class="total-cost"><b>Tổng giá tiền:</b>   <%= request.getAttribute("totalCost")%> VNĐ</p>
+                <%
+                    if (orderItems != null && !orderItems.isEmpty() && orderItems.size() >= 1) {
+                        OrderItem oi = orderItems.get(0);
+                        if (oi.getDish().getAccount() != null) {
+                %>
+                <p><b>Tên người nhận:   </b> <%= oi.getDish().getAccount().getName()%></p>
+                <%
+                        } else {
+                            out.println("Required data is missing in the order item.");
+                        }
+                    } else {
+                        out.println("Order items list does not have enough elements.");
+                    }
+                %>
+                <form action="OrderCompleteServlet" method="post">
+                    <%
+                        int i = 0;
+                        for (OrderItem item : orderItems) {
+                    %>
+                    <input type="hidden" name="orderItems<%=i%>" value="<%=item.getDish().getDish_id()%>">
+                    <input type="hidden" name="orderQuantity<%=i%>" value="<%=item.getQuantity()%>">
+                    <%
+                            i++;
                         }
                     %>
-                    <input type="hidden" name="orderItems" value="<%= request.getAttribute("orderItems") %>">
-                    <input type="hidden" name="totalCost" value="<%= request.getAttribute("totalCost") %>">
-                    <input type="hidden" name="accountId" value="<%= request.getAttribute("accountId") %>">
 
-                    <label for="paymentMethod">Choose a payment method:</label>
+                    <input type="hidden" name="totalCost" value="<%= request.getAttribute("totalCost")%>">
+
+                    <label for="paymentMethod"><b>Chọn phương thức thanh toán:</b></label>
                     <select id="paymentMethod" name="paymentMethod" class="form-control">
-                        <option value="receipt">Pay upon receipt</option>
-                        <option value="online">Proceed to Payment</option>
+                        <option value="receipt">Trả sau khi nhận hàng</option>
+                        <option value="online">Trả thông qua VNPay</option>
                     </select>
 
                     <div class="submit-btn-container">
                         <input type="submit" value="Order" class="btn btn-primary btn-lg mt-4">
                     </div>
                 </form>
+                    <%
+                        if(request.getAttribute("message")!=null){
+                        String mess = (String) request.getAttribute("message");
+                            %>
+                            <div>mess</div>
+                <%
+                        }
+                    %>
             </div>
         </div>
         <jsp:include page="path/footer.jsp"/>

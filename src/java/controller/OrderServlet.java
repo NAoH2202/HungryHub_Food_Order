@@ -68,7 +68,7 @@ public class OrderServlet extends HttpServlet {
                         
                         Dish dish = dm.getDishById(id);
                         double price = dish.getPrice()*quantity;
-                        OrderItem orderItem = new OrderItem(id, null, dish, quantity, price);
+                        OrderItem orderItem = new OrderItem(id, dish, quantity, price);
                         orderItems.add(orderItem);
                     }
                 } catch (NumberFormatException e) {

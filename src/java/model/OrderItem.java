@@ -12,7 +12,7 @@ import java.util.Date;
  */
 public class OrderItem {
     private int order_item_id;
-    private Order order;
+    private int order_id;
     private Dish dish;
     private int quantity;
     private double price;
@@ -22,16 +22,20 @@ public class OrderItem {
     public OrderItem() {
     }
 
-    
-    
-    public OrderItem(int order_item_id, Order order, Dish dish, int quantity, double price) {
+    public OrderItem(int order_item_id, int order_id, Dish dish, int quantity, double price) {
         this.order_item_id = order_item_id;
-        this.order = order;
+        this.order_id = order_id;
         this.dish = dish;
         this.quantity = quantity;
         this.price = price;
     }
-
+    public OrderItem(int order_item_id, Dish dish, int quantity, double price) {
+        this.order_item_id = order_item_id;
+        this.dish = dish;
+        this.quantity = quantity;
+        this.price = price;
+    }
+    
     public int getOrder_item_id() {
         return order_item_id;
     }
@@ -40,14 +44,15 @@ public class OrderItem {
         this.order_item_id = order_item_id;
     }
 
-    public Order getOrder() {
-        return order;
+    public int getOrder_id() {
+        return order_id;
     }
 
-    public void setOrder(Order order) {
-        this.order = order;
+    public void setOrder_id(int order_id) {
+        this.order_id = order_id;
     }
 
+    
     public Dish getDish() {
         return dish;
     }
@@ -92,6 +97,7 @@ public class OrderItem {
 
     @Override
     public String toString() {
-        return "OrderItem{" + "order_item_id=" + order_item_id + ", order=" + order + ", dish=" + dish + ", quantity=" + quantity + ", price=" + price + ", created_at=" + created_at + ", updated_at=" + updated_at + '}';
+        return "OrderItem{" + "order_item_id=" + order_item_id + ", order_id=" + order_id + ", dish=" + dish + ", quantity=" + quantity + ", price=" + price + ", created_at=" + created_at + ", updated_at=" + updated_at + '}';
     }
+
 }

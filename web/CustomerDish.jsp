@@ -277,10 +277,7 @@
             int id = Integer.parseInt(request.getParameter("id"));
             DishManager dm = new DishManager();
             Dish dish = dm.getDishById(id);
-<<<<<<< HEAD
-=======
             int accountId = dish.getAccount().getAccount_id(); 
->>>>>>> e592d86c81b4fafc13f7f14672e2960543f8cc2d
         %>
 
         <jsp:include page="path/header.jsp"/>
