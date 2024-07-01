@@ -21,11 +21,16 @@
                     urlacc = "";
                     name = "about";
                 } else {
-                    url = "CustomerOrderPage";
+                    String role = acc.getRole();
+                    if ("DinerManager".equals(role)) {
+                        url = "DinerOrderPage";
+                        name = acc.getName() + "'s Diner Orders";
+                    } else {
+                        url = "CustomerOrderPage";
+                        name = acc.getName() + "'s Order";
+                    }
                     urlacc = "AccountPage";
-                    name = acc.getName() + "'s Order";
                 }
-                
             %>
             <a class="nav-link" href="<%=url%>"><%=name%></a>
         </li>
@@ -44,20 +49,20 @@
             Login
         </a>
         <%
-        } else {
+            } else {
         %>
         <div class="profile-image online" onclick="UserSettingToggle()">
-                <img src="<%=acc.getProfile_picture()%>" alt="">
+            <img src="<%=acc.getProfile_picture()%>" alt="">
         </div>
         <div class="user-settings" style="background-color: white">
             <div class="profile-darkButton">
-            <div class="user-profile">
-                <img src="<%=acc.getProfile_picture()%>" alt="">
-                <div>
-                    <p> <%=acc.getName()%></p>
-                    <a href="#">See your profile</a>
+                <div class="user-profile">
+                    <img src="<%=acc.getProfile_picture()%>" alt="">
+                    <div>
+                        <p> <%=acc.getName()%></p>
+                        <a href="#">See your profile</a>
+                    </div>
                 </div>
-            </div>
             </div>
             <hr>
             <div class="user-profile">
@@ -70,7 +75,7 @@
             <hr>
             <div class="settings-links">
                 <img src="images/setting.png" alt="" class="settings-icon">
-                <a href="#">Settings & Privary <img src="images/arrow.png" alt=""></a>
+                <a href="#">Settings & Privacy <img src="images/arrow.png" alt=""></a>
             </div>
 
             <div class="settings-links">
