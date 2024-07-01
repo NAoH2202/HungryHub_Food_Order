@@ -4,7 +4,6 @@
  */
 package controller;
 
-import com.google.gson.JsonObject;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -12,19 +11,14 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import model.Account;
-import model.AccountManager;
-import model.Comment;
-import model.CommentManager;
-import model.ReplyComment;
-import model.ReplyCommentDao;
+import model.CommentDao;
 
 /**
  *
  * @author lenovo
  */
-@WebServlet(name = "RepCommentServlet", urlPatterns = {"/RepCommentServlet"})
-public class RepCommentServlet extends HttpServlet {
+@WebServlet(name = "editCommentServlet", urlPatterns = {"/editCommentServlet"})
+public class editCommentServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -37,17 +31,16 @@ public class RepCommentServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.setCharacterEncoding("UTF-8");
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet RepCommentServlet</title>");
+            out.println("<title>Servlet editCommentServlet</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet RepCommentServlet at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet editCommentServlet at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -60,41 +53,48 @@ public class RepCommentServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
-        response.setCharacterEncoding("UTF-8");
-
-        CommentManager cm = new CommentManager();
-        Account account = (Account) request.getSession().getAttribute("account");
-
+        response.setContentType("text/html;charset=UTF-8");
         String status = request.getParameter("status");
-        switch (status) {
-            case "comment":
-                String dinerIdString = request.getParameter("dinerId");
-                int dinerId = Integer.parseInt(dinerIdString);
-                String commentIdString = request.getParameter("commentId");
-                int commentId = Integer.parseInt(commentIdString);
-                Comment comment = cm.getCommentById(commentId);
-                String replyContent = request.getParameter("replyContent");
-                ReplyComment rm = new ReplyComment(0, account, comment, replyContent);
-                ReplyCommentDao.addReplyComment(rm);
 
-                PrintWriter out = response.getWriter();
+        // Sử dụng switch-case để xử lý dựa trên giá trị của 'status'
+        switch (status) {
+            case "diner":
+                // Lấy dữ liệu cần thiết từ form
+                String commentIdString = request.getParameter("commentID");
+                String dinerIdString = request.getParameter("dinerId");
+                String rateString = request.getParameter("rate");
+                String content = request.getParameter("content");
+
+
+                int commentId = Integer.parseInt(commentIdString);
+                int dinerId = Integer.parseInt(dinerIdString);
+                int rate = Integer.parseInt(rateString);
+                CommentDao.updateComment(commentId, content, rate);
+                
                 response.sendRedirect("CustomerDinerPage?id=" + dinerId);
                 break;
             case "dish":
+                // Lấy dữ liệu cần thiết từ form
+                String commentIdString2 = request.getParameter("commentID");
                 String dishIdString = request.getParameter("dishId");
-                int dishId = Integer.parseInt(dishIdString);
-                String commentIdString2 = request.getParameter("commentId");
-                int commentId2 = Integer.parseInt(commentIdString2);
-                Comment comment2 = cm.getCommentById(commentId2);
-                String replyContent2 = request.getParameter("replyContent");
-                ReplyComment rm2 = new ReplyComment(0, account, comment2, replyContent2);
-                ReplyCommentDao.addReplyComment(rm2);
+                String rateString2 = request.getParameter("rate");
+                String content2 = request.getParameter("content");
 
+
+                int commentId2 = Integer.parseInt(commentIdString2);
+                int dishId = Integer.parseInt(dishIdString);
+                int rate2 = Integer.parseInt(rateString2);
+                CommentDao.updateComment(commentId2, content2, rate2);
+                
                 response.sendRedirect("CustomerDishPage?id=" + dishId);
                 break;
+            // Có thể thêm các case khác để xử lý cho các giá trị khác của 'status'
             default:
+                response.getWriter().write("Invalid status!");
+                break;
         }
     }
 

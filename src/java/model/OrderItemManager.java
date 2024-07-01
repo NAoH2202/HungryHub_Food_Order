@@ -33,6 +33,20 @@ public class OrderItemManager {
         }
         return list;
     }
+    public int getTotalOderItem(ArrayList<OrderItem> oiList) {
+        int sum = 0;
+        for (OrderItem facc : oiList) {
+            sum+=facc.getQuantity();
+        }
+        return sum;
+    }
+    public int getTotalPrice(ArrayList<OrderItem> oiList) {
+        int sum = 0;
+        for (OrderItem facc : oiList) {
+            sum+=facc.getPrice();
+        }
+        return sum;
+    }
     
     public double getTotalPriceOrderId(int id){
         ArrayList<OrderItem> oiList = getOderItemByOrderId(id);

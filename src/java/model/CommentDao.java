@@ -13,12 +13,14 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.sql.Timestamp;
 
 /**
  *
  * @author lenovo
  */
 public class CommentDao {
+
     public static ArrayList<Comment> getAllComments() {
         ArrayList<Comment> CommentDishList = new ArrayList<>();
         AccountManager am = new AccountManager();
@@ -47,11 +49,11 @@ public class CommentDao {
                 int rating = rs.getInt("rating");
                 LocalDateTime created_at = rs.getTimestamp("created_at").toLocalDateTime();
                 LocalDateTime updated_at = rs.getTimestamp("updated_at").toLocalDateTime();
-                Comment comment = new Comment(comment_id, account, dish, diner, Post, content, rating, created_at, updated_at);
+                Comment comment = new Comment(comment_id, account, dish, diner, Post, content, rating);
                 comment.setCreated_at(created_at);
                 comment.setUpdated_at(updated_at);
-                
-                CommentDishList.add(comment);                
+
+                CommentDishList.add(comment);
             }
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(CommentDao.class.getName()).log(Level.SEVERE, null, ex);
@@ -70,5 +72,111 @@ public class CommentDao {
             }
         }
         return CommentDishList;
+    }
+
+    // Phương thức thêm bình luận cho khách hàng
+    public static boolean addCommentDiner(Comment cm) {
+        String query = "INSERT INTO [Comment] (account_id, diner_id, content, rating, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?)";
+        LocalDateTime now = LocalDateTime.now();
+
+        try (Connection conn = ConnectDB.getInstance().openConnection(); PreparedStatement statement = conn.prepareStatement(query)) {
+
+            statement.setInt(1, cm.getAccount().getAccount_id());
+            statement.setInt(2, cm.getDiner().getAccount_id());
+            statement.setString(3, cm.getContent());
+            statement.setInt(4, cm.getRating());
+            statement.setTimestamp(5, Timestamp.valueOf(now));
+            statement.setTimestamp(6, Timestamp.valueOf(now));
+
+            int rowsInserted = statement.executeUpdate();
+            return rowsInserted > 0;
+
+        } catch (ClassNotFoundException | SQLException ex) {
+            Logger.getLogger(CommentDao.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }
+    }
+
+    // Phương thức thêm bình luận cho món ăn
+    public static boolean addCommentDish(Comment cm) {
+        String query = "INSERT INTO [Comment] (account_id, dish_id, content, rating, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?)";
+        LocalDateTime now = LocalDateTime.now();
+
+        try (Connection conn = ConnectDB.getInstance().openConnection(); PreparedStatement statement = conn.prepareStatement(query)) {
+
+            statement.setInt(1, cm.getAccount().getAccount_id());
+            statement.setInt(2, cm.getDish().getDish_id());
+            statement.setString(3, cm.getContent());
+            statement.setInt(4, cm.getRating());
+            statement.setTimestamp(5, Timestamp.valueOf(now));
+            statement.setTimestamp(6, Timestamp.valueOf(now));
+
+            int rowsInserted = statement.executeUpdate();
+            return rowsInserted > 0;
+
+        } catch (ClassNotFoundException | SQLException ex) {
+            Logger.getLogger(CommentDao.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }
+    }
+
+    // Phương thức thêm bình luận cho bài đăng quảng cáo
+    public static boolean addCommentPost(Comment cm) {
+        String query = "INSERT INTO [Comment] (account_id, post_id, content, created_at, updated_at) VALUES (?, ?, ?, ?, ?)";
+        LocalDateTime now = LocalDateTime.now();
+
+        try (Connection conn = ConnectDB.getInstance().openConnection(); PreparedStatement statement = conn.prepareStatement(query)) {
+
+            statement.setInt(1, cm.getAccount().getAccount_id());
+            statement.setInt(2, cm.getPost().getAd_id());
+            statement.setString(3, cm.getContent());
+            statement.setTimestamp(4, Timestamp.valueOf(now));
+            statement.setTimestamp(6, Timestamp.valueOf(now));
+
+            int rowsInserted = statement.executeUpdate();
+            return rowsInserted > 0;
+
+        } catch (ClassNotFoundException | SQLException ex) {
+            Logger.getLogger(CommentDao.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }
+    }
+
+    public static boolean deleteComment(int commentId) {
+        String query = """
+                       DELETE FROM Likes WHERE CommentID = ?
+                       DELETE FROM [Comment] WHERE comment_id = ?""";
+
+        try (Connection conn = ConnectDB.getInstance().openConnection(); PreparedStatement statement = conn.prepareStatement(query)) {
+
+            statement.setInt(1, commentId);
+            statement.setInt(2, commentId);
+            int rowsDeleted = statement.executeUpdate();
+            return rowsDeleted > 0;
+
+        } catch (ClassNotFoundException | SQLException ex) {
+            Logger.getLogger(CommentDao.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }
+    }
+
+    public static boolean updateComment(int commentId, String newContent, int newRating) {
+        String query = "UPDATE [Comment] SET content = ?, rating = ?, updated_at = ? WHERE comment_id = ?";
+        LocalDateTime now = LocalDateTime.now();
+
+        try (Connection conn = ConnectDB.getInstance().openConnection(); PreparedStatement statement = conn.prepareStatement(query)) {
+
+            statement.setString(1, newContent);
+            statement.setInt(2, newRating);
+            statement.setTimestamp(3, Timestamp.valueOf(now));
+            statement.setInt(4, commentId);
+
+            int rowsUpdated = statement.executeUpdate();
+            return rowsUpdated > 0;
+
+        } catch (ClassNotFoundException | SQLException ex) {
+            Logger.getLogger(CommentDao.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }
     }
 }

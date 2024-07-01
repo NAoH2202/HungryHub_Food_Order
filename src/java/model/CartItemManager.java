@@ -20,9 +20,7 @@ public class CartItemManager {
     public ArrayList<CartItem> getList() {
         return List;
     }
-    
-    
-    
+
     public CartItem getCartItemById(int id) {
         for (CartItem facc : List) {
             if (id == facc.getCartitemId()) {
@@ -30,6 +28,16 @@ public class CartItemManager {
             }
         }
         return null;
+    }
+    
+    public ArrayList<CartItem> getCartItemByAccountId(int id) {
+        ArrayList<CartItem> ciList = new ArrayList<>();
+        for (CartItem facc : List) {
+            if (id == facc.getUser().getAccount_id()) {
+                ciList.add(facc);
+            }
+        }
+        return ciList;
     }
     
     public static void main(String[] args) {

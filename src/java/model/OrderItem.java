@@ -15,21 +15,21 @@ public class OrderItem {
     private int order_id;
     private Dish dish;
     private int quantity;
-    private double price;
+    private int price;
     private Date created_at = new Date();
     private Date updated_at = new Date();
 
     public OrderItem() {
     }
 
-    public OrderItem(int order_item_id, int order_id, Dish dish, int quantity, double price) {
+    public OrderItem(int order_item_id, int order_id, Dish dish, int quantity, int price) {
         this.order_item_id = order_item_id;
         this.order_id = order_id;
         this.dish = dish;
         this.quantity = quantity;
         this.price = price;
     }
-    public OrderItem(int order_item_id, Dish dish, int quantity, double price) {
+    public OrderItem(int order_item_id, Dish dish, int quantity, int price) {
         this.order_item_id = order_item_id;
         this.dish = dish;
         this.quantity = quantity;
@@ -71,11 +71,11 @@ public class OrderItem {
         this.quantity = quantity;
     }
 
-    public double getPrice() {
+    public int getPrice() {
         return price;
     }
 
-    public void setPrice(double price) {
+    public void setPrice(int price) {
         this.price = price;
     }
 

@@ -1,3 +1,8 @@
+<%@page import="controller.AddToCartServlet"%>
+<%@page import="model.CartItem"%>
+<%@page import="java.util.ArrayList"%>
+<%@page import="model.CartItemManager"%>
+<%@page import="model.Account"%>
 <%@ page import="model.OrderItem" %>
 <%@ page import="java.util.List" %>
 <%@ page import="model.Dish" %>
@@ -52,20 +57,70 @@
             .submit-btn-container {
                 text-align: center;
             }
-        </style>
-        <script>
-            function toggleEditAddress() {
-                var addressField = document.getElementById('address');
-                var editButton = document.getElementById('editAddressButton');
-                if (addressField.readOnly) {
-                    addressField.readOnly = false;
-                    editButton.value = "Save Address";
-                } else {
-                    addressField.readOnly = true;
-                    editButton.value = "Edit Address";
-                }
+            /* Styles for the success modal */
+            .modal {
+                display: none;
+                position: fixed;
+                z-index: 1000;
+                left: 0;
+                top: 0;
+                width: 100%;
+                height: 100%;
+                overflow: auto;
+                background-color: rgba(0, 0, 0, 0.5);
+                justify-content: center;
+                align-items: center;
             }
-        </script>
+            .modal-content {
+                background-color: #fefefe;
+                padding: 20px;
+                border: 1px solid #888;
+                width: 80%;
+                max-width: 500px;
+                text-align: center;
+                border-radius: 10px;
+            }
+            .close {
+                color: #aaa;
+                float: right;
+                font-size: 28px;
+                font-weight: bold;
+            }
+            .close:hover,
+            .close:focus {
+                color: black;
+                text-decoration: none;
+                cursor: pointer;
+            }
+            .success-icon {
+                font-size: 50px;
+                color: green;
+            }
+            .modal-header-new {
+                display: flex;
+                justify-content: flex-end;
+            }
+            .modal-body {
+                padding: 10px 20px;
+            }
+            .modal-footer-new {
+                display: flex;
+                justify-content: center;
+                align-content: center;
+            }
+            .btn-success {
+                padding: 10px 40px;
+                background-color: green;
+                width: 200px;
+                border: none;
+                color: white;
+                font-size: 16px;
+                border-radius: 5px;
+            }
+            .btn-success:hover {
+                background-color: darkgreen;
+            }
+        </style>
     </head>
     <body>
         <div>
@@ -73,16 +128,34 @@
             <jsp:include page="path/header.jsp"/>
             <!-- End header section -->
         </div>
+        <%
+            if (request.getSession().getAttribute("account") == null) {
+                response.sendRedirect("LoginServlet");
+                return;
+            }
+            Account account = (Account) request.getSession().getAttribute("account");
+
+        %>
         <div class="center-container">
             <div class="card">
-                <h2 class="text-center">Order Confirmation</h2>
+                <h2 class="text-center">Xác nhận đơn hàng</h2>
                 <form action="ChangeAddress" method="POST">
                     <div class="form-group">
                         <label for="address">Địa chỉ giao hàng:</label>
-                        <input type="text" id="address" name="address" class="form-control" value="<%= request.getAttribute("address")%>" readonly>
+                        <input type="text" id="address" name="address" class="form-control" value="<%=account.getAddress()%>" readonly>
                         <input type="button" id="editAddressButton" value="Thay đổi địa chỉ giao hàng" class="btn btn-primary btn-edit mt-2" onclick="toggleEditAddress()">
                     </div>
                 </form>
+                <%
+                    int OrderPrice = 0;
+                    int totalPrice = 0;
+                    CartItemManager cim = new CartItemManager();
+                    ArrayList<CartItem> ciList = cim.getCartItemByAccountId(account.getAccount_id());
+                    ArrayList<Account> dinerList = AddToCartServlet.getUniqueDinersFromCartItems(ciList);
+                    ArrayList<CartItem> ciListByDiner;
+                    for (Account diner : dinerList) {
+                %>
+                <h2><%=diner.getName()%></h2>
                 <table class="center-table">
                     <thead>
                         <tr>
@@ -93,56 +166,30 @@
                     </thead>
                     <tbody>
                         <%
-                            List<OrderItem> orderItems = (List<OrderItem>) request.getAttribute("orderItems");
-                            if (orderItems != null && !orderItems.isEmpty()) {
-                                for (OrderItem item : orderItems) {
-
+                            ciListByDiner = AddToCartServlet.getCartItemsByDiner(diner.getAccount_id(), ciList);
+                            for (CartItem ci : ciListByDiner) {
+                                OrderPrice += ci.getDish().getPrice() * ci.getQuantity();
                         %>
                         <tr>
-                            <td><%= item.getDish().getName()%></td>
-                            <td><%= item.getQuantity()%></td>
-                            <td><%=item.getDish().getPrice() * item.getQuantity()%></td>
+                            <td><%= ci.getDish().getName()%></td>
+                            <td><%= ci.getQuantity()%></td>
+                            <td><%=ci.getDish().getPrice() * ci.getQuantity()%></td>
                         </tr>
                         <%
-                            }
-                        } else {
-                        %>
-                        <tr>
-                            <td colspan="3">Không có món ăn nào được order</td>
-                        </tr>
-                        <% }%>
+                            }%>
                     </tbody>
                 </table>
+                <p class="total-cost"><b>Tổng :</b> <%=OrderPrice%> VNĐ</p>
+                <%totalPrice += OrderPrice;
+                        OrderPrice = 0;
+                    }%>
                 <!-- Display total cost of the order -->
-                <p class="total-cost"><b>Tổng giá tiền:</b>   <%= request.getAttribute("totalCost")%> VNĐ</p>
-                <%
-                    if (orderItems != null && !orderItems.isEmpty() && orderItems.size() >= 1) {
-                        OrderItem oi = orderItems.get(0);
-                        if (oi.getDish().getAccount() != null) {
-                %>
-                <p><b>Tên người nhận:   </b> <%= oi.getDish().getAccount().getName()%></p>
-                <%
-                        } else {
-                            out.println("Required data is missing in the order item.");
-                        }
-                    } else {
-                        out.println("Order items list does not have enough elements.");
-                    }
-                %>
-                <form action="OrderCompleteServlet" method="post">
-                    <%
-                        int i = 0;
-                        for (OrderItem item : orderItems) {
-                    %>
-                    <input type="hidden" name="orderItems<%=i%>" value="<%=item.getDish().getDish_id()%>">
-                    <input type="hidden" name="orderQuantity<%=i%>" value="<%=item.getQuantity()%>">
-                    <%
-                            i++;
-                        }
-                    %>
+                <p class="total-cost"><b>Tổng giá tiền:</b>   <%=totalPrice%> VNĐ</p>
 
-                    <input type="hidden" name="totalCost" value="<%= request.getAttribute("totalCost")%>">
+                <p><b>Tên người nhận:   </b> <%=account.getName()%></p>
 
+                <form id="orderForm" action="OrderCompleteServlet" method="post">
+                    <input type="hidden" name="totalCost" value="<%=totalPrice%>">
                     <label for="paymentMethod"><b>Chọn phương thức thanh toán:</b></label>
                     <select id="paymentMethod" name="paymentMethod" class="form-control">
                         <option value="receipt">Trả sau khi nhận hàng</option>
@@ -150,19 +197,48 @@
                     </select>
 
                     <div class="submit-btn-container">
-                        <input type="submit" value="Order" class="btn btn-primary btn-lg mt-4">
+                        <input type="button" value="Đặt hàng" class="btn btn-primary btn-lg mt-4" onclick="showSuccessModal()">
                     </div>
                 </form>
-                    <%
-                        if(request.getAttribute("message")!=null){
-                        String mess = (String) request.getAttribute("message");
-                            %>
-                            <div>mess</div>
                 <%
-                        }
-                    %>
+                    if (request.getAttribute("message") != null) {
+                        String mess = (String) request.getAttribute("message");
+                %>
+                <div>mess</div>
+                <%
+                    }
+                %>
             </div>
         </div>
+        <div id="successModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="success-icon">✔</div>
+                    <h2>Đặt hàng thành công!</h2>
+                    <p>Cảm ơn bạn đã đặt hàng. Đơn hàng của bạn đang được xử lý.</p>
+                    <p>Đi đến danh sách đơn hàng !!</p>
+                </div>
+                <div class="modal-footer-new">
+                    <button class="btn-success" onclick="submitForm()">OK</button>
+                </div>
+            </div>
+        </div>
+        <script>
+            // Hiển thị modal thông báo thành công
+            function showSuccessModal() {
+                document.getElementById('successModal').style.display = 'flex';
+            }
+            // Đóng modal và submit form
+            function closeModal() {
+                document.getElementById('successModal').style.display = 'none';
+            }
+
+            // Submit form sau khi đóng modal
+            function submitForm() {
+                closeModal();
+                document.getElementById('orderForm').submit();
+            }
+        </script>
         <jsp:include page="path/footer.jsp"/>
     </body>
 </html>

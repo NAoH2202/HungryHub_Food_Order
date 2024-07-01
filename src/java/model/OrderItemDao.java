@@ -38,7 +38,7 @@ public class OrderItemDao {
                 int dish_id = rs.getInt("dish_id");
                 Dish dish = dm.getDishById(dish_id);
                 int quantity = rs.getInt("quantity");
-                double price = rs.getInt("price");
+                int price = rs.getInt("price");
                 Date created_at = rs.getTimestamp("created_at");
                 Date updated_at = rs.getTimestamp("updated_at");
                 OrderItem orderItem = new OrderItem(order_item_id, order_id, dish, quantity, price);
@@ -71,11 +71,12 @@ public class OrderItemDao {
         
         try {
             conn = db.openConnection();
-            String query = "INSERT INTO OrderItem (order_id, dish_id, quantity) VALUES (?, ?, ?)";
+            String query = "INSERT INTO OrderItem (order_id, dish_id, quantity, price) VALUES (?, ?, ?, ?)";
             statement = conn.prepareStatement(query);
             statement.setInt(1, orderItem.getOrder_id());
             statement.setInt(2, orderItem.getDish().getDish_id());
             statement.setInt(3, orderItem.getQuantity());
+            statement.setInt(4, orderItem.getPrice());
             
             int rowsInserted = statement.executeUpdate();
             if (rowsInserted > 0) {

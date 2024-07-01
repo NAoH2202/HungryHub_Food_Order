@@ -4,7 +4,6 @@
  */
 package controller;
 
-import com.google.gson.JsonObject;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -15,16 +14,15 @@ import javax.servlet.http.HttpServletResponse;
 import model.Account;
 import model.AccountManager;
 import model.Comment;
-import model.CommentManager;
-import model.ReplyComment;
+import model.CommentDao;
 import model.ReplyCommentDao;
 
 /**
  *
  * @author lenovo
  */
-@WebServlet(name = "RepCommentServlet", urlPatterns = {"/RepCommentServlet"})
-public class RepCommentServlet extends HttpServlet {
+@WebServlet(name = "deleteCommentServlet", urlPatterns = {"/deleteCommentServlet"})
+public class deleteCommentServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -37,17 +35,16 @@ public class RepCommentServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.setCharacterEncoding("UTF-8");
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet RepCommentServlet</title>");
+            out.println("<title>Servlet deleteCommentServlet</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet RepCommentServlet at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet deleteCommentServlet at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -60,49 +57,49 @@ public class RepCommentServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.setCharacterEncoding("UTF-8");
-        response.setCharacterEncoding("UTF-8");
-
-        CommentManager cm = new CommentManager();
-        Account account = (Account) request.getSession().getAttribute("account");
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
 
         String status = request.getParameter("status");
         switch (status) {
-            case "comment":
+            case "Comment":
                 String dinerIdString = request.getParameter("dinerId");
                 int dinerId = Integer.parseInt(dinerIdString);
-                String commentIdString = request.getParameter("commentId");
-                int commentId = Integer.parseInt(commentIdString);
-                Comment comment = cm.getCommentById(commentId);
-                String replyContent = request.getParameter("replyContent");
-                ReplyComment rm = new ReplyComment(0, account, comment, replyContent);
-                ReplyCommentDao.addReplyComment(rm);
-
-                PrintWriter out = response.getWriter();
+                String commentIDString = request.getParameter("commentID");
+                int commentId = Integer.parseInt(commentIDString);
+                CommentDao.deleteComment(commentId);
                 response.sendRedirect("CustomerDinerPage?id=" + dinerId);
                 break;
             case "dish":
                 String dishIdString = request.getParameter("dishId");
                 int dishId = Integer.parseInt(dishIdString);
-                String commentIdString2 = request.getParameter("commentId");
-                int commentId2 = Integer.parseInt(commentIdString2);
-                Comment comment2 = cm.getCommentById(commentId2);
-                String replyContent2 = request.getParameter("replyContent");
-                ReplyComment rm2 = new ReplyComment(0, account, comment2, replyContent2);
-                ReplyCommentDao.addReplyComment(rm2);
-
+                String commentIDString2 = request.getParameter("commentID");
+                int commentId2 = Integer.parseInt(commentIDString2);
+                CommentDao.deleteComment(commentId2);
                 response.sendRedirect("CustomerDishPage?id=" + dishId);
                 break;
+            case "reply":
+
+                String replycommentIDString = request.getParameter("replycommentID");
+                int replycommentId = Integer.parseInt(replycommentIDString);
+                ReplyCommentDao.deleteReplyCommentById(replycommentId);
+                if (request.getParameter("dinerId") != null) {
+                    String dinerIdString2 = request.getParameter("dinerId");
+                    int dinerId2 = Integer.parseInt(dinerIdString2);
+                    response.sendRedirect("CustomerDinerPage?id=" + dinerId2);
+                }else{
+                    String dishIdString2 = request.getParameter("dishId");
+                    int dishId2 = Integer.parseInt(dishIdString2);
+                    response.sendRedirect("CustomerDishPage?id=" + dishId2);
+                }
+                break;
+            // Có thể thêm các case khác để xử lý cho các giá trị khác của 'status'
             default:
+                response.getWriter().write("Invalid status!");
+                break;
         }
     }
 
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
     @Override
     public String getServletInfo() {
         return "Short description";

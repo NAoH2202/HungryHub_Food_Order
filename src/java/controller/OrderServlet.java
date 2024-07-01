@@ -65,9 +65,8 @@ public class OrderServlet extends HttpServlet {
                     int quantity = Integer.parseInt(dishQuantity);
 
                     if (id > 0 && quantity > 0) {
-                        
                         Dish dish = dm.getDishById(id);
-                        double price = dish.getPrice()*quantity;
+                        int price = dish.getPrice()*quantity;
                         OrderItem orderItem = new OrderItem(id, dish, quantity, price);
                         orderItems.add(orderItem);
                     }

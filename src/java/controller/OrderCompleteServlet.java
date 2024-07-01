@@ -16,6 +16,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import model.Account;
+import model.CartItem;
+import model.CartItemDao;
+import model.CartItemManager;
 import model.Dish;
 import model.DishDao;
 import model.DishManager;
@@ -43,6 +46,7 @@ public class OrderCompleteServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        request.setCharacterEncoding("UTF-8");
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
@@ -76,43 +80,50 @@ public class OrderCompleteServlet extends HttpServlet {
         if (request.getSession().getAttribute("account") == null) {
             request.getRequestDispatcher("login.jsp").forward(request, response);
         }
-        Account acc = (Account) request.getSession().getAttribute("account");
+        Account account = (Account) request.getSession().getAttribute("account");
         // Convert totalCost and accountId to their respective types
-        double totalCost = Double.parseDouble(totalCostStr);
+        int totalCost = Integer.parseInt(totalCostStr);
+        int OrderPrice = 0;
+        switch (paymentMethod) {
+            case "receipt": {
+                // Recreate the list of OrderItems
+                OrderManager om = new OrderManager();
+                CartItemManager cIm = new CartItemManager();
+                ArrayList<CartItem> ciList = cIm.getCartItemByAccountId(account.getAccount_id());
+                ArrayList<Account> dinerList = AddToCartServlet.getUniqueDinersFromCartItems(ciList);
+                ArrayList<CartItem> ciListByDiner;
+                ArrayList<OrderItem> oiList = new ArrayList<>();
+                for (Account diner : dinerList) {
+                    ciListByDiner = AddToCartServlet.getCartItemsByDiner(diner.getAccount_id(), ciList);
+                        for (CartItem ci : ciListByDiner) {
+                            OrderPrice+=ci.getDish().getPrice() * ci.getQuantity();
+                            oiList.add(new OrderItem(0, ci.getDish(), ci.getQuantity(), ci.getDish().getPrice()* ci.getQuantity()));
+                        }
+                    Order order = new Order(0, account, diner, null, "Checking", paymentMethod, totalCost);
+                    int orderId = OrderDao.addOrder(order);
+                    for(OrderItem oi : oiList){
+                        oi.setOrder_id(orderId);
+                        OrderItemDao.addOrderItem(oi);
+                    }
+                    oiList.clear();
+                    OrderPrice=0;
+                }
+                CartItemDao.removeCartItemByAccountId(account.getAccount_id());
+                request.setAttribute("message", "Order thành công");
+                response.sendRedirect("CustomerOrderPage");
+                break;
+            }
+            case "online":
+                request.getRequestDispatcher("orderConfirmation.jsp").forward(request, response);
+                break;
+            default:
+                throw new AssertionError();
+        }
 
-        // Recreate the list of OrderItems
-        DishManager dm = new DishManager();
-        OrderManager om = new OrderManager();
-        List<OrderItem> orderItems = new ArrayList<>();
-        int i = 0;
-        while (request.getParameter("orderItems" + i) != null) {
-            int dishId = Integer.parseInt(request.getParameter("orderItems" + i));
-            int quantity = Integer.parseInt(request.getParameter("orderQuantity" + i));
-            // Assuming you have a way to get Dish object by dishId
-            Dish dish = dm.getDishById(dishId);
-            OrderItem item = new OrderItem(0, dish, quantity, totalCost);
-            orderItems.add(item);
-            i++;
-        }
-        OrderItem check = orderItems.get(0);
-        Order od = new Order(0, acc, check.getDish().getAccount(), null, "Checking", paymentMethod, totalCost);
-        int orderId = OrderDao.addOrder(od);
-        if (orderId == -1) {
-            request.setAttribute("message", "Không thể thêm order");
-            request.getRequestDispatcher("complete.jsp").forward(request, response);
-        }
-        System.out.println(orderId);
-        for (OrderItem oi : orderItems) {
-            oi.setOrder_id(orderId);
-            OrderItemDao.addOrderItem(oi);
-        }
-        request.setAttribute("message", "Order thành công");
-        request.getRequestDispatcher("complete.jsp").forward(request, response);
     }
 
     @Override
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
-
 }

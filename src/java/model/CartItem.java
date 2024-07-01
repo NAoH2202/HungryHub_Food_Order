@@ -1,4 +1,4 @@
-/*
+                           /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
@@ -12,15 +12,15 @@ import java.time.LocalDateTime;
  */
 public class CartItem {
     private int cartitemId;
-    private Cart cart;
+    private Account user;
     private Dish dish;
     private int quantity;
     private LocalDateTime created_at = LocalDateTime.now();
     private LocalDateTime updated_at = LocalDateTime.now();
 
-    public CartItem(int cartitemId, Cart cart, Dish dish, int quantity) {
+    public CartItem(int cartitemId, Account user, Dish dish, int quantity) {
         this.cartitemId = cartitemId;
-        this.cart = cart;
+        this.user = user;
         this.dish = dish;
         this.quantity = quantity;
     }
@@ -33,13 +33,15 @@ public class CartItem {
         this.cartitemId = cartitemId;
     }
 
-    public Cart getCart() {
-        return cart;
+    public Account getUser() {
+        return user;
     }
 
-    public void setCart(Cart cart) {
-        this.cart = cart;
+    public void setUser(Account user) {
+        this.user = user;
     }
+
+    
 
     public Dish getDish() {
         return dish;
@@ -75,6 +77,7 @@ public class CartItem {
 
     @Override
     public String toString() {
-        return "CartItem{" + "cartitemId=" + cartitemId + ", cart=" + cart + ", dish=" + dish + ", quantity=" + quantity + ", created_at=" + created_at + ", updated_at=" + updated_at + '}';
+        return "CartItem{" + "cartitemId=" + cartitemId + ", user=" + user + ", dish=" + dish + ", quantity=" + quantity + ", created_at=" + created_at + ", updated_at=" + updated_at + '}';
     }
+
 }
