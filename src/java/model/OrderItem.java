@@ -19,6 +19,11 @@ public class OrderItem {
     private Date created_at = new Date();
     private Date updated_at = new Date();
 
+    public OrderItem() {
+    }
+
+    
+    
     public OrderItem(int order_item_id, Order order, Dish dish, int quantity, double price) {
         this.order_item_id = order_item_id;
         this.order = order;

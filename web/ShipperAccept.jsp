@@ -19,6 +19,7 @@
                 display: flex;
                 flex-direction: column;
                 overflow: hidden;
+                overflow-y: auto;
             }
             #map {
                 height: 100%;
@@ -37,16 +38,8 @@
                 overflow-y: auto;
                 display: flex;
                 flex-direction: column;
-            }
-            .table-container {
-                background-color: #ffffff;
-                padding: 20px;
                 border-radius: 10px;
                 box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-                flex-grow: 1;
-                display: flex;
-                flex-direction: column;
-                position: relative;
             }
             .sidebar {
                 flex: 1;
@@ -56,6 +49,7 @@
                 border-left: 1px solid #ccc;
                 border-radius: 10px;
                 margin-left: 20px;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             }
             .map, .chat {
                 padding: 20px;
@@ -69,9 +63,10 @@
             .chat {
                 flex: 1;
             }
-            h2 {
+            h1, h2 {
                 margin-top: 0;
                 color: #333;
+                font-weight: normal;
             }
             table {
                 width: 100%;
@@ -79,6 +74,7 @@
                 margin-top: 20px;
                 border-radius: 10px;
                 overflow: hidden;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             }
             table th, table td {
                 padding: 12px;
@@ -87,15 +83,18 @@
             }
             table th {
                 background-color: #8bc34a;
+                color: #fff;
             }
             table tr:nth-child(even) {
-                background-color: #ffffff;
+                background-color: #f9f9f9;
             }
             #chat-box {
                 height: calc(70% - 40px);
                 overflow-y: auto;
                 border: 1px solid #ccc;
                 padding: 10px;
+                border-radius: 10px;
+                box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
             }
             #chat-form {
                 display: flex;
@@ -123,17 +122,23 @@
             .header {
                 display: flex;
                 align-items: center;
-                padding: 40px;
+                padding: 15px;
                 background-color: #8bc34a;
                 box-shadow: 0 2px 4px rgba(0,0,0,0.1);
                 position: relative;
             }
-            .header img {
-                height: 50px;
+            .header a {
+                text-decoration: none;
+                color: #000;
+                font-family: 'Brush Script MT', sans-serif;
+                font-size: 50px;
             }
-            input[type="submit"]:hover {
-                background-color: #45a049;
-                color: red;
+            .header .order_online {
+                position: absolute;
+                top: 30px;
+                right: 20px;
+                font-size: 40px;
+                color: white;
             }
             .message {
                 padding: 10px;
@@ -143,12 +148,8 @@
             }
             .message-success {
                 color: #155724;
-                background-color: #d4edda; /* Màu nền xanh nhạt */
+                background-color: #d4edda;
                 border-color: #c3e6cb;
-                padding: 10px;
-                margin-bottom: 20px; /* Để tách thông báo và phần thông tin đơn hàng */
-                border: 1px solid transparent;
-                border-radius: 4px;
             }
             .message-error {
                 color: #721c24;
@@ -159,84 +160,148 @@
                 display: flex;
                 justify-content: flex-end;
                 margin-top: 20px;
+                 gap: 0.5cm;
             }
-            input[type="submit"] {
+            .accept-button-container input[type="submit"] {
                 padding: 15px 30px;
                 font-size: 16px;
                 background-color: #8bc34a;
                 color: #fff;
                 border: none;
-                border-radius: 4px;
+                border-radius: 10px;
                 cursor: pointer;
                 transition: background-color 0.3s;
             }
-            input[type="submit"]:hover {
+            .accept-button-container input[type="submit"]:hover {
                 background-color: #7cb342;
             }
-            .message-complete {
-                color: #155724;
-                background-color: #d4edda;
-                border-color: #c3e6cb;
-                padding: 10px;
-                margin-top: 20px;
-                border: 1px solid transparent;
-                border-radius: 4px;
+            .accept-button-container input[type="submitCancel"]:hover {
+                background-color: #dc3545;
             }
+             .accept-button-container input[type="submitCancel"] {
+                 height: 15px;
+                 width: 60px;
+                padding: 15px 30px;
+                font-size: 16px;
+                background-color: #e66365;
+                color: #fff;
+                border: none;
+                border-radius: 10px;
+                cursor: pointer;
+                transition: background-color 0.3s;
+            }
+            .popup, .popupcancel {
+                background-color: #ffffff;
+                border-radius: 6px;
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%) scale(0.1);
+                text-align: center;
+                padding: 20px;
+                visibility: hidden;
+                transition: transform 0.4s, top 0.4s;
+                z-index: 9999;
+                width: 300px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            }
+            .popup.open-popup, .popupcancel.open-popupcancel {
+                visibility: visible;
+                transform: translate(-50%, -50%) scale(1);
+            }
+            .popup h2, .popupcancel h2 {
+                margin-top: 0;
+                color: #333;
+            }
+            .popup p, .popupcancel p {
+                color: #333;
+            }
+            .popup button, .popupcancel button {
+                width: 80%;
+                padding: 10px 0;
+                color: #fff;
+                border: 0;
+                outline: none;
+                font-size: 18px;
+                border-radius: 5px;
+                cursor: pointer;
+                transition: background-color 0.3s;
+            }
+            .popup button.ok {
+                background: #45a049;
+                margin-top: 20px;
+            }
+            .popup button.close {
+                background: #c3e6cb;
+                margin-top: 20px;
+            }
+            .popupcancel button.ok {
+                background: #dc3545;
+                margin-top: 20px;
+            }
+            .popupcancel button.close {
+                background: #f8d7da;
+                color: #333;
+                margin-top: 20px;
+            }
+            .popupcancel button.close:hover {
+                background: #f5c6cb;
+            }
+            .back-button {
+    margin-top: 5px;
+    margin-bottom: 5px;
+    text-align: left;
+      padding-left: 0.5cm;
+}
+
+ 
+
+.back-link i {
+    margin-right: 5px;
+    color: #555; /* Màu mũi tên xám */
+    font-size: 20px;
+    display: inline-block;
+    transform: scaleX(1.75);/* Độ dài và kích thước của mũi tên */
+}
             
         </style>
-        <script>
-            function initMap() {
-                var map = new google.maps.Map(document.getElementById('map'), {
-                    center: {lat: -34.397, lng: 150.644},
-                    zoom: 8
-                });
-            }
-        </script>
-        <script async defer
-                src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap">
-        </script>
-
-        <script>
-            function showCompleteMessage() {
-                var messageBox = document.createElement('div');
-                messageBox.className = 'message message-success';
-                messageBox.innerHTML = 'Order completed successfully!';
-                document.body.appendChild(messageBox);
-            }
-        </script>
-
     </head>
     <body>
         <div class="header">
-           <a href="ShipperPage" style="text-decoration: none; color: #ff6347; font-family: 'Roboto', sans-serif; font-size: 20px; font-weight: bold;">
-    HungryHub</a>
-            <a href="AccountPage" class="order_online" style="position: absolute; top: 30px; right: 20px; font-size: 40px;">
+            <a href="ShipperPage">HungryHub</a>
+            <a href="ShipperAccountPage" class="order_online">
                 <i class="fas fa-user"></i>
             </a>
         </div>
+        <div class="back-button">
+    <a href="ShipperListAcceptPage" class="back-link">
+        <i class="fas fa-arrow-left"></i>
+    </a>
+</div>
         <div class="container">
             <div class="order-info">
-                <h1 style="font-size: 36px; line-height: 42px;">Order Information</h1>
+                <h1>Order Information</h1>
                 <%
+                    OrderItem orderItem = null;
                     ArrayList<OrderItem> orderItemList = (ArrayList<OrderItem>) request.getAttribute("orderItemList");
                     if (orderItemList == null || orderItemList.isEmpty()) {
                 %>
                 <div class="message message-error">Order not found or empty.</div>
                 <%
-                } else {
-                  %>
-                <div class="message message-success">Accept successfully!!!</div>
-                 <%   OrderItem orderItem = orderItemList.get(0);
-                    double total = 0.0;
-                    for (OrderItem item : orderItemList) {
-                        total += item.getDish().getPrice() * item.getQuantity();
-                    }
+                    } else {
+                        orderItem = orderItemList.get(0);
+                        double total = 0.0;
+                        for (OrderItem item : orderItemList) {
+                            total += item.getDish().getPrice() * item.getQuantity();
+                        }
                 %>
                 <div>
                     <p><strong>Order ID:</strong> <%= orderItem.getOrder().getOrder_id()%></p>
+                    <p><strong>Shipper ID:</strong> <%= orderItem.getOrder().getShipper().getAccount_id()%></p>
                     <p><strong>Name Customer:</strong> <%= orderItem.getOrder().getCustomer().getName()%></p>
                     <p><strong>Phone Number:</strong> <%= orderItem.getOrder().getCustomer().getPhoneNumber()%></p>
-                    <p><strong>Address:</strong> <%= orderItem.getOrder().getCustomer().getAddress()%></p>
+                    <p><strong>Diner address:</strong> <%= orderItem.getOrder().getDiner().getAddress()%></p>
+                    <p><strong>Customer address:</strong> <%= orderItem.getOrder().getCustomer().getAddress()%></p>
                     <p><strong>Status Order:</strong> <%= orderItem.getOrder().getOrder_status()%></p>
                     <p><strong>Total:</strong> <%= total%></p>
                 </div>
@@ -245,10 +310,37 @@
                 %>
 
                 <div class="accept-button-container">
-                    <input type="submit" id="completeButton" value="Complete" onclick="completeOrder()">
+                    <input type="submit" onclick="openPopup()" value="Complete">
+                    <div class="popup">
+                        <h2>--------------------------------</h2>
+                        <h2>Complete</h2>
+                        <p>Your Order Completed</p>
+                        <form id="completeForm" action="OrderItemServlet" method="GET">
+                            <input type="hidden" name="command" value="Complete">
+                            <input type="hidden" name="orderId" value="<%=orderItem.getOrder().getOrder_id()%>">
+                            <button class="ok" type="submit" onclick="submitFormAndRedirect()">OK</button>
+                            <button class="close" type="button" onclick="closePopup()">Close</button>
+                        </form>
+                    </div>   
+                            
+                            <input type="submitCancel" onclick="openPopupCancel()" value="Cancel">
+                    <div class="popupcancel">
+                        <h2>--------------------------------</h2>
+                        <h2>CANCEL</h2>
+                        <p>Are You Sure !!!</p>
+                        <form id="cancelForm" action="OrderItemServlet" method="GET">
+                            <input type="hidden" name="command" value="Canceled">
+                            <input type="hidden" name="orderId" value="<%=orderItem.getOrder().getOrder_id()%>">
+                            <textarea name="cancelReason" placeholder="Enter reason for cancellation" required></textarea>
+                            <button class="ok" type="submit" onclick="submitFormCancel()">OK</button>
+                            <button class="close" type="button" onclick="closePopupCancel()">Close</button>
+                        </form>
+                    </div>   
                 </div>
 
+ 
             </div>
+
             <div class="sidebar">
                 <div class="map">
                     <h2>Map</h2>
@@ -271,5 +363,35 @@
                 </div>
             </div>
         </div>
+
+        <script>
+            function openPopup() {
+                var popup = document.querySelector('.popup');
+                popup.classList.add('open-popup');
+            }
+
+            function closePopup() {
+                var popup = document.querySelector('.popup');
+                popup.classList.remove('open-popup');
+            }
+
+            function submitFormAndRedirect() {
+                document.getElementById("completeForm").submit();
+            }
+
+            function openPopupCancel() {
+                var popupcancel = document.querySelector('.popupcancel');
+                popupcancel.classList.add('open-popupcancel');
+            }
+
+            function closePopupCancel() {
+                var popupcancel = document.querySelector('.popupcancel');
+                popupcancel.classList.remove('open-popupcancel');
+            }
+
+            function submitFormCancel() {
+                document.getElementById("cancelForm").submit();
+            }
+        </script>
     </body>
 </html>

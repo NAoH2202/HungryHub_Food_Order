@@ -85,21 +85,38 @@ public class AccountManager {
     public boolean checkDishInDiner(String input, Account acc) {
         ArrayList<Dish> listDish = getAllDishByDiner(acc);
         for (Dish dish : listDish) {
-            if (dish.getName().equalsIgnoreCase(input) || dish.getType().equalsIgnoreCase(input) || dish.getDescription().equalsIgnoreCase(input)) {
+            if (matchesInput(input, dish)) {
                 return true;
             }
         }
         return false;
     }
 
+    private boolean matchesInput(String input, Dish dish) {
+        String check = input.trim().toLowerCase();
+        return dish.getName().toLowerCase().contains(check)
+                || dish.getType().toLowerCase().contains(check)
+                || dish.getDescription().toLowerCase().contains(check);
+    }
+
     public ArrayList<Account> searchDiner(String input) {
+        if (input == null || input.trim().isEmpty()) {
+            return new ArrayList<>(); // hoặc null hoặc trả về danh sách trống
+        }
         ArrayList<Account> listDiner = getAllDiner();
+        ArrayList<Account> resultDiner = new ArrayList<>();
         for (Account acc : listDiner) {
-            if (input.equalsIgnoreCase(acc.getName()) || input.equalsIgnoreCase(acc.getAddress()) || checkDishInDiner(input, acc)) {
-                listDiner.add(acc);
+            if (matchesInput(input, acc) || checkDishInDiner(input, acc)) {
+                resultDiner.add(acc);
             }
         }
-        return listDiner;
+        return resultDiner;
+    }
+
+    private boolean matchesInput(String input, Account acc) {
+        String check = input.trim().toLowerCase();
+        return acc.getName().toLowerCase().contains(check)
+                || acc.getAddress().toLowerCase().contains(check);
     }
 
     public ArrayList<Account> getNext3Accounts(int amout) {
@@ -148,10 +165,10 @@ public class AccountManager {
                 String maxacthuc = rs.getString("maxacthuc");
                 Timestamp thoigianhieuluc = rs.getTimestamp("thoigianhieuluc");
                 LocalDateTime tghl;
-                if(thoigianhieuluc != null){
-                tghl = thoigianhieuluc.toLocalDateTime();
-                }else{
-                    tghl =null;
+                if (thoigianhieuluc != null) {
+                    tghl = thoigianhieuluc.toLocalDateTime();
+                } else {
+                    tghl = null;
                 }
                 boolean trangthaixacthuc = rs.getBoolean("trangthaixacthuc");
 
@@ -206,7 +223,8 @@ public class AccountManager {
 
     public static void main(String[] args) {
         AccountManager am = new AccountManager();
-        for (Account a : am.getAllDiner()) {
+        ArrayList<Account> diner = am.searchDiner("c");
+        for (Account a : diner) {
             System.out.println(a);
         }
     }

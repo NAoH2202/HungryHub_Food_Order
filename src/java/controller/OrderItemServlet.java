@@ -10,6 +10,8 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import model.Account;
 import model.Order;
 import model.OrderDao;
 import model.OrderItem;
@@ -36,13 +38,18 @@ public class OrderItemServlet extends HttpServlet {
                 case "ITEM":
                     view(request, response);
                     break;
-                case "Map":
-                    map(request, response);
+                case "Accept":
+                    acceptOrderItem(request, response);
                     break;
-                case "Chat":
-                    chat(request, response);
+                case "Complete":
+                    complete(request, response);
                     break;
-                    
+                case "Canceled":
+                    canceled(request, response);
+                    break;
+                case "ViewDetail":
+                    viewDetail(request, response);
+                    break;
                 default:
                     listItem(request, response);
                     break;
@@ -60,8 +67,140 @@ public class OrderItemServlet extends HttpServlet {
         dispatcher.forward(request, response);
     }
 
-    private void map(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // Implement map logic here
+    private void viewDetail(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+       HttpSession session = request.getSession();
+        Account acc = (Account) session.getAttribute("account");
+        String orderItemIdStr = request.getParameter("orderId");
+
+        if (orderItemIdStr == null || orderItemIdStr.trim().isEmpty()) {
+            request.setAttribute("message", "Order item ID is missing or empty.");
+            request.getRequestDispatcher("ShipperAcceptPage").forward(request, response);
+            return;
+        }
+
+        int orderItemId;
+        try {
+            orderItemId = Integer.parseInt(orderItemIdStr);
+        } catch (NumberFormatException e) {
+            request.setAttribute("message", "Invalid order item ID format.");
+            request.getRequestDispatcher("ShipperAcceptPage").forward(request, response);
+            return;
+        }
+
+        OrderManager oM = new OrderManager();
+        OrderItemManager otm = new OrderItemManager();
+        OrderDao orderDao = new OrderDao();
+ 
+        request.setAttribute("orderItemList", otm.getOderItemByOrderId(orderItemId));
+        request.getRequestDispatcher("ShipperAcceptPage").forward(request, response);
+    }
+
+    private void complete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String orderItemIdStr = request.getParameter("orderId");
+        if (orderItemIdStr == null || orderItemIdStr.trim().isEmpty()) {
+            request.setAttribute("message", "Order item ID is missing or empty.");
+            request.getRequestDispatcher("ShipperListOrderPage").forward(request, response);
+            return;
+        }
+        int orderItemId;
+        try {
+            orderItemId = Integer.parseInt(orderItemIdStr);
+        } catch (NumberFormatException e) {
+            request.setAttribute("message", "Invalid order item ID format.");
+            request.getRequestDispatcher("ShipperListOrderPage").forward(request, response);
+            return;
+        }
+        OrderManager oM = new OrderManager();
+        OrderItemManager otm = new OrderItemManager();
+        OrderDao orderDao = new OrderDao();
+        Order orderToUpdate = oM.getOderById(orderItemId);
+        orderToUpdate.setOrder_status("Completed");
+        orderDao.updateOrderStatus(orderToUpdate); // Update order_status
+        request.setAttribute("orderItemList", otm.getOderItemByOrderId(orderItemId));
+        request.getRequestDispatcher("ShipperListOrderPage").forward(request, response);
+    }
+
+    private void canceled(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String orderItemIdStr = request.getParameter("orderId");
+        if (orderItemIdStr == null || orderItemIdStr.trim().isEmpty()) {
+            request.setAttribute("message", "Order item ID is missing or empty.");
+            request.getRequestDispatcher("ShipperListOrderPage").forward(request, response);
+            return;
+        }
+        int orderItemId;
+        try {
+            orderItemId = Integer.parseInt(orderItemIdStr);
+        } catch (NumberFormatException e) {
+            request.setAttribute("message", "Invalid order item ID format.");
+            request.getRequestDispatcher("ShipperListOrderPage").forward(request, response);
+            return;
+        }
+        OrderManager oM = new OrderManager();
+        OrderItemManager otm = new OrderItemManager();
+        OrderDao orderDao = new OrderDao();
+        Order orderToUpdate = oM.getOderById(orderItemId);
+        
+        orderToUpdate.setOrder_status("canceled");
+        orderDao.updateOrderStatus(orderToUpdate); // Update order_status
+         String cancelReason = request.getParameter("cancelReason");
+    if (cancelReason != null && !cancelReason.trim().isEmpty()) {
+        orderToUpdate.setReason(cancelReason); // Đặt lý do hủy trong đơn hàng
+        orderDao.updateReason(orderToUpdate); // Cập nhật lý do hủy vào cơ sở dữ liệu
+    }
+        
+        request.setAttribute("orderItemList", otm.getOderItemByOrderId(orderItemId));
+        request.getRequestDispatcher("ShipperListOrderPage").forward(request, response);
+    }
+
+    private void acceptOrderItem(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        HttpSession session = request.getSession();
+        Account acc = (Account) session.getAttribute("account");
+        String orderItemIdStr = request.getParameter("orderId");
+
+        if (orderItemIdStr == null || orderItemIdStr.trim().isEmpty()) {
+            request.setAttribute("message", "Order item ID is missing or empty.");
+            request.getRequestDispatcher("ShipperListAcceptPage").forward(request, response);
+            return;
+        }
+
+        int orderItemId;
+        try {
+            orderItemId = Integer.parseInt(orderItemIdStr);
+        } catch (NumberFormatException e) {
+            request.setAttribute("message", "Invalid order item ID format.");
+            request.getRequestDispatcher("ShipperListAcceptPage").forward(request, response);
+            return;
+        }
+
+        OrderManager oM = new OrderManager();
+        OrderItemManager otm = new OrderItemManager();
+        OrderDao orderDao = new OrderDao();
+
+        Order orderToUpdate = oM.getOderById(orderItemId);
+
+        if (orderToUpdate == null) {
+            String message = "Failed to Accept. Order not found.";
+            request.setAttribute("message", message);
+            request.getRequestDispatcher("ShipperListAcceptPage").forward(request, response);
+            return;
+        }
+
+        int shipperId = acc.getAccount_id();
+        orderToUpdate.setShipper(acc); // Assuming setShipper() accepts an Account object
+        orderToUpdate.getShipper().setAccount_id(shipperId); // Assuming setAccount_id() is a method in Account class
+
+        // Update order status
+        orderToUpdate.setOrder_status("OntheWay");
+
+        // Update order in database using OrderDao
+        orderDao.updateShipperId(orderToUpdate); // Update shipper_id
+        orderDao.updateOrderStatus(orderToUpdate); // Update order_status
+
+        // Prepare success message and forward to ShipperAcceptPage
+        String message = "Order accepted successfully!";
+        request.setAttribute("message", message);
+        request.setAttribute("orderItemList", otm.getOderItemByOrderId(orderItemId));
+        request.getRequestDispatcher("ShipperListAcceptPage").forward(request, response);
     }
 
     private void view(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -80,50 +219,10 @@ public class OrderItemServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String command = request.getParameter("command");
-        if ("Accept".equals(command)) {
-            acceptOrderItem(request, response);
-        }
-    }
-
-    private void acceptOrderItem(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String orderItemIdStr = request.getParameter("orderId");
-        
-    
-        if (orderItemIdStr == null || orderItemIdStr.trim().isEmpty()) {
-            request.setAttribute("message", "Order item ID is missing or empty.");
-            request.getRequestDispatcher("ShipperAccept.jsp").forward(request, response);
-            return;
-        }
-
-        int orderItemId;
-        try {
-            orderItemId = Integer.parseInt(orderItemIdStr);
-        } catch (NumberFormatException e) {
-            request.setAttribute("message", "Invalid order item ID format.");
-            request.getRequestDispatcher("ShipperAccept.jsp").forward(request, response);
-            return;
-        }
-
-        OrderManager oM = new OrderManager();
-        OrderItemManager otm = new OrderItemManager();
-        Order orderToUpdate = oM.getOderById(orderItemId);
-        OrderDao orderDao = new OrderDao();
-        String message;
-        if (orderToUpdate != null) {
-            orderToUpdate.setOrder_status("OntheWay");
-            orderDao.updateOrderStatus(orderToUpdate);
-            message = "Accept successfully!";
-            request.setAttribute("message", message);
-            request.setAttribute("orderItemList", otm.getOderItemByOrderId(orderItemId));
-        request.getRequestDispatcher("ShipperAccept.jsp").forward(request, response);
-        } else {
-            message = "Failed to Accept.";
-      
-        }
-        request.setAttribute("message", message);
-        request.getRequestDispatcher("ShipperAccept.jsp").forward(request, response);
-    
+//        String command = request.getParameter("command");
+//        if ("Accept".equals(command)) {
+//            acceptOrderItem(request, response);
+//        }
     }
 
     @Override

@@ -14,6 +14,7 @@
             background-color: #DDDDDD;
             margin: 0;
             padding: 20px;
+             overflow-y: auto;
         }
 
         .container {
@@ -79,23 +80,22 @@
         .header {
             display: flex;
             align-items: center;
-            padding: 40px;
+            padding: 15px;
             background-color: #8bc34a;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            
         }
 
-        .header img {
-            height: 50px;
-        }
+       
     </style>
 </head>
 <body>
     <div class="header">
-           <a href="ShipperPage" style="text-decoration: none; color: #ff6347; font-family: 'Roboto', sans-serif; font-size: 20px; font-weight: bold;">
+           <a href="ShipperPage" style="text-decoration: none; color: #000; font-family: 'Brush Script MT', sans-serif; font-size: 50px; ">
     HungryHub</a>
-        <a href="AccountPage" class="order_online" style="position: absolute; top: 10px; right: 20px; font-size: 60px;">
-            <i class="fas fa-user"></i>
-        </a>
+        <a href="ShipperAccountPage" class="order_online" style="position: absolute; top: 30px; right: 20px; font-size: 80px;">
+                <i class="fas fa-user"></i>
+            </a>
     </div>
     <div class="container">
         <h1>ORDER LIST</h1>
@@ -137,6 +137,11 @@
                 </c:forEach>
             </tbody>
         </table>
+        <div class="actions">
+    <form action="ShipperListAcceptPage" method="GET">
+        <input type="submit" value="List Order to Accepted">
+    </form>
+</div>
     </div>
 </body>
 </html>

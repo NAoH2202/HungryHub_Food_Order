@@ -42,10 +42,11 @@ public class OrderDao {
                 Account shipper = am.getAccountById(shipper_id);
                 String order_status = rs.getString("order_status");
                 String payment_method = rs.getString("payment_method");
+                String reason = rs.getString("reason");
                 LocalDateTime created_at = rs.getTimestamp("created_at").toLocalDateTime();
                 LocalDateTime updated_at = rs.getTimestamp("updated_at").toLocalDateTime();
                 int total_price =0;
-                Order order = new Order(order_id, customer, diner, shipper, order_status, payment_method, total_price);
+                Order order = new Order(order_id, customer, diner, shipper, order_status, payment_method,reason, total_price);
                 order.setCreated_at(created_at);
                 order.setUpdated_at(updated_at);
                 OrderList.add(order);
@@ -78,6 +79,59 @@ public class OrderDao {
             statement = conn.prepareStatement(query);
             statement.setString(1, order.getOrder_status());
              
+            statement.setInt(2, order.getOrder_id());
+            statement.executeUpdate();
+        } catch (ClassNotFoundException | SQLException ex) {
+            Logger.getLogger(OrderDao.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if (statement != null) {
+                    statement.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                Logger.getLogger(OrderDao.class.getName()).log(Level.SEVERE, null, e);
+            }
+        }
+    }
+      public void updateReason(Order order) {
+        ConnectDB db = ConnectDB.getInstance();
+        Connection conn = null;
+        PreparedStatement statement = null;
+        try {
+            conn = db.openConnection();
+            String query = "UPDATE [Order] SET reason = ? WHERE order_id = ?";
+            statement = conn.prepareStatement(query);
+            statement.setString(1, order.getReason());
+             
+            statement.setInt(2, order.getOrder_id());
+            statement.executeUpdate();
+        } catch (ClassNotFoundException | SQLException ex) {
+            Logger.getLogger(OrderDao.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if (statement != null) {
+                    statement.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                Logger.getLogger(OrderDao.class.getName()).log(Level.SEVERE, null, e);
+            }
+        }
+    }
+       public void updateShipperId(Order order) {
+        ConnectDB db = ConnectDB.getInstance();
+        Connection conn = null;
+        PreparedStatement statement = null;
+        try {
+            conn = db.openConnection();
+            String query = "UPDATE [Order] SET shipper_id = ? WHERE order_id = ?";
+            statement = conn.prepareStatement(query);
+             statement.setInt(1, order.getShipper().getAccount_id());
             statement.setInt(2, order.getOrder_id());
             statement.executeUpdate();
         } catch (ClassNotFoundException | SQLException ex) {

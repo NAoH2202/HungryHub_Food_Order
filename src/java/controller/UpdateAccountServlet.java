@@ -83,97 +83,101 @@ public class UpdateAccountServlet extends HttpServlet {
         String filename = null;
         Date birthDate = null;
 
-        // Tạo một nhà máy cho các mục tệp dựa trên đĩa
-        DiskFileItemFactory factory = new DiskFileItemFactory();
-        // Cấu hình một kho lưu trữ để đảm bảo vị trí tạm thời an toàn được sử dụng
-        ServletContext servletContext = this.getServletConfig().getServletContext();
-        File repository = (File) servletContext.getAttribute("jakarta.servlet.context.tempdir"); // Hoặc "javax.servlet.context.tempdir" cho javax
-        factory.setRepository(repository);
-        // Tạo một trình xử lý tải tệp mới
-        ServletFileUpload upload = new ServletFileUpload(factory);
+        // Lấy tài khoản hiện tại từ session
+        Account currentAccount = (Account) request.getSession().getAttribute("account");
+        if (currentAccount != null) {
+            // Lấy ảnh đại diện hiện tại
+            String currentProfilePicture = currentAccount.getProfile_picture();
 
-        try {
-            // Phân tích yêu cầu
-            List<FileItem> items = upload.parseRequest(request);
-            for (FileItem item : items) {
-                if (item.isFormField()) {
-                    // Xử lý các trường form thông thường
-                    String fieldName = item.getFieldName();
-                    String fieldValue = item.getString("UTF-8");
-                    switch (fieldName) {
-                        case "full_name":
-                            fullName = fieldValue;
-                            break;
-                        case "phone":
-                            phoneNumber = fieldValue;
-                            break;
-                        case "email":
-                            email = fieldValue;
-                            break;
-                        case "address":
-                            adds = fieldValue;
-                            break;
-                        case "birth_date":
-                            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-                            if (!fieldValue.isEmpty()) {
-                                birthDate = dateFormat.parse(fieldValue);
-                            }
-                            break;
-                    }
-                } else {
-                    // Xử lý tệp được tải lên
-                    filename = item.getName();
-                    if (filename != null && !filename.isEmpty()) {
-                        Path path = Paths.get(filename);
-                        String extension = "";
+            // Tạo một nhà máy cho các mục tệp dựa trên đĩa
+            DiskFileItemFactory factory = new DiskFileItemFactory();
+            ServletContext servletContext = this.getServletConfig().getServletContext();
+            File repository = (File) servletContext.getAttribute("jakarta.servlet.context.tempdir");
+            factory.setRepository(repository);
+            ServletFileUpload upload = new ServletFileUpload(factory);
 
-                        // Lấy phần mở rộng của tệp
-                        int dotIndex = filename.lastIndexOf('.');
-                        if (dotIndex >= 0) {
-                            extension = filename.substring(dotIndex);
+            try {
+                // Phân tích yêu cầu
+                List<FileItem> items = upload.parseRequest(request);
+                for (FileItem item : items) {
+                    if (item.isFormField()) {
+                        // Xử lý các trường form thông thường
+                        String fieldName = item.getFieldName();
+                        String fieldValue = item.getString("UTF-8");
+                        switch (fieldName) {
+                            case "full_name":
+                                fullName = fieldValue;
+                                break;
+                            case "phone":
+                                phoneNumber = fieldValue;
+                                break;
+                            case "email":
+                                email = fieldValue;
+                                break;
+                            case "address":
+                                adds = fieldValue;
+                                break;
+                            case "birth_date":
+                                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                                if (!fieldValue.isEmpty()) {
+                                    birthDate = dateFormat.parse(fieldValue);
+                                }
+                                break;
                         }
+                    } else {
+                        // Xử lý tệp được tải lên
+                        filename = item.getName();
+                        if (filename != null && !filename.isEmpty()) {
+                            Path path = Paths.get(filename);
+                            String extension = "";
 
-                        // Tạo tên tệp mới với chuỗi ngẫu nhiên
-                        String newFilename = NumVerify.getNumVerify() + extension;
-                        String storePath = servletContext.getRealPath("/avt");
-                        File uploadFile = new File(storePath + File.separator + newFilename);
-                        item.write(uploadFile);
+                            // Lấy phần mở rộng của tệp
+                            int dotIndex = filename.lastIndexOf('.');
+                            if (dotIndex >= 0) {
+                                extension = filename.substring(dotIndex);
+                            }
 
-                        // Lưu lại tên tệp mới để sử dụng sau này (nếu cần)
-                        filename = newFilename;
+                            // Tạo tên tệp mới với chuỗi ngẫu nhiên
+                            String newFilename = NumVerify.getNumVerify() + extension;
+                            String storePath = servletContext.getRealPath("/avt");
+                            File uploadFile = new File(storePath + File.separator + newFilename);
+                            item.write(uploadFile);
+
+                            // Lưu lại tên tệp mới để sử dụng sau này (nếu cần)
+                            filename = "avt/"+newFilename;
+                        }
                     }
                 }
+            } catch (Exception ex) {
+                Logger.getLogger(UpdateAccountServlet.class.getName()).log(Level.SEVERE, null, ex);
             }
-        } catch (Exception ex) {
-            Logger.getLogger(UpdateAccountServlet.class.getName()).log(Level.SEVERE, null, ex);
-        }
 
-        if (birthDate != null) {
-            // Lấy tài khoản hiện tại từ session
-            Account currentAccount = (Account) request.getSession().getAttribute("account");
-            if (currentAccount != null) {
-                // Cập nhật thông tin tài khoản
-                currentAccount.setName(fullName);
-                currentAccount.setPhoneNumber(phoneNumber);
-                currentAccount.setEmail(email);
-                currentAccount.setAddress(adds);
+            // Cập nhật thông tin tài khoản
+            currentAccount.setName(fullName);
+            currentAccount.setPhoneNumber(phoneNumber);
+            currentAccount.setEmail(email);
+            currentAccount.setAddress(adds);
+            if (birthDate != null) {
                 currentAccount.setDate_of_birth(birthDate);
+            }
+            if (filename != null && !filename.isEmpty()) {
                 currentAccount.setProfile_picture(filename);
-
-                // Cập nhật tài khoản trong cơ sở dữ liệu
-                boolean isUpdated = AccountDao.updateAccount(currentAccount);
-
-                // Thiết lập thông báo kết quả
-                if (isUpdated) {
-                    request.setAttribute("message", "Account updated successfully!");
-                } else {
-                    request.setAttribute("message", "Failed to update account. Please try again.");
-                }
             } else {
-                request.setAttribute("message", "Account not found in session.");
+                // Giữ lại ảnh đại diện cũ nếu không có tệp mới được tải lên
+                currentAccount.setProfile_picture(currentProfilePicture);
+            }
+
+            // Cập nhật tài khoản trong cơ sở dữ liệu
+            boolean isUpdated = AccountDao.updateAccount(currentAccount);
+
+            // Thiết lập thông báo kết quả
+            if (isUpdated) {
+                request.setAttribute("message", "Account updated successfully!");
+            } else {
+                request.setAttribute("message", "Failed to update account. Please try again.");
             }
         } else {
-            request.setAttribute("message", "Failed to update account. Please provide a valid birth date.");
+            request.setAttribute("message", "Account not found in session.");
         }
 
         // Chuyển tiếp đến trang account.jsp để hiển thị thông báo

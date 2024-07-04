@@ -10,16 +10,20 @@ import java.util.ArrayList;
  *
  * @author lenovo
  */
-public class CommentDishManager {
-    ArrayList<CommentDish> List;
+public class CommentManager {
+    private ArrayList<Comment> List;
 
-    public CommentDishManager() {
-        List = CommentDishDao.getAllCommentDishs();
+    public CommentManager() {
+        List = CommentDao.getAllComments();
+    }
+
+    public ArrayList<Comment> getList() {
+        return List;
     }
     
-    public CommentDish getCommentDishById(int id) {
-        for (CommentDish facc : List) {
-            if (id == facc.getComment_id()) {
+    public Comment getCommentById(int id) {
+        for (Comment facc : List) {
+            if (id == facc.getCommentId()) {
                 return facc;
             }
         }

@@ -57,11 +57,11 @@ public class SearchServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        request.setCharacterEncoding("UTF-8");
+        response.setContentType("text/html; charset=UTF-8");
+        
         String input = request.getParameter("search");
         AccountManager am = new AccountManager();
-        if(am.searchDiner(input) == null){
-            response.sendRedirect("HomePage");
-        }
         ArrayList<Account> listDiner = am.searchDiner(input);
         request.getSession().setAttribute("listDiner", listDiner);
         response.sendRedirect("SearchPage");

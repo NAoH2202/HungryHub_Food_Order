@@ -22,6 +22,7 @@
                 display: flex;
                 flex-direction: column;
                 overflow: hidden;
+                overflow-y: auto;
             }
             #map {
                 height: 100%;
@@ -126,14 +127,12 @@
             .header {
                 display: flex;
                 align-items: center;
-                padding: 40px;
+                padding: 15px;
                 background-color: #8bc34a;
                 box-shadow: 0 2px 4px rgba(0,0,0,0.1);
                 position: relative;
             }
-            .header img {
-                height: 50px;
-            }
+
             input[type="submit"]:hover {
                 background-color: #45a049;
                 color: red;
@@ -174,6 +173,47 @@
             input[type="submit"]:hover {
                 background-color: #7cb342;
             }
+            .popup, .popupcancel {
+                background-color: #ffffff;
+                border-radius: 6px;
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%) scale(0.1);
+                text-align: center;
+                padding: 20px;
+                visibility: hidden;
+                transition: transform 0.4s, top 0.4s;
+                z-index: 9999;
+                width: 300px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            }
+            .open-popup, .open-popupcancel {
+                visibility: visible;
+                transform: translate(-50%, -50%) scale(1);
+            }
+            .popup h2, .popupcancel h2 {
+                margin-top: 0;
+                color: #333;
+            }
+            .popup p, .popupcancel p {
+                color: #333;
+            }
+            .popup button, .popupcancel button {
+                width: 80%;
+                padding: 10px 0;
+                color: #fff;
+                border: 0;
+                outline: none;
+                font-size: 18px;
+                border-radius: 5px;
+                cursor: pointer;
+                transition: background-color 0.3s;
+            }
+            .popup button {
+                background: #45a049;
+                margin-top: 20px;
+            }
         </style>
         <script>
             function initMap() {
@@ -189,10 +229,10 @@
     </head>
     <body>
         <div class="header">
-            
-           <a href="ShipperPage" style="text-decoration: none; color: #ff6347; font-family: 'Roboto', sans-serif; font-size: 20px; font-weight: bold;">
-    HungryHub</a>
-            <a href="AccountPage" class="order_online" style="position: absolute; top: 20px; right: 20px; font-size: 40px;">
+
+            <a href="ShipperPage" style="text-decoration: none; color: #000; font-family: 'Brush Script MT', sans-serif; font-size: 50px; ">
+                HungryHub</a>
+            <a href="ShipperAccountPage" class="order_online" style="position: absolute; top: 20px; right: 20px; font-size: 50px; color: white;">
                 <i class="fas fa-user"></i>
             </a>
         </div>
@@ -217,7 +257,9 @@
                     <p><strong>Order ID:</strong><%= orderItem.getOrder().getOrder_id()%></p>
                     <p><strong>Name Customer:</strong> <%= orderItem.getOrder().getCustomer().getName()%></p>
                     <p><strong>Phone Number:</strong> <%= orderItem.getOrder().getCustomer().getPhoneNumber()%></p>
-                    <p><strong>Address:</strong> <%= orderItem.getOrder().getCustomer().getAddress()%></p>
+                    <p><strong>Diner address:</strong> <%= orderItem.getOrder().getDiner().getAddress()%></p>
+                    <p><strong>Customer address:</strong> <%= orderItem.getOrder().getCustomer().getAddress()%></p>
+
                 </div>
                 <%
                     }
@@ -246,17 +288,31 @@
                         </tbody>
                     </table>
                     <div class="accept-button-container">
-                        <form action="OrderItemServlet" method="POST">
-                            <input type="hidden" name="command" value="Accept">
-                            <input type="hidden" name="orderId" value="<%=orderItem.getOrder().getOrder_id()%>">
-                            <input type="submit" value="Accept">
+                        
+                            <form action="OrderItemServlet" method="GET">
+                                <input type="hidden" name="command" value="Accept">
+                                <input type="hidden" name="orderId" value="<%= orderItem.getOrder().getOrder_id()%>">
+                            <input type="submit" value="Accept" 
+                                   <%
+                                       if (!"Ready".equals(orderItem.getOrder().getOrder_status())) {
+                                   %>
+                                   disabled style="opacity: 0.5; cursor: not-allowed;"
+                                   <%
+                                       }
+                                   %>
+                                   >
                         </form>
-                        <c:if test="${not empty message}">
-                            <div class="message ${message.startsWith('Accept') ? 'message-success' : 'message-error'}">
-                                ${message}
-                            </div>
-                        </c:if>
-
+<!--                        <div class="popup">
+                            <h2>--------------------------------</h2>
+                            <h2>Accept</h2>
+                            <p>Kick "OK" to Accept Order</p>
+                            <form action="OrderItemServlet" method="GET">
+                                <input type="hidden" name="command" value="Accept">
+                                <input type="hidden" name="orderId" value="<%= orderItem.getOrder().getOrder_id()%>">
+                                <button class="ok" type="submit" onclick="submitFormAndRedirect()">OK</button>
+                                <button class="close" type="button" onclick="closePopup()">Close</button>
+                            </form>
+                        </div>-->
                     </div>
                 </div>
             </div>
@@ -283,5 +339,20 @@
                 </div>
             </div>
         </div>
+        <script>
+            function openPopup() {
+                var popup = document.querySelector('.popup');
+                popup.classList.add('open-popup');
+            }
+
+            function closePopup() {
+                var popup = document.querySelector('.popup');
+                popup.classList.remove('open-popup');
+            }
+
+            function submitFormAndRedirect() {
+                document.getElementById("completeForm").submit();
+            }
+        </script>
     </body>
 </html>

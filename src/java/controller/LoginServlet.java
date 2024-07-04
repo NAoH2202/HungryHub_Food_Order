@@ -67,7 +67,7 @@ public class LoginServlet extends HttpServlet {
             if (!account.isTrangthaixacthuc()) { // Kiểm tra trạng thái xác thực
                 request.setAttribute("errorMessage", "Account is not verified. Please verify your account.");
                 request.setAttribute("Account", account);
-                request.getRequestDispatcher("Verify.jsp").forward(request, response);
+                request.getRequestDispatcher("VerifyPage").forward(request, response);
                 return;
             }
             if (remember != null) {
@@ -78,7 +78,7 @@ public class LoginServlet extends HttpServlet {
             if (account.getRole().equalsIgnoreCase("admin")) {
                 response.sendRedirect("AdminPage");
             } else if (account.getRole().equalsIgnoreCase("DinerManager")) {
-                response.sendRedirect("DinerMainPage.jsp");
+                response.sendRedirect("DinerPage");
             } else if (account.getRole().equalsIgnoreCase("Shipper")) {
                 response.sendRedirect("ShipperPage");
             } else {

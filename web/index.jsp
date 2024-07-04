@@ -56,17 +56,17 @@
             <!-- slider section -->
             <section class="slider_section" style="height: 400px ; padding: 0px; display: flex; align-content: center;justify-content: center">
                 <div class="banner_main" style="display: flex;">
-                        <!-- Another variation with a button -->
-                        <form action="SearchServlet" method="Post" class="input-group" style="width: 600px; height: 50px">
-                            <input type="text" class="form-control" name="search" placeholder="Tìm địa điểm, món ăn, địa chỉ,..." style="height: 50px">
-                            <div class="input-group-append">
-                                <button class="btn btn-secondary" type="submit" style="background-color: #ffffff; border-color:#ffffff ">
-                                    <i class="fa fa-search" style="color: #191919;"></i>
-                                </button>
-                            </div>
-                        </form>
+                    <!-- Another variation with a button -->
+                    <form action="SearchServlet" method="Post" class="input-group" style="width: 600px; height: 50px">
+                        <input type="text" class="form-control" name="search" placeholder="Tìm địa điểm, món ăn, địa chỉ,..." style="height: 50px">
+                        <div class="input-group-append">
+                            <button class="btn btn-secondary" type="submit" style="background-color: #ffffff; border-color:#ffffff ">
+                                <i class="fa fa-search" style="color: #191919;"></i>
+                            </button>
+                        </div>
+                    </form>
                 </div>
-        </section>
+            </section>
             <!-- end slider section -->
         </div>  
 
@@ -167,7 +167,7 @@
             <div class="container">
                 <div class="heading_container heading_center">
                     <h2 style="font-size: 60px">
-                        Gợi ý một số loại thức ăn
+                        Gợi ý từ HungryHub
                     </h2>
                 </div>
 
@@ -182,19 +182,19 @@
                 <div class="filters-content">
                     <div class="row grid" id="recomend">
                         <%
-                            AccountManager am = new AccountManager() ;
+                            AccountManager am = new AccountManager();
                             DishManager dm = new DishManager();
                             ArrayList<Account> listDiner = am.getAllDiner();
-                            int i=1;
-                            for(Account ac : listDiner)
-                            {
-                            if(i>6) break;
+                            int i = 1;
+                            for (Account ac : listDiner) {
+                                if (i > 6)
+                                    break;
                         %>
                         <div class="col-sm-6 col-lg-4 all <%=dm.getFirstDish(ac).getType()%> item">
                             <div class="box">
                                 <div>
-                                    <div class="img-box">
-                                        <img src="<%=ac.getProfile_picture()%>" alt="" style="object-fit: cover;">
+                                    <div class="img-box" style="padding: 0;">
+                                        <img src="<%=ac.getProfile_picture()%>" alt="" style="width: 100%; max-height: 220px;object-fit: cover ">
                                     </div>
                                     <div class="detail-box">
                                         <h5>
@@ -204,7 +204,7 @@
                                             <%=ac.getDetail()%>
                                         </p>
                                         <div class="options">
-                                            <a href="CustomerDishPage?id=1">
+                                            <a href="CustomerDinerPage?id=<%=ac.getAccount_id()%>">
                                                 <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 456.029 456.029" style="enable-background:new 0 0 456.029 456.029;" xml:space="preserve">
                                                 <g>
                                                 <g>
@@ -233,108 +233,31 @@
                                 </div>
                             </div>
                         </div>
-                        <%i++;}%>
+                        <%i++;
+                            }%>
                     </div>
                 </div>
             </div>
         </section>
 
         <!-- footer section -->
-        <footer class="footer_section">
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-4 footer-col">
-                        <div class="footer_contact">
-                            <h4>
-                                Contact Us
-                            </h4>
-                            <div class="contact_link_box">
-                                <a href="">
-                                    <i class="fa fa-map-marker" aria-hidden="true"></i>
-                                    <span>
-                                        Location
-                                    </span>
-                                </a>
-                                <a href="">
-                                    <i class="fa fa-phone" aria-hidden="true"></i>
-                                    <span>
-                                        Call +01 1234567890
-                                    </span>
-                                </a>
-                                <a href="">
-                                    <i class="fa fa-envelope" aria-hidden="true"></i>
-                                    <span>
-                                        demo@gmail.com
-                                    </span>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4 footer-col">
-                        <div class="footer_detail">
-                            <a href="" class="footer-logo">
-                                Feane
-                            </a>
-                            <p>
-                                Necessary, making this the first true generator on the Internet. It uses a dictionary of over 200 Latin words, combined with
-                            </p>
-                            <div class="footer_social">
-                                <a href="">
-                                    <i class="fa fa-facebook" aria-hidden="true"></i>
-                                </a>
-                                <a href="">
-                                    <i class="fa fa-twitter" aria-hidden="true"></i>
-                                </a>
-                                <a href="">
-                                    <i class="fa fa-linkedin" aria-hidden="true"></i>
-                                </a>
-                                <a href="">
-                                    <i class="fa fa-instagram" aria-hidden="true"></i>
-                                </a>
-                                <a href="">
-                                    <i class="fa fa-pinterest" aria-hidden="true"></i>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4 footer-col">
-                        <h4>
-                            Opening Hours
-                        </h4>
-                        <p>
-                            Everyday
-                        </p>
-                        <p>
-                            10.00 Am -10.00 Pm
-                        </p>
-                    </div>
-                </div>
-                <div class="footer-info">
-                    <p>
-                        &copy; <span id="displayYear"></span> All Rights Reserved By
-                        <a href="https://html.design/">Free Html Templates</a><br><br>
-                        &copy; <span id="displayYear"></span> Distributed By
-                        <a href="https://themewagon.com/" target="_blank">ThemeWagon</a>
-                    </p>
-                </div>
-            </div>
-        </footer>
+        <jsp:include page="path/footer.jsp"/>
         <!-- footer section -->
-<!--        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-        <script>
-            function loadMore(){
-                $.ajax({
-                    url: "/HungryHub_OrderFood/LoadMoreDiners",
-                    type:"get",
-                    success: function (data) {
-                        var row = document.getElementById("recomend");
-                        row.innerHTML += data;
-                    },
-                    error: function(xhr) {
+        <!--        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+                <script>
+                    function loadMore(){
+                        $.ajax({
+                            url: "/HungryHub_OrderFood/LoadMoreDiners",
+                            type:"get",
+                            success: function (data) {
+                                var row = document.getElementById("recomend");
+                                row.innerHTML += data;
+                            },
+                            error: function(xhr) {
+                            }
+                        });
                     }
-                });
-            }
-        </script>-->
+                </script>-->
         <!-- jQery -->
         <script src="js/jquery-3.4.1.min.js"></script>
         <!-- popper js -->
