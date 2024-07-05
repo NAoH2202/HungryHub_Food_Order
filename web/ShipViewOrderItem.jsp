@@ -1,3 +1,4 @@
+<%@page import="model.OrderManager"%>
 <%@page import="model.OrderItemDao"%>
 <%@page import="model.OrderItem"%>
 <%@page import="model.Order"%>
@@ -243,6 +244,8 @@
                     // Retrieve the first order item to access customer details
                     OrderItem orderItem = null;
                     ArrayList<OrderItem> orderItemList = null;
+                    OrderManager om = new OrderManager();
+                     
                     double total = 0.0;
                     if (request.getAttribute("orderItemList") != null) {
                         orderItemList = (ArrayList<OrderItem>) request.getAttribute("orderItemList");
@@ -252,18 +255,17 @@
                         }
                     }
                     if (orderItem != null) {
+                    Order order = om.getOderById(orderItem.getOrder_id());
                 %>
                 <div>
-                    <p><strong>Order ID:</strong><%= orderItem.getOrder().getOrder_id()%></p>
-                    <p><strong>Name Customer:</strong> <%= orderItem.getOrder().getCustomer().getName()%></p>
-                    <p><strong>Phone Number:</strong> <%= orderItem.getOrder().getCustomer().getPhoneNumber()%></p>
-                    <p><strong>Diner address:</strong> <%= orderItem.getOrder().getDiner().getAddress()%></p>
-                    <p><strong>Customer address:</strong> <%= orderItem.getOrder().getCustomer().getAddress()%></p>
+                    <p><strong>Order ID:</strong><%= orderItem.getOrder_id()%></p>
+                    <p><strong>Name Customer:</strong> <%= order.getCustomer().getName()%></p>
+                    <p><strong>Phone Number:</strong> <%= order.getCustomer().getPhoneNumber()%></p>
+                    <p><strong>Diner address:</strong> <%= order.getDiner().getAddress()%></p>
+                    <p><strong>Customer address:</strong> <%= order.getCustomer().getAddress()%></p>
 
                 </div>
-                <%
-                    }
-                %>
+              
                 <div class="table-container">
                     <table>
                         <thead>
@@ -291,10 +293,10 @@
                         
                             <form action="OrderItemServlet" method="GET">
                                 <input type="hidden" name="command" value="Accept">
-                                <input type="hidden" name="orderId" value="<%= orderItem.getOrder().getOrder_id()%>">
+                                <input type="hidden" name="orderId" value="<%= order.getOrder_id()%>">
                             <input type="submit" value="Accept" 
                                    <%
-                                       if (!"Ready".equals(orderItem.getOrder().getOrder_status())) {
+                                       if (!"Ready".equals(order.getOrder_status())) {
                                    %>
                                    disabled style="opacity: 0.5; cursor: not-allowed;"
                                    <%
@@ -302,18 +304,11 @@
                                    %>
                                    >
                         </form>
-<!--                        <div class="popup">
-                            <h2>--------------------------------</h2>
-                            <h2>Accept</h2>
-                            <p>Kick "OK" to Accept Order</p>
-                            <form action="OrderItemServlet" method="GET">
-                                <input type="hidden" name="command" value="Accept">
-                                <input type="hidden" name="orderId" value="<%= orderItem.getOrder().getOrder_id()%>">
-                                <button class="ok" type="submit" onclick="submitFormAndRedirect()">OK</button>
-                                <button class="close" type="button" onclick="closePopup()">Close</button>
-                            </form>
-                        </div>-->
+                         
                     </div>
+                                  <%
+                    }
+                %>
                 </div>
             </div>
             <div class="sidebar">
@@ -339,20 +334,6 @@
                 </div>
             </div>
         </div>
-        <script>
-            function openPopup() {
-                var popup = document.querySelector('.popup');
-                popup.classList.add('open-popup');
-            }
-
-            function closePopup() {
-                var popup = document.querySelector('.popup');
-                popup.classList.remove('open-popup');
-            }
-
-            function submitFormAndRedirect() {
-                document.getElementById("completeForm").submit();
-            }
-        </script>
+         
     </body>
 </html>

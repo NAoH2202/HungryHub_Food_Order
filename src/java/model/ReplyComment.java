@@ -14,6 +14,7 @@ public class ReplyComment {
     private int repcommentId;
     private Account account;
     private Comment comment;
+    private int rep_id ;
     private String content;
     private LocalDateTime created_at = LocalDateTime.now();
     private LocalDateTime updated_at = LocalDateTime.now();
@@ -27,6 +28,16 @@ public class ReplyComment {
         this.updated_at = updated_at;
     }
 
+    public ReplyComment(int repcommentId, Account account, Comment comment, int rep_id, String content) {
+        this.repcommentId = repcommentId;
+        this.account = account;
+        this.comment = comment;
+        this.rep_id = rep_id;
+        this.content = content;
+    }
+
+
+    
     public ReplyComment(int repcommentId, Account account, Comment comment, String content) {
         this.repcommentId = repcommentId;
         this.account = account;
@@ -66,8 +77,15 @@ public class ReplyComment {
         this.content = content;
     }
 
-    
-    
+    public int getRep_id() {
+        return rep_id;
+    }
+
+    public void setRep_id(int rep_id) {
+        this.rep_id = rep_id;
+    }
+
+
     public LocalDateTime getCreated_at() {
         return created_at;
     }
@@ -86,6 +104,7 @@ public class ReplyComment {
 
     @Override
     public String toString() {
-        return "ReplyComment{" + "repcommentId=" + repcommentId + ", account=" + account + ", comment=" + comment + ", created_at=" + created_at + ", updated_at=" + updated_at + '}';
+        return "ReplyComment{" + "repcommentId=" + repcommentId + ", account=" + account + ", comment=" + comment + ", rep=" + rep_id + ", content=" + content + ", created_at=" + created_at + ", updated_at=" + updated_at + '}';
     }
+
 }

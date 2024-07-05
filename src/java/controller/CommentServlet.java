@@ -59,22 +59,27 @@ public class CommentServlet extends HttpServlet {
         String action = request.getParameter("action");
         int commentId = Integer.parseInt(request.getParameter("commentId"));
         JsonObject jsonResponse = new JsonObject();
+        if (request.getSession().getAttribute("account") == null) {
+            jsonResponse.addProperty("status", "notLoginYet");
+            jsonResponse.addProperty("message", "Bạn phải đăng nhập để có thể thực hiện thành động này");
+            response.setContentType("application/json");
+            response.getWriter().write(jsonResponse.toString());
+        }
+        Account account = (Account) request.getSession().getAttribute("account");
 
         switch (action) {
             case "like":
-//                 Xử lý logic thêm lượt thích vào cơ sở dữ liệu
-                if (request.getSession().getAttribute("account") == null) {
-                    jsonResponse.addProperty("status", "notLoginYet");
-                    jsonResponse.addProperty("message", "Bạn phải đăng nhập để có thể thực hiện thành động này");
-                    break;
-                }
-                Account account = (Account) request.getSession().getAttribute("account");
                 LikeDao.addLike(commentId, account.getAccount_id());
                 // Tạo phản hồi JSON
-                jsonResponse
-                        .addProperty("status", "liked");
+                jsonResponse.addProperty("status", "liked");
+                jsonResponse.addProperty("message", commentId + "\n" + account.getAccount_id());
                 break;
-
+            case "unlike":
+                LikeDao.removeLike(commentId, account.getAccount_id());
+                // Tạo phản hồi JSON
+                jsonResponse.addProperty("status", "unliked");
+                jsonResponse.addProperty("message", commentId + "\n" + account.getAccount_id());
+                break;
             case "reply":
                 // Trả về phản hồi để hiển thị ô input reply
                 jsonResponse.addProperty("status", "reply");

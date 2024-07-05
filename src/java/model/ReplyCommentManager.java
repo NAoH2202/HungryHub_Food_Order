@@ -29,4 +29,22 @@ public class ReplyCommentManager {
         }
         return null;
     }
+    
+    public ArrayList<ReplyComment> getReplyCommentByCommentId(int id) {
+        ArrayList<ReplyComment> listRC= new ArrayList<>();
+        for (ReplyComment facc : List) {
+            if (id == facc.getComment().getCommentId()) {
+                listRC.add(facc);
+            }
+        }
+        return listRC;
+    }
+    public static void main(String[] args) {
+        ReplyCommentDao.deleteReplyCommentById(1);
+        ReplyCommentManager rcm = new ReplyCommentManager();
+        for (ReplyComment en : rcm.getList()) {
+            System.out.println(en);
+        }
+        
+    }
 }

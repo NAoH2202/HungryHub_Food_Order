@@ -1,3 +1,5 @@
+<%@page import="model.Account"%>
+<%@page import="model.OrderManager"%>
 <%@page import="model.OrderItemDao"%>
 <%@page import="model.OrderDao"%>
 <%@page import="java.util.List"%>
@@ -121,8 +123,15 @@
         <h1 style="font-size: 36px; line-height: 42px; text-align: center;">Order to Accepted</h1>
         <%-- Retrieve the list of orders from the DAO --%>
         <%
-            ArrayList<OrderItem> orderItemList = OrderItemDao.getAllOrderItems();
-            request.setAttribute("orderItemList", orderItemList);
+            Account acc = (Account) session.getAttribute("account");
+            if (acc == null) {
+                response.sendRedirect("LoginServlet");
+                return;
+            }
+            int currentshipperid=acc.getAccount_id();
+            ArrayList<Order> orderList = OrderDao.getAllOrders();
+            request.setAttribute("orderList", orderList);
+            
         %>
         <table>
             <thead>
@@ -137,30 +146,33 @@
             </thead>
             <tbody>
                 <%-- Loop through each order item --%>
-                <c:forEach var="orderItem" items="${orderItemList}">
-                    <%-- Display only orders with status 'OntheWay' --%>
-                    <c:if test="${orderItem.order.order_status eq 'OntheWay'}">
-                        <%-- Check if current order ID is different from previous --%>
-                        <c:if test="${not empty currentOrderId && !currentOrderId.equals(orderItem.order.order_id)}">
-                            <%-- Output row with aggregated data for previous order --%>
-                            <tr>
-                                <td>${currentOrderId}</td>
-                                <td>${orderItem.order.customer.name}</td>
-                                <td>${orderItem.order.customer.phoneNumber}</td>
-                                <td>${orderItem.order.diner.address}</td>
-                                <td>${orderItem.order.customer.address}</td>
-                                <td>
-                                    <form action="OrderItemServlet" method="GET">
-                                        <input type="hidden" name="command" value="ViewDetail">
-                                        <input type="hidden" name="orderId" value="${currentOrderId}">
-                                        <input type="submit" value="View details">
-                                    </form>
-                                </td>
-                            </tr>
-                        </c:if>
-                        <c:set var="currentOrderId" value="${orderItem.order.order_id}" />
-                    </c:if>
-                </c:forEach>
+              <c:forEach var="order" items="${orderList}">
+    <%-- Retrieve the order using the order_id from OrderItem --%>
+    
+    <%-- Display only orders with status 'OntheWay' and matching shipper_id --%>
+    <c:if test="${order.order_status eq 'OntheWay' && order.shipper.account_id eq sessionScope.account.account_id}">
+        <%-- Check if current order ID is different from previous --%>
+        <c:if test="${not empty currentOrderId && !currentOrderId.equals(order.getOrder_id())}">
+            <%-- Output row with aggregated data for previous order --%>
+            <tr>
+                <td>${currentOrderId}</td>
+                <td>${order.customer.name}</td>
+                <td>${order.customer.phoneNumber}</td>
+                <td>${order.diner.address}</td>
+                <td>${order.customer.address}</td>
+                <td>
+                    <form action="OrderItemServlet" method="GET">
+                        <input type="hidden" name="command" value="ViewDetail">
+                        <input type="hidden" name="orderId" value="${currentOrderId}">
+                        <input type="submit" value="View details">
+                    </form>
+                </td>
+            </tr>
+        </c:if>
+        <c:set var="currentOrderId" value="${order.getOrder_id()}" />
+    </c:if>
+</c:forEach>
+
             </tbody>
         </table>
         <div class="actions">

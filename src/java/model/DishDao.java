@@ -38,7 +38,7 @@ public class DishDao {
                 String name = rs.getString("name");
                 String picture = rs.getString("Picture");
                 String description = rs.getString("description");
-                double price = rs.getDouble("price");
+                int price = rs.getInt("price");
                 String type = rs.getString("type");
                 String ingredients = rs.getString("ingredients");
                 LocalDateTime created_at = rs.getTimestamp("created_at").toLocalDateTime();

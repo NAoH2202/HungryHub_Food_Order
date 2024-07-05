@@ -1,3 +1,4 @@
+<%@page import="model.OrderManager"%>
 <%@page import="model.OrderItem"%>
 <%@page import="model.Order"%>
 <%@page import="java.util.ArrayList"%>
@@ -160,7 +161,7 @@
                 display: flex;
                 justify-content: flex-end;
                 margin-top: 20px;
-                 gap: 0.5cm;
+                gap: 0.5cm;
             }
             .accept-button-container input[type="submit"] {
                 padding: 15px 30px;
@@ -178,9 +179,9 @@
             .accept-button-container input[type="submitCancel"]:hover {
                 background-color: #dc3545;
             }
-             .accept-button-container input[type="submitCancel"] {
-                 height: 15px;
-                 width: 60px;
+            .accept-button-container input[type="submitCancel"] {
+                height: 15px;
+                width: 60px;
                 padding: 15px 30px;
                 font-size: 16px;
                 background-color: #e66365;
@@ -248,22 +249,22 @@
                 background: #f5c6cb;
             }
             .back-button {
-    margin-top: 5px;
-    margin-bottom: 5px;
-    text-align: left;
-      padding-left: 0.5cm;
-}
+                margin-top: 5px;
+                margin-bottom: 5px;
+                text-align: left;
+                padding-left: 0.5cm;
+            }
 
- 
 
-.back-link i {
-    margin-right: 5px;
-    color: #555; /* Màu mũi tên xám */
-    font-size: 20px;
-    display: inline-block;
-    transform: scaleX(1.75);/* Độ dài và kích thước của mũi tên */
-}
-            
+
+            .back-link i {
+                margin-right: 5px;
+                color: #555; /* Màu mũi tên xám */
+                font-size: 20px;
+                display: inline-block;
+                transform: scaleX(1.75);/* Độ dài và kích thước của mũi tên */
+            }
+
         </style>
     </head>
     <body>
@@ -274,40 +275,42 @@
             </a>
         </div>
         <div class="back-button">
-    <a href="ShipperListAcceptPage" class="back-link">
-        <i class="fas fa-arrow-left"></i>
-    </a>
-</div>
+            <a href="ShipperListAcceptPage" class="back-link">
+                <i class="fas fa-arrow-left"></i>
+            </a>
+        </div>
         <div class="container">
             <div class="order-info">
                 <h1>Order Information</h1>
                 <%
                     OrderItem orderItem = null;
+                    OrderManager om = new OrderManager();
                     ArrayList<OrderItem> orderItemList = (ArrayList<OrderItem>) request.getAttribute("orderItemList");
+
                     if (orderItemList == null || orderItemList.isEmpty()) {
+
                 %>
                 <div class="message message-error">Order not found or empty.</div>
-                <%
-                    } else {
-                        orderItem = orderItemList.get(0);
-                        double total = 0.0;
-                        for (OrderItem item : orderItemList) {
-                            total += item.getDish().getPrice() * item.getQuantity();
-                        }
-                %>
-                <div>
-                    <p><strong>Order ID:</strong> <%= orderItem.getOrder().getOrder_id()%></p>
-                    <p><strong>Shipper ID:</strong> <%= orderItem.getOrder().getShipper().getAccount_id()%></p>
-                    <p><strong>Name Customer:</strong> <%= orderItem.getOrder().getCustomer().getName()%></p>
-                    <p><strong>Phone Number:</strong> <%= orderItem.getOrder().getCustomer().getPhoneNumber()%></p>
-                    <p><strong>Diner address:</strong> <%= orderItem.getOrder().getDiner().getAddress()%></p>
-                    <p><strong>Customer address:</strong> <%= orderItem.getOrder().getCustomer().getAddress()%></p>
-                    <p><strong>Status Order:</strong> <%= orderItem.getOrder().getOrder_status()%></p>
-                    <p><strong>Total:</strong> <%= total%></p>
-                </div>
-                <%
+                <%                } else {
+
+                    orderItem = orderItemList.get(0);
+                    Order order = om.getOderById(orderItem.getOrder_id());
+                    double total = 0.0;
+                    for (OrderItem item : orderItemList) {
+                        total += item.getDish().getPrice() * item.getQuantity();
                     }
                 %>
+                <div>
+                    <p><strong>Order ID:</strong> <%= order.getOrder_id()%></p>
+                    <p><strong>Shipper ID:</strong> <%= order.getShipper().getAccount_id()%></p>
+                    <p><strong>Name Customer:</strong> <%= order.getCustomer().getName()%></p>
+                    <p><strong>Phone Number:</strong> <%= order.getCustomer().getPhoneNumber()%></p>
+                    <p><strong>Diner address:</strong> <%= order.getDiner().getAddress()%></p>
+                    <p><strong>Customer address:</strong> <%= order.getCustomer().getAddress()%></p>
+                    <p><strong>Status Order:</strong> <%= order.getOrder_status()%></p>
+                    <p><strong>Total:</strong> <%= total%></p>
+                </div>
+
 
                 <div class="accept-button-container">
                     <input type="submit" onclick="openPopup()" value="Complete">
@@ -317,20 +320,20 @@
                         <p>Your Order Completed</p>
                         <form id="completeForm" action="OrderItemServlet" method="GET">
                             <input type="hidden" name="command" value="Complete">
-                            <input type="hidden" name="orderId" value="<%=orderItem.getOrder().getOrder_id()%>">
+                            <input type="hidden" name="orderId" value="<%=order.getOrder_id()%>">
                             <button class="ok" type="submit" onclick="submitFormAndRedirect()">OK</button>
                             <button class="close" type="button" onclick="closePopup()">Close</button>
                         </form>
                     </div>   
-                            
-                            <input type="submitCancel" onclick="openPopupCancel()" value="Cancel">
+
+                    <input type="submitCancel" onclick="openPopupCancel()" value="Cancel">
                     <div class="popupcancel">
                         <h2>--------------------------------</h2>
                         <h2>CANCEL</h2>
                         <p>Are You Sure !!!</p>
                         <form id="cancelForm" action="OrderItemServlet" method="GET">
                             <input type="hidden" name="command" value="Canceled">
-                            <input type="hidden" name="orderId" value="<%=orderItem.getOrder().getOrder_id()%>">
+                            <input type="hidden" name="orderId" value="<%=order.getOrder_id()%>">
                             <textarea name="cancelReason" placeholder="Enter reason for cancellation" required></textarea>
                             <button class="ok" type="submit" onclick="submitFormCancel()">OK</button>
                             <button class="close" type="button" onclick="closePopupCancel()">Close</button>
@@ -338,7 +341,9 @@
                     </div>   
                 </div>
 
- 
+                <%
+                    }
+                %>
             </div>
 
             <div class="sidebar">

@@ -23,18 +23,43 @@ public class OrderItemManager {
             if (id == facc.getOrder_item_id()) {
                 return facc;
             }
-            
         }
         return null;
     }
-     public ArrayList<OrderItem> getOderItemByOrderId(int id) {
-        ArrayList<OrderItem> listOI = new ArrayList<>();
-        for (OrderItem orderItem : List) {
-            if (id == orderItem.getOrder().getOrder_id()) {
-                listOI.add(orderItem);
+ 
+     
+    public ArrayList<OrderItem> getOderItemByOrderId(int id) {
+        ArrayList<OrderItem> list = new ArrayList<>();
+        for (OrderItem facc : List) {
+            if (id == facc.getOrder_id()) {
+                list.add(facc);
             }
         }
-        return listOI;
+        return list;
+    }
+    public int getTotalOderItem(ArrayList<OrderItem> oiList) {
+        int sum = 0;
+        for (OrderItem facc : oiList) {
+            sum+=facc.getQuantity();
+        }
+        return sum;
+    }
+    public int getTotalPrice(ArrayList<OrderItem> oiList) {
+        int sum = 0;
+        for (OrderItem facc : oiList) {
+            sum+=facc.getPrice();
+        }
+        return sum;
+    }
+    
+    public double getTotalPriceOrderId(int id){
+        ArrayList<OrderItem> oiList = getOderItemByOrderId(id);
+        double total = 0;
+        for(OrderItem oi : oiList){
+            total += oi.getPrice();
+        }
+        return total;
+ 
     }
      public ArrayList<OrderItem> getList() {
         return List;
@@ -42,8 +67,8 @@ public class OrderItemManager {
      
      
     public static void main(String[] args) {
-        OrderManager om = new OrderManager();
-        for(Order o : om.getList()){
+        OrderItemManager om = new OrderItemManager();
+        for(OrderItem o : om.getList()){
             System.out.println(o);
         }
     }

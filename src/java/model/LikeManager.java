@@ -43,6 +43,7 @@ public class LikeManager {
     public static void main(String[] args) {
         LikeManager lm = new LikeManager();
         for(Like l : lm.getLikesByAccountId(1)){
+            if(l.getComment().getCommentId()==1 && l.getUser().getAccount_id()==1)
             System.out.println(l);
         }
     }

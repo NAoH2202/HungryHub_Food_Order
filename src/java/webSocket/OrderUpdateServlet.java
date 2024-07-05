@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-package controller;
+package webSocket;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -11,30 +11,35 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import model.Account;
-import model.AccountDao;
-import model.AccountManager;
 
 /**
  *
  * @author lenovo
  */
-@WebServlet(name = "ResetPasswordServlet", urlPatterns = {"/ResetPasswordServlet"})
-public class ResetPasswordServlet extends HttpServlet {
+@WebServlet(name = "OrderUpdateServlet", urlPatterns = {"/OrderUpdateServlet"})
+public class OrderUpdateServlet extends HttpServlet {
 
+    /**
+     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
+     * methods.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.setCharacterEncoding("UTF-8");
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet ResetPasswordServlet</title>");            
+            out.println("<title>Servlet OrderUpdateServlet</title>");            
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet ResetPasswordServlet at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet OrderUpdateServlet at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -47,17 +52,29 @@ public class ResetPasswordServlet extends HttpServlet {
     }
 
     @Override
+    
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        int id = Integer.parseInt(request.getParameter("accId"));
-        String pass = request.getParameter("password");
-        AccountManager am = new AccountManager();
-        Account account = am.getAccountById(id);
-        AccountDao.updatePassword(id, pass);
-        request.getSession().setAttribute("message", "Password has been reset successfully");
-        response.sendRedirect("LoginServlet");
+        // Nhận thông tin đơn hàng từ request
+        String orderId = request.getParameter("orderId");
+        String status = request.getParameter("status");
+
+        // Tạo thông báo cập nhật đơn hàng
+        String updateMessage = "Order " + orderId + " status updated to: " + status;
+
+        // Gửi cập nhật đến tất cả các kết nối WebSocket
+        OrderTrackingWebSocket.sendOrderUpdate(updateMessage);
+
+        // Phản hồi lại yêu cầu HTTP
+        response.setContentType("text/plain");
+        response.getWriter().write("Update sent: " + updateMessage);
     }
 
+    /**
+     * Returns a short description of the servlet.
+     *
+     * @return a String containing servlet description
+     */
     @Override
     public String getServletInfo() {
         return "Short description";

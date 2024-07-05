@@ -17,13 +17,13 @@ public class Dish {
     private String name;
     private String picture; //new
     private String description;
-    private double price;
+    private int price;
     private String type;
     private String ingredients;
     private LocalDateTime created_at = LocalDateTime.now();
     private LocalDateTime updated_at = LocalDateTime.now();
 
-    public Dish(int dish_id, Account account, String name,String picture, String description, double price, String type, String ingredients) {
+    public Dish(int dish_id, Account account, String name,String picture, String description, int price, String type, String ingredients) {
         this.dish_id = dish_id;
         this.picture = picture;
         this.account = account;
@@ -66,11 +66,11 @@ public class Dish {
         this.description = description;
     }
 
-    public double getPrice() {
-        return price*1000;
+    public int getPrice() {
+        return price;
     }
 
-    public void setPrice(double price) {
+    public void setPrice(int price) {
         this.price = price;
     }
 

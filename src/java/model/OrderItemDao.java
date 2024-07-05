@@ -20,9 +20,9 @@ import java.util.logging.Logger;
  * @author PC
  */
 public class OrderItemDao {
+
     public static ArrayList<OrderItem> getAllOrderItems() {
         ArrayList<OrderItem> OrderItemList = new ArrayList<>();
-        OrderManager om = new OrderManager();
         DishManager dm = new DishManager();
         ConnectDB db = ConnectDB.getInstance();
         Connection conn = null;
@@ -34,16 +34,21 @@ public class OrderItemDao {
             statement = conn.prepareStatement(query);
             rs = statement.executeQuery();
             while (rs.next()) {
-                 int order_item_id = rs.getInt("order_item_id");
+                int order_item_id = rs.getInt("order_item_id");
                 int order_id = rs.getInt("order_id");
-                Order order = om.getOderById(order_id);
                 int dish_id = rs.getInt("dish_id");
                 Dish dish = dm.getDishById(dish_id);
                 int quantity = rs.getInt("quantity");
- //               double price = rs.getDouble("price");
+
+                //               double price = rs.getDouble("price");
+//                Date created_at = rs.getTimestamp("created_at");
+//                Date updated_at = rs.getTimestamp("updated_at");
+//                OrderItem orderItem = new OrderItem(order_item_id, order, dish, quantity);
+                int price = rs.getInt("price");
                 Date created_at = rs.getTimestamp("created_at");
                 Date updated_at = rs.getTimestamp("updated_at");
-                OrderItem orderItem = new OrderItem(order_item_id, order, dish, quantity);
+                OrderItem orderItem = new OrderItem(order_item_id, order_id, dish, quantity, price);
+
                 orderItem.setCreated_at(created_at);
                 orderItem.setUpdated_at(updated_at);
                 OrderItemList.add(orderItem);
@@ -66,7 +71,7 @@ public class OrderItemDao {
         }
         return OrderItemList;
     }
-    
+
     public void updateOrderStatus(Order order) {
         ConnectDB db = ConnectDB.getInstance();
         Connection conn = null;
@@ -76,7 +81,7 @@ public class OrderItemDao {
             String query = "UPDATE [Order] SET order_status = ?, updated_at = ? WHERE order_id = ?";
             statement = conn.prepareStatement(query);
             statement.setString(1, order.getOrder_status());
-             
+
             statement.setInt(2, order.getOrder_id());
             statement.executeUpdate();
         } catch (ClassNotFoundException | SQLException ex) {
@@ -91,6 +96,41 @@ public class OrderItemDao {
                 }
             } catch (SQLException e) {
                 Logger.getLogger(OrderDao.class.getName()).log(Level.SEVERE, null, e);
+            }
+        }
+    }
+
+    public static void addOrderItem(OrderItem orderItem) {
+        ConnectDB db = ConnectDB.getInstance();
+        Connection conn = null;
+        PreparedStatement statement = null;
+
+        try {
+            conn = db.openConnection();
+            String query = "INSERT INTO OrderItem (order_id, dish_id, quantity, price) VALUES (?, ?, ?, ?)";
+            statement = conn.prepareStatement(query);
+            statement.setInt(1, orderItem.getOrder_id());
+            statement.setInt(2, orderItem.getDish().getDish_id());
+            statement.setInt(3, orderItem.getQuantity());
+            statement.setInt(4, orderItem.getPrice());
+
+            int rowsInserted = statement.executeUpdate();
+            if (rowsInserted > 0) {
+                System.out.println("A new order item was inserted successfully.");
+            }
+        } catch (ClassNotFoundException | SQLException ex) {
+            Logger.getLogger(OrderItemDao.class.getName()).log(Level.SEVERE, "Error executing SQL: ", ex);
+        } finally {
+            try {
+                if (statement != null) {
+                    statement.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                Logger.getLogger(OrderItemDao.class.getName()).log(Level.WARNING, "Error closing database resources", e);
+
             }
         }
     }

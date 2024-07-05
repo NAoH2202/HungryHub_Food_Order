@@ -18,6 +18,7 @@ import java.util.logging.Logger;
  * @author lenovo
  */
 public class LikeDao {
+
     public static ArrayList<Like> getAllLikes() {
         ArrayList<Like> LikeList = new ArrayList<>();
         CommentManager cm = new CommentManager();
@@ -57,12 +58,44 @@ public class LikeDao {
         }
         return LikeList;
     }
+
+    public static boolean removeLike(int commentID, int userID) {
+        ConnectDB db = ConnectDB.getInstance();
+        Connection conn = null;
+        PreparedStatement statement = null;
+        boolean isSuccess = false;
+
+        try {
+            conn = db.openConnection();
+            String query = "DELETE FROM [Likes] WHERE CommentID = ? AND UserID = ?";
+            statement = conn.prepareStatement(query);
+            statement.setInt(1, commentID);
+            statement.setInt(2, userID);
+            int rowsDeleted = statement.executeUpdate();
+            isSuccess = rowsDeleted > 0;
+        } catch (ClassNotFoundException | SQLException ex) {
+            Logger.getLogger(LikeDao.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if (statement != null) {
+                    statement.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+            }
+        }
+
+        return isSuccess;
+    }
+
     public static boolean addLike(int commentID, int userID) {
         ConnectDB db = ConnectDB.getInstance();
         Connection conn = null;
         PreparedStatement statement = null;
         boolean isSuccess = false;
-        
+
         try {
             conn = db.openConnection();
             String query = "INSERT INTO [Likes] (CommentID, UserID) VALUES (?, ?)";
@@ -84,7 +117,7 @@ public class LikeDao {
             } catch (SQLException e) {
             }
         }
-        
+
         return isSuccess;
     }
 }

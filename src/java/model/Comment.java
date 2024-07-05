@@ -22,7 +22,7 @@ public class Comment {
     private LocalDateTime updated_at = LocalDateTime.now();
 
     // Constructor
-    public Comment(int commentId, Account account, Dish dish, Account diner, FoodAd post, String content, int rating, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public Comment(int commentId, Account account, Dish dish, Account diner, FoodAd post, String content, int rating) {
         this.commentId = commentId;
         this.account = account;
         this.dish = dish;
@@ -30,8 +30,6 @@ public class Comment {
         this.post = post;
         this.content = content;
         this.rating = rating;
-        this.created_at = createdAt;
-        this.updated_at = updatedAt;
     }
 
     // Getters and Setters
