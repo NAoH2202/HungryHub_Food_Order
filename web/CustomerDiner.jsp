@@ -231,7 +231,7 @@ Author     : MSIGAMING
                             <div class="dish-description col-md-10">
                                 <div class="col-md-9">
                                     <h3 id="dishName"><a href="CustomerDishPage?id=<%=d.getDish_id()%>" style="color: black"><%=d.getName()%></a></h3>
-                                    <p>Price: <span id="dishPrice"><%=d.getPrice()%> VNĐ</span></p>
+                                    <p>Price: <span id="dishPrice"><%=d.getPrice()%>₫</span></p>
                                 </div>
 
                                 <div class="col-md-3" style="align-content: center">

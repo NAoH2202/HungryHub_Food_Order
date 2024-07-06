@@ -198,7 +198,7 @@
                                             <p>Tổng tiền: <%=totalPrice%>₫</p>
                                         </div>
                                         <div class="order-actions">
-                                            <button class="reorder-button">Theo dõi</button>
+                                            <button class="reorder-button" onclick="window.location.href = 'CustomerTrackingOrder?id=<%=od.getOrder_id()%>'">Theo dõi</button>
                                         </div>
                                     </div>
                                 </div>
@@ -231,7 +231,7 @@
                                             <p>Tổng tiền: <%=totalPrice%>₫</p>
                                         </div>
                                         <div class="order-actions">
-                                            <button class="reorder-button">Theo dõi</button>
+                                            <button class="reorder-button"  onclick="window.location.href = 'CustomerTrackingOrder?id=<%=od.getOrder_id()%>'">Theo dõi</button>
                                         </div>
                                     </div>
                                 </div>
@@ -263,7 +263,7 @@
                                             <p>Tổng tiền: <%=totalPrice%>₫</p>
                                         </div>
                                         <div class="order-actions">
-                                            <button class="reorder-button">Theo dõi</button>
+                                            <button class="reorder-button" onclick="window.location.href = 'CustomerTrackingOrder?id=<%=od.getOrder_id()%>'">Theo dõi</button>
                                         </div>
                                     </div>
                                 </div>
@@ -295,7 +295,7 @@
                                             <p>Tổng tiền: <%=totalPrice%>₫</p>
                                         </div>
                                         <div class="order-actions">
-                                            <button class="reorder-button">Theo dõi</button>
+                                            <button class="reorder-button" onclick="window.location.href = 'CustomerTrackingOrder?id=<%=od.getOrder_id()%>'">Theo dõi</button>
                                         </div>
                                     </div>
                                 </div>

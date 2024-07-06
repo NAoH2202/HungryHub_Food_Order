@@ -67,7 +67,7 @@ public class Chat {
 
     @Override
     public String toString() {
-        return "Chat{" + "chat_id=" + chat_id + ", sender=" + sender + ", receiver=" + receiver + ", message=" + message + ", sent_at=" + sent_at + '}';
+        return "Chat{" + "chat_id=" + chat_id + ", sender=" + sender.getAccount_id() + ", receiver=" + receiver.getAccount_id() + ", message=" + message + ", sent_at=" + sent_at + '}';
     }
 
     
