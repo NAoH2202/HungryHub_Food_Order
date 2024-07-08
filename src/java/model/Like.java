@@ -9,45 +9,42 @@ package model;
  * @author lenovo
  */
 public class Like {
-    private int likeID;
-    private FoodAd post;
-    private Account user;
+    private int likeId;
+    private Comment comment;
+    private Account User;
 
-    public Like(int likeID, FoodAd post, Account user) {
-        this.likeID = likeID;
-        this.post = post;
-        this.user = user;
+    public Like(int likeId, Comment comment, Account User) {
+        this.likeId = likeId;
+        this.comment = comment;
+        this.User = User;
     }
 
-    public int getLikeID() {
-        return likeID;
+    public int getLikeId() {
+        return likeId;
     }
 
-    public void setLikeID(int likeID) {
-        this.likeID = likeID;
+    public void setLikeId(int likeId) {
+        this.likeId = likeId;
     }
 
-    public FoodAd getPost() {
-        return post;
+    public Comment getComment() {
+        return comment;
     }
 
-    public void setPost(FoodAd post) {
-        this.post = post;
+    public void setComment(Comment comment) {
+        this.comment = comment;
     }
 
     public Account getUser() {
-        return user;
+        return User;
     }
 
-    public void setUser(Account user) {
-        this.user = user;
+    public void setUser(Account User) {
+        this.User = User;
     }
-
-    
 
     @Override
     public String toString() {
-        return "Like{" + "likeID=" + likeID + ", post=" + post+ ", user=" + user + '}';
+        return "Like{" + "likeId=" + likeId + ", comment=" + comment + ", UserId=" + User + '}';
     }
-    
 }

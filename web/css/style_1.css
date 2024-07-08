@@ -28,7 +28,7 @@
 
 .user-settings {
     position: absolute;
-    right: 5%;
+    right: calc(5% - 60px);
     background: var(--bg-color);
     top: 110%;
     max-width: 350px;
@@ -132,3 +132,5 @@ div#dark-button.dark-mode-on {
     background: #464545;
     padding: 2px 22px;
 }
+
+

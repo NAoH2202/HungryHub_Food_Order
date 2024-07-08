@@ -8,10 +8,10 @@ import java.util.ArrayList;
 
 /**
  *
- * @author PC
+ * @author lenovo
  */
 public class LikeManager {
-     ArrayList<Like> List;
+    private ArrayList<Like> List;
 
     public LikeManager() {
         List = LikeDao.getAllLikes();
@@ -19,10 +19,32 @@ public class LikeManager {
     
     public Like getLikeById(int id) {
         for (Like facc : List) {
-            if (id == facc.getLikeID()) {
+            if (id == facc.getLikeId()) {
                 return facc;
             }
         }
         return null;
+    }
+
+    public ArrayList<Like> getList() {
+        return List;
+    }
+    
+    public ArrayList<Like> getLikesByAccountId(int id) {
+        ArrayList<Like> likeList = new ArrayList<>();
+        for (Like facc : List) {
+            if (id == facc.getUser().getAccount_id()) {
+                likeList.add(facc);
+            }
+        }
+        return likeList;
+    }
+    
+    public static void main(String[] args) {
+        LikeManager lm = new LikeManager();
+        for(Like l : lm.getLikesByAccountId(1)){
+            if(l.getComment().getCommentId()==1 && l.getUser().getAccount_id()==1)
+            System.out.println(l);
+        }
     }
 }

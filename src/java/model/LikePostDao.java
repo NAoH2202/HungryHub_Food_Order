@@ -13,45 +13,37 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.apache.tomcat.jni.Library;
 
 /**
  *
- * @author lenovo
+ * @author PC
  */
-public class CommentPostDao {
-    public static ArrayList<CommentPost> getAllCommentPosts() {
-        ArrayList<CommentPost> CommentPostList = new ArrayList<>();
-        AccountManager am = new AccountManager();
+public class LikePostDao {
+
+    public static ArrayList<LikePost> getAllLikePosts() {
+        ArrayList<LikePost> LikeList = new ArrayList<>();
         FoodAdManager fam = new FoodAdManager();
+        AccountManager am = new AccountManager();
         ConnectDB db = ConnectDB.getInstance();
         Connection conn = null;
         PreparedStatement statement = null;
         ResultSet rs = null;
         try {
             conn = db.openConnection();
-            String query = "SELECT * FROM [User]";
+            String query = "SELECT * FROM [LikesPost]";
             statement = conn.prepareStatement(query);
             rs = statement.executeQuery();
             while (rs.next()) {
-                int comment_id = rs.getInt("comment_id");
-                int account_id = rs.getInt("account_id");
-                Account account = am.getAccountById(account_id);
-                int post_id = rs.getInt("post_id");
-                FoodAd post = fam.getFoodAdById(post_id);
-                String content = rs.getString("content");
-                int rating = rs.getInt("rating");
-                LocalDateTime created_at = rs.getTimestamp("created_at").toLocalDateTime();
-                LocalDateTime updated_at = rs.getTimestamp("updated_at").toLocalDateTime();
-
-                // Tạo đối tượng CommentPost và thêm vào danh sách
-                CommentPost commentPost = new CommentPost(comment_id, account, post, content, rating);
-                commentPost.setCreated_at(created_at);
-                commentPost.setUpdated_at(updated_at);
-
-                CommentPostList.add(commentPost);
+                int likeID = rs.getInt("LikeID");
+                int postID = rs.getInt("PostID");
+                FoodAd post = fam.getFoodAdById(postID);
+                int userID = rs.getInt("UserID");
+                Account acc = am.getAccountById(userID);
+                LikeList.add(new LikePost(likeID, post, acc));
             }
         } catch (ClassNotFoundException | SQLException ex) {
-            Logger.getLogger(CommentPostDao.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(LikePostDao.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {
                 if (rs != null) {
@@ -66,6 +58,6 @@ public class CommentPostDao {
             } catch (SQLException e) {
             }
         }
-        return CommentPostList;
+        return LikeList;
     }
 }

@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -23,7 +24,7 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             width: 100%;
             max-width: 500px;
-            margin: 20px; /* ThÍm kho?ng c·ch ?? tr·nh s·t mÈp m‡n hÏnh */
+            margin: 20px; /* Th√™m kho?ng c√°ch ?? tr√°nh s√°t m√©p m√†n h√¨nh */
         }
         .form-title {
             text-align: center;
