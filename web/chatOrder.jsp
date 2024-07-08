@@ -17,12 +17,12 @@
     Account account = (Account) session.getAttribute("account");
     String currentUser = account.getName();
     Integer currentUserId = account.getAccount_id(); // Assuming userId is stored in session
-    String recipient = request.getParameter("recipient");
+    String recipient = (String)request.getAttribute("recipient");
     if (request.getParameter("recipientId") == null) {
         response.sendRedirect("testPage");
         return;
     }
-    Integer recipientId = Integer.parseInt(request.getParameter("recipientId")); // Assuming recipientId is stored in session
+    int recipientId = (int) request.getAttribute("recipientId"); // Assuming recipientId is stored in session
 
     ChatManager cm = new ChatManager();
     ArrayList<Chat> chatHistory = cm.getChatHistory(currentUserId, recipientId);
@@ -33,7 +33,7 @@
         <meta charset="UTF-8">
         <title>Chat with <%= recipient%></title>
         <style>
-            body {
+/*            body {
                 font-family: Arial, sans-serif;
                 background-color: #f4f4f9;
                 display: flex;
@@ -41,7 +41,7 @@
                 align-items: center;
                 height: 100vh;
                 margin: 0;
-            }
+            }*/
             #chatContainer {
                 width: 90%;
                 max-width: 600px;

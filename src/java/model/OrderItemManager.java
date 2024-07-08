@@ -4,7 +4,9 @@
  */
 package model;
 
+import static java.nio.file.Files.list;
 import java.util.ArrayList;
+import static java.util.Collections.list;
 
 /**
  *
@@ -24,6 +26,8 @@ public class OrderItemManager {
         }
         return null;
     }
+ 
+     
     public ArrayList<OrderItem> getOderItemByOrderId(int id) {
         ArrayList<OrderItem> list = new ArrayList<>();
         for (OrderItem facc : List) {
@@ -55,13 +59,16 @@ public class OrderItemManager {
             total += oi.getPrice();
         }
         return total;
+ 
     }
      public ArrayList<OrderItem> getList() {
         return List;
     }
+     
+     
     public static void main(String[] args) {
         OrderItemManager om = new OrderItemManager();
-        for(OrderItem o : om.getList()){
+        for(OrderItem o : om.getOderItemByOrderId(100009)){
             System.out.println(o);
         }
     }

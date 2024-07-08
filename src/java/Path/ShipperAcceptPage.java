@@ -14,20 +14,12 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  *
- * @author lenovo
+ * @author DELL
  */
-@WebServlet(name = "CustomerTrackingOrder", urlPatterns = {"/CustomerTrackingOrder"})
-public class CustomerTrackingOrder extends HttpServlet {
+@WebServlet(name = "ShipperAcceptPage", urlPatterns = {"/ShipperAcceptPage"})
+public class ShipperAcceptPage extends HttpServlet {
 
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
+   
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
@@ -36,25 +28,34 @@ public class CustomerTrackingOrder extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet testPage</title>");            
+            out.println("<title>Servlet ShipperListOrderPage</title>");            
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet testPage at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet ShipperListOrderPage at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
     }
 
+    
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.getRequestDispatcher("CustomerTrackingOrder.jsp").forward(request, response);
+         request.getRequestDispatcher("ShipperAccept.jsp").forward(request, response);
     }
 
+    /**
+     * Handles the HTTP <code>POST</code> method.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.getRequestDispatcher("CustomerTrackingOrder.jsp").forward(request, response);
+         request.getRequestDispatcher("ShipperAccept.jsp").forward(request, response);
     }
 
     /**

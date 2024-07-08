@@ -13,6 +13,7 @@ import java.util.Date;
 public class OrderItem {
     private int order_item_id;
     private int order_id;
+     
     private Dish dish;
     private int quantity;
     private int price;
@@ -29,6 +30,17 @@ public class OrderItem {
         this.quantity = quantity;
         this.price = price;
     }
+ 
+
+    public OrderItem(int order_item_id, int order_id, Dish dish, int quantity) {
+        this.order_item_id = order_item_id;
+        this.order_id = order_id;
+        this.dish = dish;
+        this.quantity = quantity;
+    }
+    
+
+ 
     public OrderItem(int order_item_id, Dish dish, int quantity, int price) {
         this.order_item_id = order_item_id;
         this.dish = dish;
@@ -36,6 +48,7 @@ public class OrderItem {
         this.price = price;
     }
     
+ 
     public int getOrder_item_id() {
         return order_item_id;
     }
@@ -51,6 +64,8 @@ public class OrderItem {
     public void setOrder_id(int order_id) {
         this.order_id = order_id;
     }
+
+    
 
     
     public Dish getDish() {

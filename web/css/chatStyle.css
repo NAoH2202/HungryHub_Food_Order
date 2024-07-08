@@ -1,0 +1,71 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css to edit this template
+*/
+/* 
+    Created on : Jul 7, 2024, 2:37:16 AM
+    Author     : lenovo
+*/
+
+/*#chatContainer {
+    width: 90%;
+    max-width: 600px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    border-radius: 10px;
+    
+}*/
+#header {
+    background-color: #4CAF50;
+    color: white;
+    padding: 15px;
+    text-align: center;
+    font-size: 1.2em;
+}
+#chatBox {
+    height: 65%;
+    overflow-y: auto;
+    padding: 15px;
+    background-color: #f9f9f9;
+    border-bottom: 1px solid #ccc;
+}
+.message {
+    display: flex;
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: 10px;
+    max-width: 70%;
+}
+.message.sent {
+    margin-left: auto;
+    background-color: #dcf8c6;
+}
+.message.received {
+    margin-right: auto;
+    background-color: #fff;
+    border: 1px solid #ccc;
+}
+#inputContainer {
+    display: flex;
+    padding: 10px;
+    background-color: #fff;
+}
+#message {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    margin-right: 10px;
+}
+#sendButton {
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+}
+#sendButton:hover {
+    background-color: #45a049;
+}

@@ -73,7 +73,7 @@ public class ChatEndpoint {
         AccountManager am = new AccountManager();
         Account rec = am.getAccountById(receiverId);
         // Prepare the message to be sent
-        String jsonMessage = String.format("{\"type\":\"received\", \"message\":\"%s\", \"sender\":\"%s\"}", messageContent.replace("\"", "\\\""), username);
+        String jsonMessage = String.format("{\"type\":\"received\", \"message\":\"%s\", \"recipient\":\"%s\"}", messageContent.replace("\"", "\\\""), senderId);
 
         // Send the message to the recipient if they are connected
         Session recipientSession = userSessions.get(rec.getName());
@@ -82,7 +82,7 @@ public class ChatEndpoint {
         }
 
         // Send confirmation back to the sender
-        String senderMessage = String.format("{\"type\":\"sent\", \"message\":\"%s\", \"recipient\":\"%s\"}", messageContent.replace("\"", "\\\""), username);
+        String senderMessage = String.format("{\"type\":\"sent\", \"message\":\"%s\", \"sender\":\"%s\"}", messageContent.replace("\"", "\\\""), username);
         session.getBasicRemote().sendText(senderMessage);
 
         // Save the message to the database

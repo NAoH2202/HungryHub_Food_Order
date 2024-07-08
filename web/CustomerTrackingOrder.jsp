@@ -1,3 +1,6 @@
+<%@page import="model.Chat"%>
+<%@page import="model.ChatManager"%>
+<%@page import="model.Account"%>
 <%@page import="model.OrderItem"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="model.OrderItemManager"%>
@@ -5,11 +8,32 @@
 <%@page import="model.Order"%>
 <%@page import="model.OrderManager"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%
+    if (request.getParameter("id") == null) {
+        response.sendRedirect("CustomerOrderPage");
+        return;
+    }
+    int id = Integer.parseInt(request.getParameter("id"));
+    OrderManager om = new OrderManager();
+    OrderItemManager oIm = new OrderItemManager();
+    Order currentOrder = om.getOderById(id);
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    ArrayList<OrderItem> oiList = oIm.getOderItemByOrderId(id);
+    int Price = oIm.getTotalPrice(oiList);
+    if (session == null || session.getAttribute("account") == null) {
+        response.sendRedirect("LoginServlet");
+        return;
+    }
+    Account account = (Account) session.getAttribute("account");
+    String currentUser = account.getName();
+    int currentUserId = account.getAccount_id(); // Assuming userId is stored in session
+%>
 <!DOCTYPE html>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>JSP Page</title>
+        <link rel="stylesheet" href="css/chatStyle.css">
         <style>
             @media (max-width: 768px) {
                 .order-tracker {
@@ -48,7 +72,6 @@
             header {
                 background-color: #4CAF50;
                 color: white;
-                text-align: center;
                 padding: 20px 0;
             }
 
@@ -357,24 +380,21 @@
                 color: #333;
                 margin: 5px 0;
             }
+            #chatContainer {
+                width: 25%;
+                max-width: 600px;
+                max-height: 400px;
+                background-color: #fff;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                overflow: hidden;
+                border-radius: 10px;
+
+            }
         </style>
     </head>
     <body style="background-color: #dddddd;">
         <jsp:include page="path/header.jsp"/>
         <main style="display: flex;">
-            <%
-                if (request.getParameter("id") == null) {
-                    response.sendRedirect("CustomerOrderPage");
-                    return;
-                }
-                int id = Integer.parseInt(request.getParameter("id"));
-                OrderManager om = new OrderManager();
-                OrderItemManager oIm = new OrderItemManager();
-                Order currentOrder = om.getOderById(id);
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-                ArrayList<OrderItem> oiList = oIm.getOderItemByOrderId(id);
-                int Price = oIm.getTotalPrice(oiList);
-            %>
             <div class="order-tracker">
                 <div class="tracker-header">
                     <img src="images/tick-icon.png" alt="Tick"> Cảm ơn bạn đã đặt hàng!
@@ -437,11 +457,107 @@
                     <button onclick="window.location.href = 'CustomerOrderPage'">Trở về danh sách đơn hàng</button>
                 </div>
             </div>
+            <%    if (currentOrder.getOrder_status().equalsIgnoreCase("OntheWay")) {
+                    String recipient = (String) request.getParameter("recipient");
+                    if (request.getParameter("recipientId") == null) {
+                        response.sendRedirect("CustomerOrderPage");
+                        return;
+                    }
+                    int recipientId = Integer.parseInt(request.getParameter("recipientId")); // Assuming recipientId is stored in session
+
+                    ChatManager cm = new ChatManager();
+                    ArrayList<Chat> chatHistory = cm.getChatHistory(currentUserId, recipientId);%>
+            <script>
+                let websocket;
+
+                function connect2() {
+                    websocket = new WebSocket("ws://localhost:8080/HungryHub_OrderFood/chat");
+                    websocket.onopen = function () {
+                        console.log("Connected to the WebSocket server");
+                    };
+                    websocket.onmessage = function (event) {
+                        try {
+                            const messageData = JSON.parse(event.data);
+                            const messageElement = document.createElement("div");
+                            if (messageData.type === "received") {
+                                if (messageData.recipient === '<%=recipientId%>') {
+                                    messageElement.classList.add("message");
+                                    messageElement.classList.add("received");
+                                    messageElement.innerText = '<%= recipient%>' + ": " + messageData.message;
+                                }
+                            } else {
+                                messageElement.classList.add("message");
+                                messageElement.classList.add("sent");
+                                messageElement.innerText = '<%=currentUser%>' + ": " + messageData.message;
+                            }
+                            document.getElementById("chatBox").appendChild(messageElement);
+                            document.getElementById("chatBox").scrollTop = document.getElementById("chatBox").scrollHeight;
+                        } catch (e) {
+                            console.error("Error parsing JSON:", e);
+                        }
+                    };
+                    websocket.onerror = function (error) {
+                        console.error("WebSocket Error:", error);
+                    };
+                    websocket.onclose = function () {
+                        console.log("WebSocket connection closed");
+                        location.reload();
+                    };
+                }
+
+                function sendMessage() {
+                    const message = document.getElementById("message").value;
+                    if (websocket && websocket.readyState === WebSocket.OPEN) {
+                        const messageObj = {recipient: "<%=recipientId%>", message: message};
+                        websocket.send(JSON.stringify(messageObj));
+                        document.getElementById("message").value = "";
+                    } else {
+                        console.error("WebSocket is not connected or not open");
+                    }
+                }
+
+                window.onload = function () {
+                    console.log(<%=currentUserId%>);
+                    console.log(<%=recipientId%>);
+                    const chatBox = document.getElementById("chatBox");
+                    var messageElement2 = null;
+                    var message = null;
+                <% for (Chat chat : chatHistory) {
+                %>
+                    messageElement2 = document.createElement("div");
+                    messageElement2.classList.add("message");
+                <%   if (chat.getSender().getAccount_id() == currentUserId) {
+                %>
+                    messageElement2.classList.add("sent");
+                <%} else {%>
+                    messageElement2.classList.add("received");
+                <% }%>
+                    message = '<%=chat.getMessage()%>';
+                    messageElement2.innerText = "<%= chat.getSender().getAccount_id() == currentUserId ? currentUser : recipient%>" + ": " + message;
+                    chatBox.appendChild(messageElement2);
+                    chatBox.scrollTop = chatBox.scrollHeight;
+                <% }%>
+                };
+
+            </script>
+            <div id="chatContainer">
+                <div id="header">Chat with <%= recipient%></div>
+                <div id="chatBox" style="height: 70%">
+                </div>
+                <div id="inputContainer">
+                    <input type="text" id="message" placeholder="Type a message...">
+                    <button id="sendButton" onclick="sendMessage()">Send</button>
+                </div>
+            </div>
+            <%}%>
         </main>
         <jsp:include page="path/footer.jsp"/>
         <script type="text/javascript">
             var ws;
-
+            window.onload = function () {
+                connect();
+                connect2();
+            };
             function connect() {
                 ws = new WebSocket("ws://localhost:8080/HungryHub_OrderFood/orderStatus");
 
@@ -479,16 +595,17 @@
                     steps[1].classList.add('active');
                     steps[2].classList.add('active');
                     steps[3].classList.add('active');
+                    location.reload();
                 } else if (status === 'Completed') {
                     steps[0].classList.add('active');
                     steps[1].classList.add('active');
                     steps[2].classList.add('active');
                     steps[3].classList.add('active');
                     steps[4].classList.add('active');
+                    location.reload();
                 }
             }
 
-            window.onload = connect;
         </script>
     </body>
 </html>

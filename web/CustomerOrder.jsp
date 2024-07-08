@@ -151,43 +151,45 @@
             <div id="content">
                 <section class="section-yellow" style="border-radius: 20px">
                     <ul class="showing-container">
-                        <li class="item-status available active-os" selected="1">
+                        <li class="item-status available active-os" data-selected="1">
                             <div class="statusOrder noselect">Xác nhận</div>
                         </li>
-                        <li class="item-status available" selected="2">
+                        <li class="item-status available" data-selected="2">
                             <div class="statusOrder noselect">Đang Nấu</div>
                         </li>
-                        <li class="item-status available" selected="3">
+                        <li class="item-status available" data-selected="3">
                             <div class="statusOrder noselect">Sẵn sàng</div>
                         </li>
-                        <li class="item-status available" selected="4">
+                        <li class="item-status available" data-selected="4">
                             <div class="statusOrder noselect">Đang giao</div>
                         </li>
-                        <li class="item-status available" selected="5">
+                        <li class="item-status available" data-selected="5">
                             <div class="statusOrder noselect">Hoàn thành</div>
                         </li>
-                        <li class="item-status available" selected="6">
+                        <li class="item-status available" data-selected="6">
                             <div class="statusOrder noselect">Đã hủy</div>
                         </li>
                     </ul>
                 </section>
                 <div class="contentBot">
                     <section class="section-white">
-                        <div class="box" content="1" >      
-                            <div class="row"><%
-                                OrderManager om = new OrderManager();
-                                OrderItemManager oim = new OrderItemManager();
-                                for (Order od : om.getList()) {
-                                    if (od.getOrder_status().equalsIgnoreCase("Checking")) {
-                                        ArrayList<OrderItem> oiList = oim.getOderItemByOrderId(od.getOrder_id());
-                                        OrderItem odi = oiList.get(0);
-                                        int totalQuantity = oiList.size();
-                                        int totalPrice = oim.getTotalPrice(oiList);
+                        <div class="box" data-content="1">
+                            <div class="row">
+                                <%
+                                    OrderManager om = new OrderManager();
+                                    OrderItemManager oim = new OrderItemManager();
+                                    for (Order od : om.getList()) {
+                                        if (od.getOrder_status().equalsIgnoreCase("Checking")) {
+                                            ArrayList<OrderItem> oiList = oim.getOderItemByOrderId(od.getOrder_id());
+                                            if (oiList != null && !oiList.isEmpty()) {
+                                                OrderItem odi = oiList.get(0);
+                                                int totalQuantity = oiList.size();
+                                                int totalPrice = oim.getTotalPrice(oiList);
                                 %>
                                 <div class="col-sm-12 col-md-4">
                                     <div class="order-summary">
                                         <div class="order-item">
-                                            <img src="<%=odi.getDish().getPicture()%>" alt="Product Image" class="product-image">
+                                            <img src="<%=odi.getDish().getPicture() != null ? odi.getDish().getPicture() : "default_image_path.jpg"%>" alt="Product Image" class="product-image">
                                             <div class="product-info">
                                                 <a href="CustomerChatPage?idO=<%=od.getOrder_id()%>"><p class="product-name"><%=odi.getDish().getName()%></p></a>
                                                 <p class="product-quantity-price">Số lượng: <%=odi.getQuantity()%> | Giá: <%=odi.getPrice()%>₫</p>
@@ -203,56 +205,27 @@
                                     </div>
                                 </div>
                                 <%
+                                            }
                                         }
                                     }
                                 %>
                             </div>
                         </div>
-                        <div class="box" content="2" style="display: none">      
-                            <div class="row"><%
-                                for (Order od : om.getList()) {
-                                    if (od.getOrder_status().equalsIgnoreCase("Preparing")) {
-                                        ArrayList<OrderItem> oiList = oim.getOderItemByOrderId(od.getOrder_id());
-                                        OrderItem odi = oiList.get(0);
-                                        int totalQuantity = oiList.size();
-                                        int totalPrice = oim.getTotalPrice(oiList);
-                                %>
-                                <div class="col-sm-12 col-md-4">
-                                    <div class="order-summary">
-                                        <div class="order-item">
-                                            <img src="<%=odi.getDish().getPicture()%>" alt="Product Image" class="product-image">
-                                            <div class="product-info">
-                                                <a href="CustomerChatPage?idO=<%=od.getOrder_id()%>"><p class="product-name"><%=odi.getDish().getName()%></p></a>
-                                                <p class="product-quantity-price">Số lượng: <%=odi.getQuantity()%> | Giá: <%=odi.getPrice()%>₫</p>
-                                            </div>
-                                        </div>
-                                        <div class="order-total">
-                                            <p>Tổng số lượng món: <%=totalQuantity%></p>
-                                            <p>Tổng tiền: <%=totalPrice%>₫</p>
-                                        </div>
-                                        <div class="order-actions">
-                                            <button class="reorder-button"  onclick="window.location.href = 'CustomerTrackingOrder?id=<%=od.getOrder_id()%>'">Theo dõi</button>
-                                        </div>
-                                    </div>
-                                </div>
+                        <div class="box" data-content="2" style="display: none">
+                            <div class="row">
                                 <%
-                                        }
-                                    }
-                                %></div>
-                        </div>
-                        <div class="box" content="3" style="display: none">      
-                            <div class="row"><%
-                                for (Order od : om.getList()) {
-                                    if (od.getOrder_status().equalsIgnoreCase("Ready")) {
-                                        ArrayList<OrderItem> oiList = oim.getOderItemByOrderId(od.getOrder_id());
-                                        OrderItem odi = oiList.get(0);
-                                        int totalQuantity = oiList.size();
-                                        int totalPrice = oim.getTotalPrice(oiList);
+                                    for (Order od : om.getList()) {
+                                        if (od.getOrder_status().equalsIgnoreCase("Preparing")) {
+                                            ArrayList<OrderItem> oiList = oim.getOderItemByOrderId(od.getOrder_id());
+                                            if (oiList != null && !oiList.isEmpty()) {
+                                                OrderItem odi = oiList.get(0);
+                                                int totalQuantity = oiList.size();
+                                                int totalPrice = oim.getTotalPrice(oiList);
                                 %>
                                 <div class="col-sm-12 col-md-4">
                                     <div class="order-summary">
                                         <div class="order-item">
-                                            <img src="<%=odi.getDish().getPicture()%>" alt="Product Image" class="product-image">
+                                            <img src="<%=odi.getDish().getPicture() != null ? odi.getDish().getPicture() : "default_image_path.jpg"%>" alt="Product Image" class="product-image">
                                             <div class="product-info">
                                                 <a href="CustomerChatPage?idO=<%=od.getOrder_id()%>"><p class="product-name"><%=odi.getDish().getName()%></p></a>
                                                 <p class="product-quantity-price">Số lượng: <%=odi.getQuantity()%> | Giá: <%=odi.getPrice()%>₫</p>
@@ -268,23 +241,27 @@
                                     </div>
                                 </div>
                                 <%
+                                            }
                                         }
                                     }
-                                %></div>
+                                %>
+                            </div>
                         </div>
-                        <div class="box" content="4" style="display: none">      
-                            <div class="row"><%
-                                for (Order od : om.getList()) {
-                                    if (od.getOrder_status().equalsIgnoreCase("OntheWay")) {
-                                        ArrayList<OrderItem> oiList = oim.getOderItemByOrderId(od.getOrder_id());
-                                        OrderItem odi = oiList.get(0);
-                                        int totalQuantity = oiList.size();
-                                        int totalPrice = oim.getTotalPrice(oiList);
+                        <div class="box" data-content="3" style="display: none">
+                            <div class="row">
+                                <%
+                                    for (Order od : om.getList()) {
+                                        if (od.getOrder_status().equalsIgnoreCase("Ready")) {
+                                            ArrayList<OrderItem> oiList = oim.getOderItemByOrderId(od.getOrder_id());
+                                            if (oiList != null && !oiList.isEmpty()) {
+                                                OrderItem odi = oiList.get(0);
+                                                int totalQuantity = oiList.size();
+                                                int totalPrice = oim.getTotalPrice(oiList);
                                 %>
                                 <div class="col-sm-12 col-md-4">
                                     <div class="order-summary">
                                         <div class="order-item">
-                                            <img src="<%=odi.getDish().getPicture()%>" alt="Product Image" class="product-image">
+                                            <img src="<%=odi.getDish().getPicture() != null ? odi.getDish().getPicture() : "default_image_path.jpg"%>" alt="Product Image" class="product-image">
                                             <div class="product-info">
                                                 <a href="CustomerChatPage?idO=<%=od.getOrder_id()%>"><p class="product-name"><%=odi.getDish().getName()%></p></a>
                                                 <p class="product-quantity-price">Số lượng: <%=odi.getQuantity()%> | Giá: <%=odi.getPrice()%>₫</p>
@@ -300,23 +277,68 @@
                                     </div>
                                 </div>
                                 <%
+                                            }
                                         }
                                     }
-                                %></div>
+                                %>
+                            </div>
                         </div>
-                        <div class="box" content="5" style="display: none">      
-                            <div class="row"><%
-                                for (Order od : om.getList()) {
-                                    if (od.getOrder_status().equalsIgnoreCase("Completed")) {
-                                        ArrayList<OrderItem> oiList = oim.getOderItemByOrderId(od.getOrder_id());
-                                        OrderItem odi = oiList.get(0);
-                                        int totalQuantity = oiList.size();
-                                        int totalPrice = oim.getTotalPrice(oiList);
+                        <div class="box" data-content="4" style="display: none">
+                            <div class="row">
+                                <%
+                                    for (Order od : om.getList()) {
+                                        if (od.getOrder_status().equalsIgnoreCase("OntheWay")) {
+                                            ArrayList<OrderItem> oiList = oim.getOderItemByOrderId(od.getOrder_id());
+                                            if (oiList != null && !oiList.isEmpty()) {
+                                                OrderItem odi = oiList.get(0);
+                                                int totalQuantity = oiList.size();
+                                                int totalPrice = oim.getTotalPrice(oiList);
                                 %>
                                 <div class="col-sm-12 col-md-4">
                                     <div class="order-summary">
                                         <div class="order-item">
-                                            <img src="<%=odi.getDish().getPicture()%>" alt="Product Image" class="product-image">
+                                            <img src="<%=odi.getDish().getPicture() != null ? odi.getDish().getPicture() : "default_image_path.jpg"%>" alt="Product Image" class="product-image">
+                                            <div class="product-info">
+                                                <a href="CustomerChatPage?idO=<%=od.getOrder_id()%>"><p class="product-name"><%=odi.getDish().getName()%></p></a>
+                                                <p class="product-quantity-price">Số lượng: <%=odi.getQuantity()%> | Giá: <%=odi.getPrice()%>₫</p>
+                                            </div>
+                                        </div>
+                                        <div class="order-total">
+                                            <p>Tổng số lượng món: <%=totalQuantity%></p>
+                                            <p>Tổng tiền: <%=totalPrice%>₫</p>
+                                        </div>
+                                        <div class="order-actions">
+                                            <form action="CustomerTrackingOrder" method="POST">
+                                                <input type="hidden" name="id" value="<%=od.getOrder_id()%>" />
+                                                <input type="hidden" name="recipientId" value="<%=od.getShipper().getAccount_id()%>" />
+                                                <input type="hidden" name="recipient" value="<%=od.getShipper().getName()%>" />
+                                                <button class="reorder-button" type="submit">Theo dõi</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                                <%
+                                            }
+                                        }
+                                    }
+                                %>
+                            </div>
+                        </div>
+                        <div class="box" data-content="5" style="display: none">
+                            <div class="row">
+                                <%
+                                    for (Order od : om.getList()) {
+                                        if (od.getOrder_status().equalsIgnoreCase("Completed")) {
+                                            ArrayList<OrderItem> oiList = oim.getOderItemByOrderId(od.getOrder_id());
+                                            if (oiList != null && !oiList.isEmpty()) {
+                                                OrderItem odi = oiList.get(0);
+                                                int totalQuantity = oiList.size();
+                                                int totalPrice = oim.getTotalPrice(oiList);
+                                %>
+                                <div class="col-sm-12 col-md-4">
+                                    <div class="order-summary">
+                                        <div class="order-item">
+                                            <img src="<%=odi.getDish().getPicture() != null ? odi.getDish().getPicture() : "default_image_path.jpg"%>" alt="Product Image" class="product-image">
                                             <div class="product-info">
                                                 <a href="CustomerChatPage?idO=<%=od.getOrder_id()%>"><p class="product-name"><%=odi.getDish().getName()%></p></a>
                                                 <p class="product-quantity-price">Số lượng: <%=odi.getQuantity()%> | Giá: <%=odi.getPrice()%>₫</p>
@@ -332,23 +354,27 @@
                                     </div>
                                 </div>
                                 <%
+                                            }
                                         }
                                     }
-                                %></div>
+                                %>
+                            </div>
                         </div>
-                        <div class="box" content="6" style="display: none">      
-                            <div class="row"><%
-                                for (Order od : om.getList()) {
-                                    if (od.getOrder_status().equalsIgnoreCase("canceled")) {
-                                        ArrayList<OrderItem> oiList = oim.getOderItemByOrderId(od.getOrder_id());
-                                        OrderItem odi = oiList.get(0);
-                                        int totalQuantity = oiList.size();
-                                        int totalPrice = oim.getTotalPrice(oiList);
+                        <div class="box" data-content="6" style="display: none">
+                            <div class="row">
+                                <%
+                                    for (Order od : om.getList()) {
+                                        if (od.getOrder_status().equalsIgnoreCase("canceled")) {
+                                            ArrayList<OrderItem> oiList = oim.getOderItemByOrderId(od.getOrder_id());
+                                            if (oiList != null && !oiList.isEmpty()) {
+                                                OrderItem odi = oiList.get(0);
+                                                int totalQuantity = oiList.size();
+                                                int totalPrice = oim.getTotalPrice(oiList);
                                 %>
                                 <div class="col-sm-12 col-md-4">
                                     <div class="order-summary">
                                         <div class="order-item">
-                                            <img src="<%=odi.getDish().getPicture()%>" alt="Product Image" class="product-image">
+                                            <img src="<%=odi.getDish().getPicture() != null ? odi.getDish().getPicture() : "default_image_path.jpg"%>" alt="Product Image" class="product-image">
                                             <div class="product-info">
                                                 <a href="CustomerChatPage?idO=<%=od.getOrder_id()%>"><p class="product-name"><%=odi.getDish().getName()%></p></a>
                                                 <p class="product-quantity-price">Số lượng: <%=odi.getQuantity()%> | Giá: <%=odi.getPrice()%>₫</p>
@@ -364,9 +390,11 @@
                                     </div>
                                 </div>
                                 <%
+                                            }
                                         }
                                     }
-                                %></div>
+                                %>
+                            </div>
                         </div>
                     </section>
                 </div>
@@ -382,12 +410,12 @@
                     });
                     this.classList.add('active-os');
 
-                    var selected = this.getAttribute('selected');
+                    var selected = this.dataset.selected;
                     var movieTimeLines = document.querySelectorAll('.box');
 
                     movieTimeLines.forEach(function (movieTimeLine) {
-                        var Chosse = movieTimeLine.getAttribute('content');
-                        if (Chosse === selected) {
+                        var content = movieTimeLine.dataset.content;
+                        if (content === selected) {
                             movieTimeLine.style.display = 'block';
                         } else {
                             movieTimeLine.style.display = 'none';
