@@ -14,7 +14,6 @@
             background-color: #DDDDDD;
             margin: 0;
             padding: 20px;
-             overflow-y: auto;
         }
 
         .container {
@@ -80,13 +79,15 @@
         .header {
             display: flex;
             align-items: center;
-            padding: 15px;
+            padding: 40px;
             background-color: #8bc34a;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             
         }
 
-       
+        .header img {
+            height: 50px;
+        }
     </style>
 </head>
 <body>
@@ -109,39 +110,32 @@
                 <tr>
                     <th>Order ID</th>
                     <th>Customer</th>
+                    <th>Address of Customer</th>
                     <th>Dish</th>
+                    <th>Address of Dinner</th>
                     <th>Status Order</th>
-                    <th>Payment</th>
+                     
                      
                 </tr>
             </thead>
             <tbody>
                 <c:forEach var="order" items="${orderList}">
-                       <c:if test="${order.order_status eq 'Ready'}">
+                       <c:if test="${order.order_status eq 'Completed'}">
             <tr>
               <td>${order.order_id}</td>
               <td>${order.customer.name}</td>
+              <td>${order.customer.address}</td>
               <td>${order.diner.name}</td>
+              <td>${order.diner.address}</td>
               <td>${order.order_status}</td>
-              <td>${order.payment_method}</td>
                
-              <td>
-                <form action="OrderItemServlet" method="GET">
-                  <input type="hidden" name="command" value="ITEM">
-                  <input type="hidden" name="orderId" value="${order.order_id}">
-                  <input type="submit" value="View Info">
-                </form>
-              </td>
+               
+              
             </tr>
           </c:if>
                 </c:forEach>
             </tbody>
         </table>
-        <div class="actions">
-    <form action="ShipperListAcceptPage" method="GET">
-        <input type="submit" value="List Order to Accepted">
-    </form>
-</div>
     </div>
 </body>
 </html>

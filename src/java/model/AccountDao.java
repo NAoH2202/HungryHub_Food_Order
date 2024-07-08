@@ -286,6 +286,33 @@ private static void updateDateOfBirth(Account account) {
     }
     return false;
 }
+  public void updateActiveStatus(Account account) {
+    ConnectDB db = ConnectDB.getInstance();
+    Connection conn = null;
+    PreparedStatement statement = null;
+    try {
+        conn = db.openConnection();
+        String query = "UPDATE Account SET active_status = ? WHERE account_id = ? AND role = 'Shipper'";
+        statement = conn.prepareStatement(query);
+        statement.setBoolean(1, account.isActive_status());  
+        statement.setInt(2, account.getAccount_id());
+        statement.executeUpdate();
+    } catch (ClassNotFoundException | SQLException ex) {
+        Logger.getLogger(AccountDao.class.getName()).log(Level.SEVERE, null, ex);
+    } finally {
+        try {
+            if (statement != null) {
+                statement.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
+        } catch (SQLException e) {
+            Logger.getLogger(AccountDao.class.getName()).log(Level.SEVERE, null, e);  
+        }
+    }
+}
+
 
     public static void main(String[] args) {
         ArrayList<Account> test = AccountDao.getAllAccounts();

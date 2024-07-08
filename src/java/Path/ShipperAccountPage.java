@@ -16,8 +16,8 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author lenovo
  */
-@WebServlet(name = "ShipperPage", urlPatterns = {"/ShipperPage"})
-public class ShipperPage extends HttpServlet {
+@WebServlet(name = "ShipperAccountPage", urlPatterns = {"/ShipperAccountPage"})
+public class ShipperAccountPage extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -28,7 +28,6 @@ public class ShipperPage extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
@@ -37,10 +36,10 @@ public class ShipperPage extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet ShipperPage</title>");            
+            out.println("<title>Servlet AccountPage</title>");            
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet ShipperPage at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet AccountPage at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -49,21 +48,13 @@ public class ShipperPage extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.getRequestDispatcher("ShipperMainPage.jsp").forward(request, response);
+        request.getRequestDispatcher("Shipper.jsp").forward(request, response);
     }
 
-    /**
-     * Handles the HTTP <code>POST</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-       request.getRequestDispatcher("ShipperMainPage.jsp").forward(request, response);
+        request.getRequestDispatcher("Shipper.jsp").forward(request, response);
     }
 
     /**
