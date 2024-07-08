@@ -288,7 +288,7 @@
                                         </div>
                                         <div class="order-actions">
 <!--                                            <button class="accept-button "onclick="updateOrderStatus('<%=od.getOrder_id()%>', 'OntheWay')">Vận Chuyển</button>-->
-                                            <button class="cancel-button" onclick="updateOrderStatus('<%=od.getOrder_id()%>', 'Canceled')">Hủy bỏ</button>
+<!--                                            <button class="cancel-button" onclick="updateOrderStatus('<%=od.getOrder_id()%>', 'Canceled')">Hủy bỏ</button>-->
                                         </div>
                                     </div>
                                 </div>

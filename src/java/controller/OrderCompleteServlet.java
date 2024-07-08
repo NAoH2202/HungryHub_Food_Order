@@ -99,7 +99,8 @@ public class OrderCompleteServlet extends HttpServlet {
                             OrderPrice+=ci.getDish().getPrice() * ci.getQuantity();
                             oiList.add(new OrderItem(0, ci.getDish(), ci.getQuantity(), ci.getDish().getPrice()* ci.getQuantity()));
                         }
-                    Order order = new Order(0, account, diner, null, "Checking", paymentMethod,"", totalCost);
+
+                    Order order = new Order(0, account, diner, null, "Checking", paymentMethod,null, totalCost);
                     int orderId = OrderDao.addOrder(order);
                     for(OrderItem oi : oiList){
                         oi.setOrder_id(orderId);

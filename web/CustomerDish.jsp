@@ -167,7 +167,7 @@
                         <div id="mota">
                             <h1 id="dishName"><%=dish.getName()%></h1>
                             <p>Description: <%=dish.getDescription()%></p>
-                            <p>Price: <%=dish.getPrice()%> VNĐ</p>
+                            <p>Price: <%=dish.getPrice()%>₫</p>
                             <div>
                                 <label for="quantity">Quantity:</label>
                                 <input type="number" id="quantity_<%=dish.getDish_id()%>" name="quantity" min="1" max="100">
