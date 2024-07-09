@@ -99,6 +99,7 @@ public class OrderCompleteServlet extends HttpServlet {
                             OrderPrice+=ci.getDish().getPrice() * ci.getQuantity();
                             oiList.add(new OrderItem(0, ci.getDish(), ci.getQuantity(), ci.getDish().getPrice()* ci.getQuantity()));
                         }
+
                     Order order = new Order(0, account, diner, null, "Checking", paymentMethod,null, totalCost);
                     int orderId = OrderDao.addOrder(order);
                     for(OrderItem oi : oiList){
@@ -114,7 +115,36 @@ public class OrderCompleteServlet extends HttpServlet {
                 break;
             }
             case "online":
-                request.getRequestDispatcher("orderConfirmation.jsp").forward(request, response);
+               OrderManager om = new OrderManager();
+                CartItemManager cIm = new CartItemManager();
+                ArrayList<CartItem> ciList = cIm.getCartItemByAccountId(account.getAccount_id());
+                ArrayList<Account> dinerList = AddToCartServlet.getUniqueDinersFromCartItems(ciList);
+                ArrayList<CartItem> ciListByDiner;
+                ArrayList<OrderItem> oiList = new ArrayList<>();
+                ArrayList<Integer> orderIds = new ArrayList<>();
+
+                for (Account diner : dinerList) {
+                    ciListByDiner = AddToCartServlet.getCartItemsByDiner(diner.getAccount_id(), ciList);
+                    for (CartItem ci : ciListByDiner) {
+                        OrderPrice += ci.getDish().getPrice() * ci.getQuantity();
+                        oiList.add(new OrderItem(0, ci.getDish(), ci.getQuantity(), ci.getDish().getPrice() * ci.getQuantity()));
+                    }
+
+                    Order order = new Order(0, account, diner, null, "Checking", paymentMethod, null, totalCost);
+                    int orderId = OrderDao.addOrder(order);
+                    for (OrderItem oi : oiList) {
+                        oi.setOrder_id(orderId);
+                        OrderItemDao.addOrderItem(oi);
+                    }
+                    orderIds.add(orderId);
+                    oiList.clear();
+                    OrderPrice = 0;
+                }
+
+                CartItemDao.removeCartItemByAccountId(account.getAccount_id());
+                request.setAttribute("orderIds", orderIds);
+                request.setAttribute("totalCost",  totalCost);
+                request.getRequestDispatcher("vnpay_pay.jsp").forward(request, response);
                 break;
             default:
                 throw new AssertionError();

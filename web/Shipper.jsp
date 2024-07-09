@@ -41,7 +41,7 @@
                 background-color: white; /* Background color of the main content */
             }
 
-            .container {
+            .container1 {
                 margin-right: auto;
                 margin-left: auto;
                 padding-left: 15px;
@@ -166,10 +166,7 @@
         </style>
     </head>
     <body>
-        <div class="header">
-              <a href="ShipperPage" style="text-decoration: none; color: #000; font-family: 'Brush Script MT', sans-serif; font-size: 50px; ">
-    HungryHub</a>
-            </div>
+        < <jsp:include page="path/shipperheader.jsp"/>
         <%
              Account acc = null;
             if (request.getSession().getAttribute("account") != null) {
@@ -194,7 +191,7 @@
         
         <div id="site-content" style="background-color: #DDDDDD">
             <main class="main-content" style="padding: 50px;">
-                <div class="container" style="max-width: 1500px;">
+                <div class="container1" style="max-width: 1500px;">
                     <div class="midContent" style="width: 100%;height: auto;padding: 20px">
                         <div class="row" style="background-color: white;">
                             <div class="col-md-3 d-flex justify-content-center">

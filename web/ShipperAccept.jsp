@@ -29,7 +29,7 @@
             #map {
                 height: 100%;
             }
-            .container {
+            .container1 {
                 display: flex;
                 padding: 20px;
                 box-sizing: border-box;
@@ -190,8 +190,8 @@
                 background-color: #dc3545;
             }
             .accept-button-container input[type="submitCancel"] {
-                height: 15px;
-                width: 60px;
+                height: 60px;
+                width: 130px;
                 padding: 15px 30px;
                 font-size: 16px;
                 background-color: #e66365;
@@ -202,6 +202,8 @@
                 transition: background-color 0.3s;
             }
             .popup, .popupcancel {
+                
+                height: 350px;
                 background-color: #ffffff;
                 border-radius: 6px;
                 position: absolute;
@@ -243,17 +245,23 @@
                 margin-top: 20px;
             }
             .popup button.close {
+                height: 50px;
+                width: 210px;
                 background: #c3e6cb;
                 margin-top: 20px;
+                 margin-right:  24px;
             }
             .popupcancel button.ok {
                 background: #dc3545;
                 margin-top: 20px;
             }
             .popupcancel button.close {
+                 height: 50px;
+                width: 210px;
                 background: #f8d7da;
                 color: #333;
                 margin-top: 20px;
+                 margin-right:  24px;
             }
             .popupcancel button.close:hover {
                 background: #f5c6cb;
@@ -278,54 +286,70 @@
         </style>
     </head>
     <body>
-        <div class="header">
-            <a href="ShipperPage">HungryHub</a>
-            <a href="ShipperAccountPage" class="order_online">
-                <i class="fas fa-user"></i>
-            </a>
-        </div>
+        <jsp:include page="path/shipperheader.jsp"/>
         <div class="back-button">
             <a href="ShipperListAcceptPage" class="back-link">
                 <i class="fas fa-arrow-left"></i>
             </a>
         </div>
-        <div class="container">
+        <div class="container1">
             <div class="order-info">
                 <h1>Order Information</h1>
-                <%
+                  <%
+                    // Retrieve the first order item to access customer details
                     OrderItem orderItem = null;
+                    ArrayList<OrderItem> orderItemList = null;
                     OrderManager om = new OrderManager();
-                    ArrayList<OrderItem> orderItemList = (ArrayList<OrderItem>) request.getAttribute("orderItemList");
-
-                    if (orderItemList == null || orderItemList.isEmpty()) {
-
-                %>
-                <div class="message message-error">Order not found or empty.</div>
-                <%                } else {
-
-                    orderItem = orderItemList.get(0);
-                    Order order = om.getOderById(orderItem.getOrder_id());
-                    double total = 0.0;
-                    for (OrderItem item : orderItemList) {
-                        total += item.getDish().getPrice() * item.getQuantity();
+                     
+                    int total = 0;
+                    if (request.getAttribute("orderItemList") != null) {
+                        orderItemList = (ArrayList<OrderItem>) request.getAttribute("orderItemList");
+                        orderItem = orderItemList.get(0);
+                        for (OrderItem item : orderItemList) {
+                            total += item.getDish().getPrice() * item.getQuantity();
+                        }
                     }
+                    if (orderItem != null) {
+                    Order order = om.getOderById(orderItem.getOrder_id());
                 %>
                 <div>
-                    <p><strong>Order ID:</strong> <%= order.getOrder_id()%></p>
-                    <p><strong>Shipper ID:</strong> <%= order.getShipper().getAccount_id()%></p>
+                    <p><strong>Order ID:</strong><%= orderItem.getOrder_id()%></p>
                     <p><strong>Name Customer:</strong> <%= order.getCustomer().getName()%></p>
                     <p><strong>Phone Number:</strong> <%= order.getCustomer().getPhoneNumber()%></p>
                     <p><strong>Diner address:</strong> <%= order.getDiner().getAddress()%></p>
                     <p><strong>Customer address:</strong> <%= order.getCustomer().getAddress()%></p>
-                    <p><strong>Status Order:</strong> <%= order.getOrder_status()%></p>
-                    <p><strong>Total:</strong> <%= total%></p>
+
                 </div>
+              
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Name of Dish</th>
+                                <th>Quantity</th>
+                                <th>Price</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <c:forEach var="orderItem" items="${orderItemList}">
+                                <tr>
+                                    <td>${orderItem.dish.name}</td>
+                                    <td>${orderItem.quantity}</td>
+                                    <td>${orderItem.dish.price * orderItem.quantity}₫</td>
+                                </tr>
+                            </c:forEach>
+                            <tr>
+                                <td colspan="2" style="text-align: right;"><strong>Total:</strong></td>
+                                <td><%= total%>₫</td>
+                            </tr>
+                        </tbody>
+                    </table>
 
 
                 <div class="accept-button-container">
                     <input type="submit" onclick="openPopup()" value="Complete">
                     <div class="popup">
-                        <h2>--------------------------------</h2>
+                       
                         <h2>Complete</h2>
                         <p>Your Order Completed</p>
                         <form id="completeForm" action="OrderItemServlet" method="GET">
@@ -338,7 +362,7 @@
 
                     <input type="submitCancel" onclick="openPopupCancel()" value="Cancel">
                     <div class="popupcancel">
-                        <h2>--------------------------------</h2>
+                        
                         <h2>CANCEL</h2>
                         <p>Are You Sure !!!</p>
                         <form id="cancelForm" action="OrderItemServlet" method="GET">
@@ -355,6 +379,7 @@
                     }
                 %>
             </div>
+              </div>
 
             <div class="sidebar">
                 <div class="map">
@@ -396,7 +421,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+      
 
         <script>
             let websocket;
@@ -492,8 +517,13 @@
             }
 
             function submitFormCancel() {
-                document.getElementById("cancelForm").submit();
+            var cancelReason = document.getElementById("cancelReason").value.trim();
+            if (cancelReason === "") {
+                alert("Please enter a reason for cancellation.");
+                return;
             }
+            document.getElementById("cancelForm").submit();
+        }
         </script>
     </body>
 </html>

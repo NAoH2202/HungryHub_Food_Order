@@ -24,6 +24,44 @@
         <filter-name>adminFilter</filter-name>
         <url-pattern>/AdminPage</url-pattern>
     </filter-mapping>
+    <servlet>
+    <servlet-name>AddNewDishServlet</servlet-name>
+    <servlet-class>controller.AddNewDishServlet</servlet-class>
+    <multipart-config>
+        <location>/some/directory/on/server/to/save/file</location>
+        <max-file-size>20848820</max-file-size>
+        <max-request-size>418018841</max-request-size>
+        <file-size-threshold>1048576</file-size-threshold>
+    </multipart-config>
+</servlet>
+<servlet-mapping>
+    <servlet-name>AddNewDishServlet</servlet-name>
+    <url-pattern>/AddNewDishServlet</url-pattern>
+</servlet-mapping>
+    <servlet>
+        <servlet-name>ajaxServlet</servlet-name>
+        <servlet-class>com.vnpay.common.ajaxServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>vnpayQuery</servlet-name>
+        <servlet-class>com.vnpay.common.vnpayQuery</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>vnpayRefund</servlet-name>
+        <servlet-class>com.vnpay.common.vnpayRefund</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ajaxServlet</servlet-name>
+        <url-pattern>/vnpayajax/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>vnpayQuery</servlet-name>
+        <url-pattern>/vnpayquery/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>vnpayRefund</servlet-name>
+        <url-pattern>/vnpayrefund/*</url-pattern>
+    </servlet-mapping>
     <session-config>
         <session-timeout>
             30

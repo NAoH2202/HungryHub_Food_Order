@@ -26,7 +26,7 @@
             overflow: hidden;
             overflow-y: auto;
         }
-        .container {
+        .container1 {
             display: flex;
             height: 100%;
             padding: 20px;
@@ -93,32 +93,18 @@
         .actions input[type="submit"]:hover {
             background-color: #0056b3;
         }
-        .header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 15px;
-            background-color: #8bc34a;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        .header a {
-            text-decoration: none;
-            color: #000;
-            font-family: 'Brush Script MT', sans-serif;
-            font-size: 32px;
-        }
-        .header .order_online {
-            font-size: 40px;
-            color: white;
-        }
+         
     </style>
 </head>
+<jsp:include page="path/shipperheader.jsp"/>
 <body>
-<div class="header">
-    <a href="ShipperPage">HungryHub</a>
-    <a href="ShipperAccountPage" class="order_online"><i class="fas fa-user"></i></a>
-</div>
-<div class="container">
+    
+ <div>
+            <!-- Include header -->
+            
+            <!-- End header section -->
+        </div>
+<div class="container1">
     <div class="order-info">
         <h1 style="font-size: 36px; line-height: 42px; text-align: center;">Order to Accepted</h1>
         <%-- Retrieve the list of orders from the DAO --%>
@@ -128,6 +114,10 @@
                 response.sendRedirect("LoginServlet");
                 return;
             }
+             if (acc.isActive_status()== false) {
+                        response.sendRedirect("ShipperPage");
+                        return;
+                    }
             int currentshipperid=acc.getAccount_id();
             ArrayList<Order> orderList = OrderDao.getAllOrders();
             request.setAttribute("orderList", orderList);
@@ -175,11 +165,7 @@
 
             </tbody>
         </table>
-        <div class="actions">
-            <a href="ShipperListOrderPage">
-                <input type="submit" value="Back to List Order">
-            </a>
-        </div>
+        
     </div>
 </div>
 </body>

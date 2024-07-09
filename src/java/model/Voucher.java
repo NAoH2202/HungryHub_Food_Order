@@ -18,18 +18,17 @@ public class Voucher {
     private Date valid_from;
     private Date valid_to;
     private Account created_by;
-    private Date expiration_date;
     private LocalDateTime created_at = LocalDateTime.now();
     private LocalDateTime updated_at = LocalDateTime.now();
 
-    public Voucher(int voucher_id, String code, double discount_percentage, Date valid_from, Date valid_to, Account created_by, Date expiration_date) {
+    public Voucher(int voucher_id, String code, double discount_percentage, Date valid_from, Date valid_to, Account created_by) {
         this.voucher_id = voucher_id;
         this.code = code;
         this.discount_percentage = discount_percentage;
         this.valid_from = valid_from;
         this.valid_to = valid_to;
         this.created_by = created_by;
-        this.expiration_date = expiration_date;
+        
     }
 
     public int getVoucher_id() {
@@ -80,13 +79,6 @@ public class Voucher {
         this.created_by = created_by;
     }
 
-    public Date getExpiration_date() {
-        return expiration_date;
-    }
-
-    public void setExpiration_date(Date expiration_date) {
-        this.expiration_date = expiration_date;
-    }
 
     public LocalDateTime getCreated_at() {
         return created_at;
@@ -106,7 +98,7 @@ public class Voucher {
 
     @Override
     public String toString() {
-        return "Voucher{" + "voucher_id=" + voucher_id + ", code=" + code + ", discount_percentage=" + discount_percentage + ", valid_from=" + valid_from + ", valid_to=" + valid_to + ", created_by=" + created_by + ", expiration_date=" + expiration_date + ", created_at=" + created_at + ", updated_at=" + updated_at + '}';
+        return "Voucher{" + "voucher_id=" + voucher_id + ", code=" + code + ", discount_percentage=" + discount_percentage + ", valid_from=" + valid_from + ", valid_to=" + valid_to + ", created_by=" + created_by + ", created_at=" + created_at + ", updated_at=" + updated_at + '}';
     }
     
     
