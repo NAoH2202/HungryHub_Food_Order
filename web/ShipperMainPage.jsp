@@ -18,7 +18,7 @@
                 overflow-y: auto; /* Enable vertical scrolling */
             }
 
-            .container {
+            .container1 {
                 max-width: 1200px;
                 margin: 0 auto;
                 padding: 20px;
@@ -130,27 +130,13 @@
                 cursor: not-allowed;
             }
 
-            .header {
-                display: flex;
-                align-items: center;
-                padding: 15px;
-                background-color: #8bc34a;
-                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-                font-family: 'Brush Script MT', cursive;
-            }
 
-            .header a.brand {
-                text-decoration: none; 
-                color: #000; 
-                font-family: 'Brush Script MT', cursive; /* Change font to Brush Script MT */
-                font-size: 50px; 
-            }
         </style>
     </head>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-        $(document).ready(function() {
-            $('#toggle-active').change(function() {
+        $(document).ready(function () {
+            $('.toggle-active').change(function () {
                 var isActive = this.checked ? 1 : 0;
                 var accountId = $('#account-id').val(); // Get the account ID from the hidden input
 
@@ -161,53 +147,61 @@
                         active_status: isActive,
                         account_id: accountId // Include the account ID in the request
                     },
-                    success: function(response) {
-                        if(response === 'success') {
+                    success: function (response) {
+                        if (response === 'success') {
                             $('input[type="submit"]').prop('disabled', !isActive);
                         } else {
                             alert('Failed to update status.');
                         }
                     },
-                    error: function() {
+                    error: function () {
                         alert('Error in the server call.');
                     }
                 });
             });
 
             // Trigger change event on page load to set the initial state
-            $('#toggle-active').trigger('change');
+            $('.toggle-active').trigger('change');
         });
     </script>
-
+   
     <body>
-        <div class="header">
-            <a href="ShipperPage" class="brand">HungryHub</a>
-            <a href="ShipperAccountPage" class="order_online" style="position: absolute; top: 15px; right: 100px; font-size: 50px; color: white;">
-                <i class="fas fa-user"></i>
-            </a>
-            <a href="ShipperHistoryPage" class="notification" style="position: absolute; top: 15px; right: 20px; font-size: 50px; color: white;">
-                <i class="fas fa-bell"></i>
-            </a>
-        </div>
-        <h1 style="font-size: 70px; line-height: 42px;">ARE YOU READY!!</h1>
-        <h1>--------------------------------</h1>
-        <h1 style="font-size: 40px; line-height: 42px; color: #4CAF50;">SAFE, FAST and GOOD LUCK</h1>
-        <div class="container">
-            <div class="form-group">
-                <label for="toggle-active">Active state:</label>
-                <label class="switch">
-                    <input type="checkbox" id="toggle-active" checked>
-                    <span class="slider"></span>
-                </label>
-                <input type="hidden" id="account-id" value="${sessionScope.account.account_id}"> <!-- Hidden input for account_id -->
-            </div>
+       
+         <div>
+         
+ <jsp:include page="path/shipperheader.jsp"/>
+         
+    </div>
+    <br><!-- comment -->
+    <br><!-- comment -->
+    <h1 style="font-size: 70px; line-height: 42px;">ARE YOU READY!!</h1>
+    <h1>--------------------------------</h1>
+    <h1 style="font-size: 40px; line-height: 42px; color: #4CAF50;">SAFE, FAST and GOOD LUCK</h1>
+    <div class="container1">
+        <div class="form-group">
+            <label for="toggle-active">Active state:</label>
+            <label class="switch">
+                <%
+                    Account acc = (Account) session.getAttribute("account");
+                    if (acc == null) {
+                        response.sendRedirect("LoginServlet");
+                        return;
+                    }
+                    if (acc.isActive_status()) {
 
-            <div class="button-container">
-                <form action="OrderItemServlet" method="GET">
-                    <input type="hidden" name="command" value="LIST">
-                    <input type="submit" value="View Order">
-                </form>
-            </div>
+
+                %>
+                <input type="checkbox" class="toggle-active" checked>
+                <%                } else {  %>
+                <input type="checkbox" class="toggle-active" >
+                <%   }
+                %>
+                <span class="slider"></span>
+            </label>
+            <input type="hidden" id="account-id" value="${sessionScope.account.account_id}"> <!-- Hidden input for account_id -->
         </div>
-    </body>
+
+
+    </div>
+</body>
 </html>

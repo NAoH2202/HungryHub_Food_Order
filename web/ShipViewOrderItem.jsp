@@ -28,7 +28,7 @@
             #map {
                 height: 100%;
             }
-            .container {
+            .container1 {
                 display: flex;
                 height: 100%;
                 padding: 20px;
@@ -125,14 +125,7 @@
             #chat-form button:hover {
                 background-color: #0056b3;
             }
-            .header {
-                display: flex;
-                align-items: center;
-                padding: 15px;
-                background-color: #8bc34a;
-                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-                position: relative;
-            }
+           
 
             input[type="submit"]:hover {
                 background-color: #45a049;
@@ -229,15 +222,8 @@
         </script>
     </head>
     <body>
-        <div class="header">
-
-            <a href="ShipperPage" style="text-decoration: none; color: #000; font-family: 'Brush Script MT', sans-serif; font-size: 50px; ">
-                HungryHub</a>
-            <a href="ShipperAccountPage" class="order_online" style="position: absolute; top: 20px; right: 20px; font-size: 50px; color: white;">
-                <i class="fas fa-user"></i>
-            </a>
-        </div>
-        <div class="container">
+      <jsp:include page="path/shipperheader.jsp"/>
+        <div class="container1">
             <div class="order-info">
                 <h1 style="font-size: 36px; line-height: 42px;">Order Information</h1>
                 <%
