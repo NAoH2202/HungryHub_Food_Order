@@ -1,3 +1,5 @@
+<%@page import="model.Districts"%>
+<%@page import="model.Provinces"%>
 <%@page import="controller.AddToCartServlet"%>
 <%@page import="model.CartItem"%>
 <%@page import="java.util.ArrayList"%>
@@ -139,11 +141,12 @@
         <div class="center-container">
             <div class="card">
                 <h2 class="text-center">Xác nhận đơn hàng</h2>
-                <form action="ChangeAddress" method="POST">
+                <form action="CustomerUpdateAddressPage" method="POST">
                     <div class="form-group">
                         <label for="address">Địa chỉ giao hàng:</label>
-                        <input type="text" id="address" name="address" class="form-control" value="<%=account.getAddress()%>" readonly>
-                        <input type="button" id="editAddressButton" value="Thay đổi địa chỉ giao hàng" class="btn btn-primary btn-edit mt-2" onclick="toggleEditAddress()">
+                        <input type="text" id="address" name="address" class="form-control" value="<%=account.getAddress()%>" readonly>  
+                        <input type="hidden" name="order" value="true">
+                        <input type="submit" id="editAddressButton" value="Thay đổi địa chỉ giao hàng" class="btn btn-primary btn-edit mt-2">
                     </div>
                 </form>
                 <%
@@ -187,7 +190,19 @@
                 <p class="total-cost"><b>Tổng giá tiền:</b>   <%=totalPrice%> VNĐ</p>
 
                 <p><b>Tên người nhận:   </b> <%=account.getName()%></p>
+                <%
+                    String address = account.getAddress();
+                    Provinces provinces = account.getProvinces(); // Assuming this method exists in Account class
+                    Districts district = account.getDistrict(); // Assuming this method exists in Account class
 
+                    if (address == null || provinces == null || district == null) {
+                %>
+                <div class="alert alert-danger" role="alert">
+                    Vui lòng cập nhật đầy đủ thông tin địa chỉ trước khi đặt hàng.
+                </div>
+                <%
+                } else {
+                %>
                 <form id="orderForm" action="OrderCompleteServlet" method="post">
                     <input type="hidden" name="totalCost" value="<%=totalPrice%>">
                     <label for="paymentMethod"><b>Chọn phương thức thanh toán:</b></label>
@@ -200,6 +215,9 @@
                         <input type="button" value="Đặt hàng" class="btn btn-primary btn-lg mt-4" onclick="showSuccessModal()">
                     </div>
                 </form>
+                <%
+                    }
+                %>
                 <%
                     if (request.getAttribute("message") != null) {
                         String mess = (String) request.getAttribute("message");

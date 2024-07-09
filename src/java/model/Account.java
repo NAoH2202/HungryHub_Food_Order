@@ -21,6 +21,8 @@ public class Account {
     private String email;
     private String phoneNumber; //new
     private String address;
+    private Provinces provinces;
+    private Districts district;
     private Date date_of_birth;
     private boolean active_status;
     private String profile_picture;
@@ -31,6 +33,27 @@ public class Account {
     private boolean trangthaixacthuc;
     private LocalDateTime thoigianhieuluc;
 
+    public Account(int account_id, String username, String password, String name, String Detail, String email, String phoneNumber, String address, Provinces provinces, Districts district, Date date_of_birth, boolean active_status, String profile_picture, String role, String maxacthuc, boolean trangthaixacthuc, LocalDateTime thoigianhieuluc) {
+        this.account_id = account_id;
+        this.username = username;
+        this.password = password;
+        this.name = name;
+        this.Detail = Detail;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.address = address;
+        this.provinces = provinces;
+        this.district = district;
+        this.date_of_birth = date_of_birth;
+        this.active_status = active_status;
+        this.profile_picture = profile_picture;
+        this.role = role;
+        this.maxacthuc = maxacthuc;
+        this.trangthaixacthuc = trangthaixacthuc;
+        this.thoigianhieuluc = thoigianhieuluc;
+    }
+
+    
     public Account(int account_id, String maxacthuc, boolean trangthaixacthuc, LocalDateTime thoigianhieuluc) {
         this.account_id = account_id;
         this.maxacthuc = maxacthuc;
@@ -246,6 +269,22 @@ public class Account {
 
     public void setDetail(String Detail) {
         this.Detail = Detail;
+    }
+
+    public Provinces getProvinces() {
+        return provinces;
+    }
+
+    public void setProvinces(Provinces provinces) {
+        this.provinces = provinces;
+    }
+
+    public Districts getDistrict() {
+        return district;
+    }
+
+    public void setDistrict(Districts district) {
+        this.district = district;
     }
 
     @Override

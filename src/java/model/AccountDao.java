@@ -24,6 +24,8 @@ public class AccountDao {
 
     public static ArrayList<Account> getAllAccounts() {
         ArrayList<Account> AccountList = new ArrayList<>();
+        ProvincesManager pm = new ProvincesManager();
+        DistrictsManager dim = new DistrictsManager();
         int account_id;
         String username;
         String password;
@@ -32,6 +34,7 @@ public class AccountDao {
         String email;
         String phoneNumber;
         String address;
+        int proId, disId;
         Date date_of_birth;
         boolean active_status;
         String profile_picture;
@@ -54,6 +57,10 @@ public class AccountDao {
                 email = rs.getString("email");
                 phoneNumber = rs.getString("PhoneNumber");
                 address = rs.getString("address");
+                proId = rs.getInt("provincesId");
+                Provinces provinces = pm.getProvincesById(proId);
+                disId = rs.getInt("districtsId");
+                Districts districts = dim.getDistrictById(disId);
                 role = rs.getString("role");
                 date_of_birth = rs.getDate("date_of_birth");
                 active_status = rs.getBoolean("active_status");
@@ -61,14 +68,14 @@ public class AccountDao {
                 String maxacthuc = rs.getString("maxacthuc");
                 Timestamp thoigianhieuluc = rs.getTimestamp("thoigianhieuluc");
                 LocalDateTime tghl;
-                if(thoigianhieuluc != null){
-                tghl = thoigianhieuluc.toLocalDateTime();
-                }else{
-                    tghl =null;
+                if (thoigianhieuluc != null) {
+                    tghl = thoigianhieuluc.toLocalDateTime();
+                } else {
+                    tghl = null;
                 }
                 boolean trangthaixacthuc = rs.getBoolean("trangthaixacthuc");
 
-                Account Acc = new Account(account_id, username, password, name, detail, email, phoneNumber, address, date_of_birth, active_status, profile_picture, role, maxacthuc, trangthaixacthuc, tghl);
+                Account Acc = new Account(account_id, username, password, name, detail, email, phoneNumber, address, provinces, districts, date_of_birth, active_status, profile_picture, role, maxacthuc, trangthaixacthuc, tghl);
                 AccountList.add(Acc);
             }
         } catch (ClassNotFoundException | SQLException ex) {
@@ -91,71 +98,71 @@ public class AccountDao {
     }
 
     public static boolean updateAccount(Account account) {
-    if (account.getDate_of_birth() != null) {
-        // Gọi hàm cập nhật ngày sinh nếu không null
-        updateDateOfBirth(account);
+        if (account.getDate_of_birth() != null) {
+            // Gọi hàm cập nhật ngày sinh nếu không null
+            updateDateOfBirth(account);
+        }
+
+        ConnectDB db = ConnectDB.getInstance();
+        Connection conn = null;
+        PreparedStatement statement = null;
+        try {
+            conn = db.openConnection();
+            String query = "UPDATE Account SET name = ?, email = ?, PhoneNumber = ?, address = ?, profile_picture = ?, role = ?, active_status = ? WHERE account_id = ?";
+            statement = conn.prepareStatement(query);
+            statement.setString(1, account.getName());
+            statement.setString(2, account.getEmail());
+            statement.setString(3, account.getPhoneNumber());
+            statement.setString(4, account.getAddress());
+            statement.setString(5, account.getProfile_picture());
+            statement.setString(6, account.getRole());
+            statement.setBoolean(7, account.isActive_status());
+            statement.setInt(8, account.getAccount_id());
+            int rowsUpdated = statement.executeUpdate();
+            return rowsUpdated > 0;
+        } catch (ClassNotFoundException | SQLException ex) {
+            Logger.getLogger(AccountDao.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if (statement != null) {
+                    statement.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                Logger.getLogger(AccountDao.class.getName()).log(Level.SEVERE, null, e);
+            }
+        }
+        return false;
     }
 
-    ConnectDB db = ConnectDB.getInstance();
-    Connection conn = null;
-    PreparedStatement statement = null;
-    try {
-        conn = db.openConnection();
-        String query = "UPDATE Account SET name = ?, email = ?, PhoneNumber = ?, address = ?, profile_picture = ?, role = ?, active_status = ? WHERE account_id = ?";
-        statement = conn.prepareStatement(query);
-        statement.setString(1, account.getName());
-        statement.setString(2, account.getEmail());
-        statement.setString(3, account.getPhoneNumber());
-        statement.setString(4, account.getAddress());
-        statement.setString(5, account.getProfile_picture());
-        statement.setString(6, account.getRole());
-        statement.setBoolean(7, account.isActive_status());
-        statement.setInt(8, account.getAccount_id());
-        int rowsUpdated = statement.executeUpdate();
-        return rowsUpdated > 0;
-    } catch (ClassNotFoundException | SQLException ex) {
-        Logger.getLogger(AccountDao.class.getName()).log(Level.SEVERE, null, ex);
-    } finally {
+    private static void updateDateOfBirth(Account account) {
+        ConnectDB db = ConnectDB.getInstance();
+        Connection conn = null;
+        PreparedStatement statement = null;
         try {
-            if (statement != null) {
-                statement.close();
+            conn = db.openConnection();
+            String query = "UPDATE Account SET date_of_birth = ? WHERE account_id = ?";
+            statement = conn.prepareStatement(query);
+            statement.setDate(1, new java.sql.Date(account.getDate_of_birth().getTime()));
+            statement.setInt(2, account.getAccount_id());
+            statement.executeUpdate();
+        } catch (ClassNotFoundException | SQLException ex) {
+            Logger.getLogger(AccountDao.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if (statement != null) {
+                    statement.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                Logger.getLogger(AccountDao.class.getName()).log(Level.SEVERE, null, e);
             }
-            if (conn != null) {
-                conn.close();
-            }
-        } catch (SQLException e) {
-            Logger.getLogger(AccountDao.class.getName()).log(Level.SEVERE, null, e);
         }
     }
-    return false;
-}
-
-private static void updateDateOfBirth(Account account) {
-    ConnectDB db = ConnectDB.getInstance();
-    Connection conn = null;
-    PreparedStatement statement = null;
-    try {
-        conn = db.openConnection();
-        String query = "UPDATE Account SET date_of_birth = ? WHERE account_id = ?";
-        statement = conn.prepareStatement(query);
-        statement.setDate(1, new java.sql.Date(account.getDate_of_birth().getTime()));
-        statement.setInt(2, account.getAccount_id());
-        statement.executeUpdate();
-    } catch (ClassNotFoundException | SQLException ex) {
-        Logger.getLogger(AccountDao.class.getName()).log(Level.SEVERE, null, ex);
-    } finally {
-        try {
-            if (statement != null) {
-                statement.close();
-            }
-            if (conn != null) {
-                conn.close();
-            }
-        } catch (SQLException e) {
-            Logger.getLogger(AccountDao.class.getName()).log(Level.SEVERE, null, e);
-        }
-    }
-}
 
     public static boolean addAccount(Account account) {
         ConnectDB db = ConnectDB.getInstance();
@@ -175,7 +182,7 @@ private static void updateDateOfBirth(Account account) {
             statement.setString(8, account.getProfile_picture());
             statement.setString(9, account.getRole());
             statement.setBoolean(10, account.isActive_status());
-            statement.setString(11,account.getMaxacthuc());
+            statement.setString(11, account.getMaxacthuc());
             statement.setTimestamp(12, Timestamp.valueOf(account.getThoigianhieuluc()));
             statement.setBoolean(13, account.getTrangthaixacthuc());
             int rowsInserted = statement.executeUpdate();
@@ -250,16 +257,16 @@ private static void updateDateOfBirth(Account account) {
         }
         return false;
     }
+
     public static boolean updateVerificationStatusToTrue(int accountId) {
         ConnectDB db = ConnectDB.getInstance();
         String query = "UPDATE Account SET trangthaixacthuc = ? WHERE account_id = ?";
-        
-        try (Connection conn = db.openConnection();
-             PreparedStatement statement = conn.prepareStatement(query)) {
+
+        try (Connection conn = db.openConnection(); PreparedStatement statement = conn.prepareStatement(query)) {
 
             statement.setBoolean(1, true);
             statement.setInt(2, accountId);
-            
+
             int rowsUpdated = statement.executeUpdate();
             return rowsUpdated > 0;
 
@@ -268,51 +275,71 @@ private static void updateDateOfBirth(Account account) {
         }
         return false;
     }
+
     public static boolean updatePassword(int accountId, String newPassword) {
-    ConnectDB db = ConnectDB.getInstance();
-    String query = "UPDATE Account SET password = ? WHERE account_id = ?";
-    
-    try (Connection conn = db.openConnection();
-         PreparedStatement statement = conn.prepareStatement(query)) {
+        ConnectDB db = ConnectDB.getInstance();
+        String query = "UPDATE Account SET password = ? WHERE account_id = ?";
 
-        statement.setString(1, newPassword);
-        statement.setInt(2, accountId);
-        
-        int rowsUpdated = statement.executeUpdate();
-        return rowsUpdated > 0;
+        try (Connection conn = db.openConnection(); PreparedStatement statement = conn.prepareStatement(query)) {
 
-    } catch (ClassNotFoundException | SQLException ex) {
-        Logger.getLogger(AccountDao.class.getName()).log(Level.SEVERE, null, ex);
+            statement.setString(1, newPassword);
+            statement.setInt(2, accountId);
+
+            int rowsUpdated = statement.executeUpdate();
+            return rowsUpdated > 0;
+
+        } catch (ClassNotFoundException | SQLException ex) {
+            Logger.getLogger(AccountDao.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
     }
-    return false;
-}
-  public void updateActiveStatus(Account account) {
-    ConnectDB db = ConnectDB.getInstance();
-    Connection conn = null;
-    PreparedStatement statement = null;
-    try {
-        conn = db.openConnection();
-        String query = "UPDATE Account SET active_status = ? WHERE account_id = ? AND role = 'Shipper'";
-        statement = conn.prepareStatement(query);
-        statement.setBoolean(1, account.isActive_status());  
-        statement.setInt(2, account.getAccount_id());
-        statement.executeUpdate();
-    } catch (ClassNotFoundException | SQLException ex) {
-        Logger.getLogger(AccountDao.class.getName()).log(Level.SEVERE, null, ex);
-    } finally {
+
+    public void updateActiveStatus(Account account) {
+        ConnectDB db = ConnectDB.getInstance();
+        Connection conn = null;
+        PreparedStatement statement = null;
         try {
-            if (statement != null) {
-                statement.close();
+            conn = db.openConnection();
+            String query = "UPDATE Account SET active_status = ? WHERE account_id = ? AND role = 'Shipper'";
+            statement = conn.prepareStatement(query);
+            statement.setBoolean(1, account.isActive_status());
+            statement.setInt(2, account.getAccount_id());
+            statement.executeUpdate();
+        } catch (ClassNotFoundException | SQLException ex) {
+            Logger.getLogger(AccountDao.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if (statement != null) {
+                    statement.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                Logger.getLogger(AccountDao.class.getName()).log(Level.SEVERE, null, e);
             }
-            if (conn != null) {
-                conn.close();
-            }
-        } catch (SQLException e) {
-            Logger.getLogger(AccountDao.class.getName()).log(Level.SEVERE, null, e);  
         }
     }
-}
 
+    public static boolean updateAccountLocation(int accountId, Integer provincesId, Integer districtsId, String address) {
+        ConnectDB db = ConnectDB.getInstance();
+        String query = "UPDATE Account SET provincesId = ?, districtsId = ?, address = ? WHERE account_id = ?";
+
+        try (Connection conn = db.openConnection(); PreparedStatement statement = conn.prepareStatement(query)) {
+
+            statement.setObject(1, provincesId, java.sql.Types.INTEGER);
+            statement.setObject(2, districtsId, java.sql.Types.INTEGER);
+            statement.setString(3, address);
+            statement.setInt(4, accountId);
+
+            int rowsUpdated = statement.executeUpdate();
+            return rowsUpdated > 0;
+
+        } catch (ClassNotFoundException | SQLException ex) {
+            Logger.getLogger(AccountDao.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
 
     public static void main(String[] args) {
         ArrayList<Account> test = AccountDao.getAllAccounts();

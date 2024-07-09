@@ -160,8 +160,9 @@
         <jsp:include page="path/header.jsp"/>
         <div id="container">
             <div id="content">
+                <a href="CustomerDinerPage?id=<%=dish.getAccount().getAccount_id()%>" class="back-link">BACK</a>
                 <div id="dish">
-                    <a href="CustomerDinerPage?id=<%=dish.getAccount().getAccount_id()%>" class="back-link">BACK</a>
+
                     <div style="display: flex;">
                         <img class="pic" src="<%=dish.getPicture()%>">
                         <div id="mota">

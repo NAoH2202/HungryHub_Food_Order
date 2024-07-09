@@ -40,6 +40,15 @@ public class CartItemManager {
         return ciList;
     }
     
+    public boolean checkIsEmptyCartItem(int id) {
+        for (CartItem facc : List) {
+            if (id == facc.getUser().getAccount_id()) {
+                return false;
+            }
+        }
+        return true;
+    }
+    
     public static void main(String[] args) {
         CartItemManager cm = new CartItemManager();
         for(CartItem c : cm.getList()){

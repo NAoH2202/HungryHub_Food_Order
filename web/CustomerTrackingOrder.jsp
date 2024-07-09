@@ -516,7 +516,7 @@
                     }
                 }
 
-                window.onload = function () {
+                function load () {
                     console.log(<%=currentUserId%>);
                     console.log(<%=recipientId%>);
                     const chatBox = document.getElementById("chatBox");
@@ -557,6 +557,7 @@
             window.onload = function () {
                 connect();
                 connect2();
+                load();
             };
             function connect() {
                 ws = new WebSocket("ws://localhost:8080/HungryHub_OrderFood/orderStatus");

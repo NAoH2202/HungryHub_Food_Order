@@ -136,7 +136,6 @@
                     urlacc = "AccountPage";
                     name = acc.getName() + "'s Order";
                 }
-
             %>
         </li>
     </ul>
@@ -175,7 +174,7 @@
                         for (CartItem ci : ciListByDiner) {%>
                     <div class="cart-item-dish">
                         <img src="<%=ci.getDish().getPicture()%>" alt="Product Image">
-                        <div>
+                        <div style=" color: #000; ">
                             <p><%=ci.getDish().getName()%></p>
                             <p><strong>Số lượng:</strong> <%=ci.getQuantity()%> - <strong>Giá:</strong> <%=ci.getDish().getPrice() * ci.getQuantity()%> VNĐ</p>
                         </div>
@@ -187,10 +186,39 @@
                 </div>
             </div>
             <hr>
-            <div class="cart-checkout">
+            <div class="cart-checkout" style=" color: #000; ">
                 <a href="OrderConfirmationPage">Go to Checkout</a>
             </div>
         </div>
+        <script>
+            function checkCartAndRedirect(accountId) {
+                $.ajax({
+                    url: 'CheckCartServlet',
+                    type: 'GET',
+                    data: {
+                        accountId: accountId
+                    },
+                    success: function (response) {
+                        if (response.isEmpty) {
+                            alert('Giỏ hàng của bạn đang trống.');
+                        } else {
+                            window.location.href = 'OrderConfirmationPage';
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        alert('Có lỗi xảy ra: ' + error);
+                    }
+                });
+            }
+
+            document.querySelector('.cart-checkout a').addEventListener('click', function (event) {
+                event.preventDefault();
+                var accountId = '<%= acc.getAccount_id()%>'; // Thay đổi để lấy accountId từ JSP
+                checkCartAndRedirect(accountId);
+            });
+        </script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
         <%
             }
         %>
@@ -221,7 +249,7 @@
                 <img src="images/feedback.png" alt="">
                 <div>
                     <p> Gửi phản hồi</p>
-                    <a href="#" style="margin-left: 0px;">Hãy trút cơn giận của bạn lên chúng tôi</a>
+                    <a href="CustomerContactPage" style="margin-left: 0px;">Hãy trút cơn giận của bạn lên chúng tôi</a>
                 </div>
             </div>
             <hr>
@@ -232,7 +260,7 @@
 
             <div class="settings-links">
                 <img src="images/help.png" alt="" class="settings-icon">
-                <a href="#">Giúp đỡ và hỗ trợ <img src="images/arrow.png" alt=""></a>
+                <a href="CustomerContactPage">Giúp đỡ và hỗ trợ <img src="images/arrow.png" alt=""></a>
             </div>
 
             <div class="settings-links">
