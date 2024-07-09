@@ -68,11 +68,11 @@ public class OrderItemServlet extends HttpServlet {
     }
 
     private void viewDetail(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-       HttpSession session = request.getSession();
+        HttpSession session = request.getSession();
         Account acc = (Account) session.getAttribute("account");
-        String orderItemIdStr = request.getParameter("orderId");
+        String orderIdStr = request.getParameter("orderId");
 
-        if (orderItemIdStr == null || orderItemIdStr.trim().isEmpty()) {
+        if (orderIdStr == null || orderIdStr.trim().isEmpty()) {
             request.setAttribute("message", "Order item ID is missing or empty.");
             request.getRequestDispatcher("ShipperAcceptPage").forward(request, response);
             return;
@@ -80,17 +80,18 @@ public class OrderItemServlet extends HttpServlet {
 
         int orderItemId;
         try {
-            orderItemId = Integer.parseInt(orderItemIdStr);
+            orderItemId = Integer.parseInt(orderIdStr);
         } catch (NumberFormatException e) {
             request.setAttribute("message", "Invalid order item ID format.");
             request.getRequestDispatcher("ShipperAcceptPage").forward(request, response);
             return;
         }
 
-        OrderManager oM = new OrderManager();
+        OrderManager om = new OrderManager();
         OrderItemManager otm = new OrderItemManager();
-        OrderDao orderDao = new OrderDao();
- 
+        Order order = om.getOderById(Integer.parseInt(orderIdStr));
+        request.setAttribute("recipient", order.getCustomer().getName());
+        request.setAttribute("recipientId", order.getCustomer().getAccount_id());
         request.setAttribute("orderItemList", otm.getOderItemByOrderId(orderItemId));
         request.getRequestDispatcher("ShipperAcceptPage").forward(request, response);
     }
@@ -139,15 +140,15 @@ public class OrderItemServlet extends HttpServlet {
         OrderItemManager otm = new OrderItemManager();
         OrderDao orderDao = new OrderDao();
         Order orderToUpdate = oM.getOderById(orderItemId);
-        
+
         orderToUpdate.setOrder_status("canceled");
         orderDao.updateOrderStatus(orderToUpdate); // Update order_status
-         String cancelReason = request.getParameter("cancelReason");
-    if (cancelReason != null && !cancelReason.trim().isEmpty()) {
-        orderToUpdate.setReason(cancelReason); // Đặt lý do hủy trong đơn hàng
-        orderDao.updateReason(orderToUpdate); // Cập nhật lý do hủy vào cơ sở dữ liệu
-    }
-        
+        String cancelReason = request.getParameter("cancelReason");
+        if (cancelReason != null && !cancelReason.trim().isEmpty()) {
+            orderToUpdate.setReason(cancelReason); // Đặt lý do hủy trong đơn hàng
+            orderDao.updateReason(orderToUpdate); // Cập nhật lý do hủy vào cơ sở dữ liệu
+        }
+
         request.setAttribute("orderItemList", otm.getOderItemByOrderId(orderItemId));
         request.getRequestDispatcher("ShipperListOrderPage").forward(request, response);
     }

@@ -202,6 +202,7 @@
         </a>
         <%
         } else {
+            String orderPageUrl = acc.getRole().equals("DinerManager") ? "DinerOrderPage" : "CustomerOrderPage";
         %>
         <div class="profile-image online" onclick="UserSettingToggle()">
             <img src="<%=acc.getProfile_picture()%>" alt="">
@@ -227,7 +228,7 @@
             <hr>
             <div class="settings-links">
                 <img src="images/order.png" alt="" class="settings-icon">
-                <a href="CustomerOrderPage">Đơn hàng của bạn<img src="images/arrow.png" alt=""></a>
+                <a href="<%=orderPageUrl%>">Đơn hàng của bạn<img src="images/arrow.png" alt=""></a>
             </div>
 
             <div class="settings-links">

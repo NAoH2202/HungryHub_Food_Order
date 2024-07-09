@@ -169,8 +169,11 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
     display: flex;
     justify-content: flex-end;
 }
-/*rating
- @import url('https://fonts.googleapis.com/css?family=Poppins:400,500,600,700&display=swap');*/
+ 
+/* 
+rating
+@import url('https://fonts.googleapis.com/css?family=Poppins:400,500,600,700&display=swap');
+ */
 
 .body_cmt {
     display: flex;

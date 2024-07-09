@@ -100,6 +100,34 @@ public class OrderDao {
             }
         }
     }
+        public static boolean updateOrderStatus1(int orderId, String newOrderStatus) {
+        ConnectDB db = ConnectDB.getInstance();
+        Connection conn = null;
+        PreparedStatement statement = null;
+        try {
+            conn = db.openConnection();
+            String query = "UPDATE [Order] SET order_status = ? WHERE order_id = ?";
+            statement = conn.prepareStatement(query);
+            statement.setString(1, newOrderStatus);
+            statement.setInt(2, orderId);
+            int rowsUpdated = statement.executeUpdate();
+            return rowsUpdated > 0;
+        } catch (ClassNotFoundException | SQLException ex) {
+            Logger.getLogger(OrderDao.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if (statement != null) {
+                    statement.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                Logger.getLogger(OrderDao.class.getName()).log(Level.SEVERE, null, e);
+            }
+        }
+        return false;
+    }
 
     public static int addOrder(Order order) {
         ConnectDB db = ConnectDB.getInstance();

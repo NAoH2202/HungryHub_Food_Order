@@ -1,3 +1,6 @@
+<%@page import="model.Chat"%>
+<%@page import="model.ChatManager"%>
+<%@page import="model.Account"%>
 <%@page import="model.OrderManager"%>
 <%@page import="model.OrderItem"%>
 <%@page import="model.Order"%>
@@ -10,6 +13,7 @@
         <meta charset="UTF-8">
         <title>View Order</title>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+        <link rel="stylesheet" href="css/chatStyle.css">
         <style>
             body, html {
                 height: 100%;
@@ -27,15 +31,15 @@
             }
             .container1 {
                 display: flex;
-                height: 100%;
                 padding: 20px;
                 box-sizing: border-box;
             }
             .order-info {
-                flex: 3;
+                /*flex: 3;*/
                 padding: 20px;
                 box-sizing: border-box;
                 background-color: #ffffff;
+                width: 65%; /*them*/
                 overflow-y: auto;
                 display: flex;
                 flex-direction: column;
@@ -43,8 +47,10 @@
                 box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             }
             .sidebar {
-                flex: 1;
+                /*flex: 1;*/
                 display: flex;
+                width: 35%; /*them*/
+                height: 900px; /*them*/
                 flex-direction: column;
                 background-color: #fff;
                 border-left: 1px solid #ccc;
@@ -62,7 +68,11 @@
                 flex: 1;
             }
             .chat {
+                padding: 0;
                 flex: 1;
+                background-color: #fff;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                overflow: hidden;
             }
             h1, h2 {
                 margin-top: 0;
@@ -89,37 +99,37 @@
             table tr:nth-child(even) {
                 background-color: #f9f9f9;
             }
-            #chat-box {
-                height: calc(70% - 40px);
-                overflow-y: auto;
-                border: 1px solid #ccc;
-                padding: 10px;
-                border-radius: 10px;
-                box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
-            }
-            #chat-form {
-                display: flex;
-                margin-top: 10px;
-            }
-            #chat-form input[type="text"] {
-                flex: 1;
-                padding: 10px;
-                border: 1px solid #ccc;
-                border-radius: 4px 0 0 4px;
-                box-sizing: border-box;
-            }
-            #chat-form button {
-                padding: 10px;
-                border: 1px solid #007bff;
-                background-color: #007bff;
-                color: #fff;
-                border-radius: 0 4px 4px 0;
-                cursor: pointer;
-                transition: background-color 0.3s;
-            }
-            #chat-form button:hover {
-                background-color: #0056b3;
-            }
+            /*            #chat-box {
+                            height: calc(70% - 40px);
+                            overflow-y: auto;
+                            border: 1px solid #ccc;
+                            padding: 10px;
+                            border-radius: 10px;
+                            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+                        }
+                        #chat-form {
+                            display: flex;
+                            margin-top: 10px;
+                        }
+                        #chat-form input[type="text"] {
+                            flex: 1;
+                            padding: 10px;
+                            border: 1px solid #ccc;
+                            border-radius: 4px 0 0 4px;
+                            box-sizing: border-box;
+                        }
+                        #chat-form button {
+                            padding: 10px;
+                            border: 1px solid #007bff;
+                            background-color: #007bff;
+                            color: #fff;
+                            border-radius: 0 4px 4px 0;
+                            cursor: pointer;
+                            transition: background-color 0.3s;
+                        }
+                        #chat-form button:hover {
+                            background-color: #0056b3;
+                        }*/
             .header {
                 display: flex;
                 align-items: center;
@@ -382,15 +392,102 @@
                     </iframe>
                 </div>
                 <div class="chat">
-                    <h2>Chat</h2>
-                    <div id="chat-box"></div>
-                    <form id="chat-form" method="post" action="sendMessage">
-                        <input type="text" name="message" placeholder="Type a message...">
-                        <button type="submit">Send</button>
-                    </form>
+                    <%
+                        if (session == null || session.getAttribute("account") == null) {
+                            response.sendRedirect("LoginServlet");
+                            return;
+                        }
+                        Account account = (Account) session.getAttribute("account");
+                        String currentUser = account.getName();
+                        int currentUserId = account.getAccount_id(); // Assuming userId is stored in session
+                        String recipient = (String) request.getAttribute("recipient");
+//                        if (request.getAttribute("recipientId") == null) {
+//                            response.sendRedirect("testPage");
+//                            return;
+//                        }
+                        int recipientId = (int) request.getAttribute("recipientId"); // Assuming recipientId is stored in session
+
+                        ChatManager cm = new ChatManager();
+                        ArrayList<Chat> chatHistory = cm.getChatHistory(currentUserId, recipientId);
+                    %>
+                    <div id="header">Chat with <%= recipient%></div>
+                    <div id="chatBox">
+                    </div>
+                    <div id="inputContainer">
+                        <input type="text" id="message" placeholder="Type a message...">
+                        <button id="sendButton" onclick="sendMessage()">Send</button>
+                    </div>
                 </div>
             </div>
       
+
+        <script>
+            let websocket;
+            function connect() {
+                websocket = new WebSocket("ws://localhost:8080/HungryHub_OrderFood/chat");
+                websocket.onopen = function () {
+                    console.log("Connected to the WebSocket server");
+                };
+                websocket.onmessage = function (event) {
+                    try {
+                        const messageData = JSON.parse(event.data);
+                        const messageElement = document.createElement("div");
+                        if (messageData.type === "received") {
+                            if (messageData.recipient === '<%=recipientId%>') {
+                                messageElement.classList.add("message");
+                                messageElement.classList.add("received");
+                                messageElement.innerText = '<%= recipient%>' + ": " + messageData.message;
+                            }
+                        } else {
+                            messageElement.classList.add("message");
+                            messageElement.classList.add("sent");
+                            messageElement.innerText = '<%=currentUser%>' + ": " + messageData.message;
+                        }
+                        document.getElementById("chatBox").appendChild(messageElement);
+                        document.getElementById("chatBox").scrollTop = document.getElementById("chatBox").scrollHeight;
+                    } catch (e) {
+                        console.error("Error parsing JSON:", e);
+                    }
+                };
+                websocket.onerror = function (error) {
+                    console.error("WebSocket Error:", error);
+                };
+                websocket.onclose = function () {
+                    console.log("WebSocket connection closed");
+                    location.reload();
+                };
+            }
+            function sendMessage() {
+                const message = document.getElementById("message").value;
+                const messageObj = {recipient: "<%=recipientId%>", message: message};
+                websocket.send(JSON.stringify(messageObj));
+                document.getElementById("message").value = "";
+            }
+            window.onload = function () {
+                console.log(<%=currentUserId%>);
+                console.log(<%=recipientId%>);
+                const chatBox = document.getElementById("chatBox");
+                var messageElement2 = null;
+                var message = null;
+            <% for (Chat chat : chatHistory) {
+            %>
+                messageElement2 = document.createElement("div");
+                messageElement2.classList.add("message");
+            <%   if (chat.getSender().getAccount_id() == currentUserId) {
+            %>
+                messageElement2.classList.add("sent");
+            <%} else {%>
+                messageElement2.classList.add("received");
+            <% }%>
+                message = '<%=chat.getMessage()%>';
+                messageElement2.innerText = "<%= chat.getSender().getAccount_id() == currentUserId ? currentUser : recipient%>" + ": " + message;
+                chatBox.appendChild(messageElement2);
+                chatBox.scrollTop = chatBox.scrollHeight;
+            <% }%>
+                connect();
+            };
+
+        </script>
 
         <script>
             function openPopup() {

@@ -40,13 +40,13 @@ public class VoucherDao {
                 Date valid_to = rs.getTimestamp("valid_to");
                 int created_by = rs.getInt("created_by");
                 Account cb = am.getAccountById(created_by);
-                Date expiration_date = rs.getTimestamp("expiration_date");
                 LocalDateTime created_at = rs.getTimestamp("created_at").toLocalDateTime();
                 LocalDateTime updated_at = rs.getTimestamp("updated_at").toLocalDateTime();
                 
-                Voucher voucher = new Voucher(voucher_id, code, discount_percentage, valid_from, valid_to, cb, expiration_date);
+                Voucher voucher = new Voucher(voucher_id, code, discount_percentage, valid_from, valid_to, cb);
                 voucher.setCreated_at(created_at);
                 voucher.setUpdated_at(updated_at);
+                VoucherList.add(voucher);
             }
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(VoucherDao.class.getName()).log(Level.SEVERE, null, ex);

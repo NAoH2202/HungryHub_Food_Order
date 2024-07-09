@@ -221,6 +221,16 @@ public class AccountManager {
         return true;
     }
 
+    public ArrayList<Account> getAllAccountsExcept(int accountId) {
+        ArrayList<Account> result = new ArrayList<>();
+        for (Account acc : List) {
+            if (acc.getAccount_id() != accountId) {
+                result.add(acc);
+            }
+        }
+        return result;
+    }
+    
     public static void main(String[] args) {
         AccountManager am = new AccountManager();
         ArrayList<Account> diner = am.searchDiner("c");
