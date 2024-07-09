@@ -223,6 +223,19 @@
                 </div>
             </div>
         </div>
+            <div id="VNPAYModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="success-icon">✔</div>
+                    <h2>Đặt hàng thành công!</h2>
+                    <p>Cảm ơn bạn đã đặt hàng. Đơn hàng của bạn đang được xử lý.</p>
+                    <p>Đi đến Trang Thanh Toán !!</p>
+                </div>
+                <div class="modal-footer-new">
+                    <button class="btn-success" onclick="submitForm()">OK</button>
+                </div>
+            </div>
+        </div>
         <script>
             // Hiển thị modal thông báo thành công
             function showSuccessModal() {
@@ -231,6 +244,13 @@
             // Đóng modal và submit form
             function closeModal() {
                 document.getElementById('successModal').style.display = 'none';
+            }
+            function showSuccessModal() {
+                document.getElementById('VNPAYModal').style.display = 'flex';
+            }
+            // Đóng modal và submit form
+            function closeModal() {
+                document.getElementById('VNPAYModal').style.display = 'none';
             }
 
             // Submit form sau khi đóng modal

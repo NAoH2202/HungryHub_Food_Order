@@ -159,7 +159,7 @@
             int dinerId = acc.getAccount_id();
             String name = acc.getName();
         %>
-        <jsp:include page="path/header.jsp"/>
+        <jsp:include page="path/dinerheader.jsp"/>
         <div class="container">
             <div id="content">
                 <section class="section-yellow" style="border-radius: 20px">
@@ -310,7 +310,7 @@
                                                 int totalQuantity = oiList.size();
                                                 int totalPrice = oim.getTotalPrice(oiList);
                                 %>
-                                <div class="col-sm-12 col-md-4">
+                                <div class="col-sm-12 col-md-4"> 
                                     <div class="order-summary">
                                         <div class="order-item">
                                             <img src="<%=odi.getDish().getPicture()%>" alt="Product Image" class="product-image">

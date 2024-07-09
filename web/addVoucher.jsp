@@ -42,7 +42,7 @@
 <body>
     <!-- Include header -->
     <header>
-        <jsp:include page="path/header.jsp"/>
+        <jsp:include page="path/dinerheader.jsp"/>
     </header>
     <!-- End header section -->
 

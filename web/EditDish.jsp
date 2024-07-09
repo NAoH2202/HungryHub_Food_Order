@@ -26,7 +26,7 @@
 </head>
 <body>
       <!-- Include header -->
-            <jsp:include page="path/header.jsp"/>
+            <jsp:include page="path/dinerheader.jsp"/>
             <!-- End header section -->
     <div class="container">
         <h1>Edit Dish</h1>

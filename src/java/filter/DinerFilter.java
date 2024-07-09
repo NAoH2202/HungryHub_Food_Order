@@ -48,7 +48,7 @@ public class DinerFilter implements Filter {
             String path = httpRequest.getServletPath();
 
             
-            if (path.equals("/CustomerDinerPage")) {
+            if (path.equals("/CustomerDinerPage") || path.equals("/CustomerOrderPage")) {
                 httpResponse.sendRedirect(httpRequest.getContextPath() + "/DinerPage");
                 return;
             }
