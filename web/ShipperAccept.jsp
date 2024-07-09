@@ -202,6 +202,8 @@
                 transition: background-color 0.3s;
             }
             .popup, .popupcancel {
+                
+                height: 350px;
                 background-color: #ffffff;
                 border-radius: 6px;
                 position: absolute;
@@ -299,7 +301,7 @@
                     ArrayList<OrderItem> orderItemList = null;
                     OrderManager om = new OrderManager();
                      
-                    double total = 0.0;
+                    int total = 0;
                     if (request.getAttribute("orderItemList") != null) {
                         orderItemList = (ArrayList<OrderItem>) request.getAttribute("orderItemList");
                         orderItem = orderItemList.get(0);
@@ -333,12 +335,12 @@
                                 <tr>
                                     <td>${orderItem.dish.name}</td>
                                     <td>${orderItem.quantity}</td>
-                                    <td>${orderItem.dish.price * orderItem.quantity}</td>
+                                    <td>${orderItem.dish.price * orderItem.quantity}₫</td>
                                 </tr>
                             </c:forEach>
                             <tr>
                                 <td colspan="2" style="text-align: right;"><strong>Total:</strong></td>
-                                <td><%= total%></td>
+                                <td><%= total%>₫</td>
                             </tr>
                         </tbody>
                     </table>
@@ -347,7 +349,7 @@
                 <div class="accept-button-container">
                     <input type="submit" onclick="openPopup()" value="Complete">
                     <div class="popup">
-                        <h2>--------------------------------</h2>
+                       
                         <h2>Complete</h2>
                         <p>Your Order Completed</p>
                         <form id="completeForm" action="OrderItemServlet" method="GET">
@@ -360,7 +362,7 @@
 
                     <input type="submitCancel" onclick="openPopupCancel()" value="Cancel">
                     <div class="popupcancel">
-                        <h2>--------------------------------</h2>
+                        
                         <h2>CANCEL</h2>
                         <p>Are You Sure !!!</p>
                         <form id="cancelForm" action="OrderItemServlet" method="GET">
