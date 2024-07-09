@@ -1,3 +1,4 @@
+<%@page import="model.Account"%>
 <%@page import="model.OrderDao"%>
 <%@page import="model.Order"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
@@ -9,15 +10,17 @@
     <meta charset="UTF-8">
     <title>Order Items</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #DDDDDD;
-            margin: 0;
-            padding: 20px;
-             overflow-y: auto;
-        }
+       body {
+                font-family: 'Roboto', sans-serif;
+                background-color: #DDDDDD; /* Light gray background */
+                color: #333; /* Default text color */
+                margin: 0;
+                padding: 0;
+                position: relative;
+                overflow-y: auto; /* Enable vertical scrolling */
+            }
 
-        .container {
+        .container1 {
             max-width: 1200px;
             margin: 0 auto;
             background-color: #fff;
@@ -77,29 +80,30 @@
             background-color: #0056b3;
         }
 
-        .header {
-            display: flex;
-            align-items: center;
-            padding: 15px;
-            background-color: #8bc34a;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            
-        }
+      
 
        
     </style>
 </head>
+<jsp:include page="path/shipperheader.jsp"/>
 <body>
-    <div class="header">
-           <a href="ShipperPage" style="text-decoration: none; color: #000; font-family: 'Brush Script MT', sans-serif; font-size: 50px; ">
-    HungryHub</a>
-        <a href="ShipperAccountPage" class="order_online" style="position: absolute; top: 30px; right: 20px; font-size: 80px;">
-                <i class="fas fa-user"></i>
-            </a>
-    </div>
-    <div class="container">
+     
+            <!-- Include header -->
+            
+            <!-- End header section -->
+        
+    <div class="container1">
         <h1>ORDER LIST</h1>
         <%
+            Account acc = (Account) session.getAttribute("account");
+                    if (acc == null) {
+                        response.sendRedirect("LoginServlet");
+                        return;
+                    }
+                    if (acc.isActive_status()== false) {
+                        response.sendRedirect("ShipperPage");
+                        return;
+                    }
             // Retrieve the list of order items from the DAO
             List<Order> orderList = OrderDao.getAllOrders();
             request.setAttribute("orderList", orderList);
@@ -137,11 +141,7 @@
                 </c:forEach>
             </tbody>
         </table>
-        <div class="actions">
-    <form action="ShipperListAcceptPage" method="GET">
-        <input type="submit" value="List Order to Accepted">
-    </form>
-</div>
+      
     </div>
 </body>
 </html>

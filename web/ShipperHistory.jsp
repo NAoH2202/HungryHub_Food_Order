@@ -16,7 +16,7 @@
             padding: 20px;
         }
 
-        .container {
+        .container1 {
             max-width: 1200px;
             margin: 0 auto;
             background-color: #fff;
@@ -91,15 +91,9 @@
     </style>
 </head>
 <body>
-    <div class="header">
-           <a href="ShipperPage" style="text-decoration: none; color: #000; font-family: 'Brush Script MT', sans-serif; font-size: 50px; ">
-    HungryHub</a>
-        <a href="ShipperAccountPage" class="order_online" style="position: absolute; top: 30px; right: 20px; font-size: 80px;">
-                <i class="fas fa-user"></i>
-            </a>
-    </div>
-    <div class="container">
-        <h1>ORDER LIST</h1>
+      <jsp:include page="path/shipperheader.jsp"/>
+    <div class="container1">
+        <h1>History</h1>
         <%
             // Retrieve the list of order items from the DAO
             List<Order> orderList = OrderDao.getAllOrders();
@@ -114,13 +108,14 @@
                     <th>Dish</th>
                     <th>Address of Dinner</th>
                     <th>Status Order</th>
+                    <th>Reason</th>
                      
                      
                 </tr>
             </thead>
             <tbody>
                 <c:forEach var="order" items="${orderList}">
-                       <c:if test="${order.order_status eq 'Completed'}">
+                       <c:if test="${order.order_status eq 'Completed' or order.order_status eq 'canceled' && order.shipper.account_id eq sessionScope.account.account_id}">
             <tr>
               <td>${order.order_id}</td>
               <td>${order.customer.name}</td>
@@ -128,6 +123,7 @@
               <td>${order.diner.name}</td>
               <td>${order.diner.address}</td>
               <td>${order.order_status}</td>
+              <td>${order.reason}</td>
                
                
               
