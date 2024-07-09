@@ -232,7 +232,7 @@
                     ArrayList<OrderItem> orderItemList = null;
                     OrderManager om = new OrderManager();
                      
-                    double total = 0.0;
+                    int total = 0;
                     if (request.getAttribute("orderItemList") != null) {
                         orderItemList = (ArrayList<OrderItem>) request.getAttribute("orderItemList");
                         orderItem = orderItemList.get(0);
@@ -266,12 +266,12 @@
                                 <tr>
                                     <td>${orderItem.dish.name}</td>
                                     <td>${orderItem.quantity}</td>
-                                    <td>${orderItem.dish.price * orderItem.quantity}</td>
+                                    <td>${orderItem.dish.price * orderItem.quantity}₫</td>
                                 </tr>
                             </c:forEach>
                             <tr>
                                 <td colspan="2" style="text-align: right;"><strong>Total:</strong></td>
-                                <td><%= total%></td>
+                                <td><%= total%>₫</td>
                             </tr>
                         </tbody>
                     </table>
@@ -312,11 +312,7 @@
                 </div>
                 <div class="chat">
                     <h2>Chat</h2>
-                    <div id="chat-box"></div>
-                    <form id="chat-form" method="post" action="sendMessage">
-                        <input type="text" name="message" placeholder="Type a message...">
-                        <button type="submit">Send</button>
-                    </form>
+                     
                 </div>
             </div>
         </div>
