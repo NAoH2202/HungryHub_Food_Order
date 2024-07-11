@@ -125,7 +125,7 @@
             #chat-form button:hover {
                 background-color: #0056b3;
             }
-           
+
 
             input[type="submit"]:hover {
                 background-color: #45a049;
@@ -222,7 +222,7 @@
         </script>
     </head>
     <body>
-      <jsp:include page="path/shipperheader.jsp"/>
+        <jsp:include page="path/shipperheader.jsp"/>
         <div class="container1">
             <div class="order-info">
                 <h1 style="font-size: 36px; line-height: 42px;">Order Information</h1>
@@ -231,17 +231,17 @@
                     OrderItem orderItem = null;
                     ArrayList<OrderItem> orderItemList = null;
                     OrderManager om = new OrderManager();
-                     
+
                     int total = 0;
                     if (request.getAttribute("orderItemList") != null) {
                         orderItemList = (ArrayList<OrderItem>) request.getAttribute("orderItemList");
                         orderItem = orderItemList.get(0);
                         for (OrderItem item : orderItemList) {
-                            total += item.getDish().getPrice() * item.getQuantity();
+                            total += item.getPrice();
                         }
                     }
                     if (orderItem != null) {
-                    Order order = om.getOderById(orderItem.getOrder_id());
+                        Order order = om.getOderById(orderItem.getOrder_id());
                 %>
                 <div>
                     <p><strong>Order ID:</strong><%= orderItem.getOrder_id()%></p>
@@ -251,7 +251,7 @@
                     <p><strong>Customer address:</strong> <%= order.getCustomer().getAddress()%></p>
 
                 </div>
-              
+
                 <div class="table-container">
                     <table>
                         <thead>
@@ -264,9 +264,9 @@
                         <tbody>
                             <c:forEach var="orderItem" items="${orderItemList}">
                                 <tr>
-                                    <td>${orderItem.dish.name}</td>
+                                    <td>${orderItem.dishName}</td>
                                     <td>${orderItem.quantity}</td>
-                                    <td>${orderItem.dish.price * orderItem.quantity}₫</td>
+                                    <td>${orderItem.price}₫</td>
                                 </tr>
                             </c:forEach>
                             <tr>
@@ -276,11 +276,11 @@
                         </tbody>
                     </table>
                     <div class="accept-button-container">
-                        
-                            <form action="OrderItemServlet" method="GET">
-                                <input type="hidden" name="command" value="Accept">
-                                <input type="hidden" name="orderId" value="<%= order.getOrder_id()%>">
-                            <input type="submit" value="Accept" 
+
+                        <form action="OrderItemServlet" method="GET">
+                            <input type="hidden" name="command" value="Accept">
+                            <input type="hidden" name="orderId" value="<%= order.getOrder_id()%>">
+                            <input type="submit" value="Accept" onclick="sendStatus('OntheWay')" 
                                    <%
                                        if (!"Ready".equals(order.getOrder_status())) {
                                    %>
@@ -290,11 +290,11 @@
                                    %>
                                    >
                         </form>
-                         
+
                     </div>
-                                  <%
-                    }
-                %>
+                    <%
+                        }
+                    %>
                 </div>
             </div>
             <div class="sidebar">
@@ -312,10 +312,38 @@
                 </div>
                 <div class="chat">
                     <h2>Chat</h2>
-                     
+
                 </div>
             </div>
         </div>
-         
+        <script type="text/javascript">
+            var ws;
+
+            function connect() {
+                ws = new WebSocket("ws://localhost:8080/HungryHub_OrderFood/orderStatus");
+
+                ws.onopen = function () {
+                    console.log("Connected to WebSocket");
+                };
+
+                ws.onmessage = function (event) {
+                    console.log("Received message: " + event.data);
+                };
+
+                ws.onclose = function () {
+                    console.log("Disconnected from WebSocket");
+                };
+            }
+
+            function sendStatus(status) {
+                if (ws && ws.readyState === WebSocket.OPEN) {
+                    ws.send(status);
+                } else {
+                    console.log("WebSocket is not connected.");
+                }
+            }
+
+            window.onload = connect;
+        </script>
     </body>
 </html>

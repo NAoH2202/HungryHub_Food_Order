@@ -95,19 +95,19 @@ public class OrderCompleteServlet extends HttpServlet {
                 ArrayList<OrderItem> oiList = new ArrayList<>();
                 for (Account diner : dinerList) {
                     ciListByDiner = AddToCartServlet.getCartItemsByDiner(diner.getAccount_id(), ciList);
-                        for (CartItem ci : ciListByDiner) {
-                            OrderPrice+=ci.getDish().getPrice() * ci.getQuantity();
-                            oiList.add(new OrderItem(0, ci.getDish(), ci.getQuantity(), ci.getDish().getPrice()* ci.getQuantity()));
-                        }
+                    for (CartItem ci : ciListByDiner) {
+                        OrderPrice += ci.getDish().getPrice() * ci.getQuantity();
+                        oiList.add(new OrderItem(0, ci.getDish().getDish_id(), ci.getDish().getName(), ci.getDish().getPicture(), ci.getDish().getDescription(), ci.getDish().getPrice(), ci.getDish().getType(), ci.getDish().getIngredients(), ci.getQuantity(), ci.getDish().getPrice() * ci.getQuantity()));
+                    }
 
-                    Order order = new Order(0, account, diner, null, "Checking", paymentMethod,null, totalCost);
+                    Order order = new Order(0, account, diner, null, "Checking", paymentMethod, null, totalCost);
                     int orderId = OrderDao.addOrder(order);
-                    for(OrderItem oi : oiList){
+                    for (OrderItem oi : oiList) {
                         oi.setOrder_id(orderId);
                         OrderItemDao.addOrderItem(oi);
                     }
                     oiList.clear();
-                    OrderPrice=0;
+                    OrderPrice = 0;
                 }
                 CartItemDao.removeCartItemByAccountId(account.getAccount_id());
                 request.setAttribute("message", "Order thành công");
@@ -115,7 +115,7 @@ public class OrderCompleteServlet extends HttpServlet {
                 break;
             }
             case "online":
-               OrderManager om = new OrderManager();
+                OrderManager om = new OrderManager();
                 CartItemManager cIm = new CartItemManager();
                 ArrayList<CartItem> ciList = cIm.getCartItemByAccountId(account.getAccount_id());
                 ArrayList<Account> dinerList = AddToCartServlet.getUniqueDinersFromCartItems(ciList);
@@ -127,7 +127,7 @@ public class OrderCompleteServlet extends HttpServlet {
                     ciListByDiner = AddToCartServlet.getCartItemsByDiner(diner.getAccount_id(), ciList);
                     for (CartItem ci : ciListByDiner) {
                         OrderPrice += ci.getDish().getPrice() * ci.getQuantity();
-                        oiList.add(new OrderItem(0, ci.getDish(), ci.getQuantity(), ci.getDish().getPrice() * ci.getQuantity()));
+                        oiList.add(new OrderItem(0, ci.getDish().getDish_id(), ci.getDish().getName(), ci.getDish().getPicture(), ci.getDish().getDescription(), ci.getDish().getPrice(), ci.getDish().getType(), ci.getDish().getIngredients(), ci.getQuantity(), ci.getDish().getPrice() * ci.getQuantity()));
                     }
 
                     Order order = new Order(0, account, diner, null, "Checking", paymentMethod, null, totalCost);
@@ -143,7 +143,7 @@ public class OrderCompleteServlet extends HttpServlet {
 
                 CartItemDao.removeCartItemByAccountId(account.getAccount_id());
                 request.setAttribute("orderIds", orderIds);
-                request.setAttribute("totalCost",  totalCost);
+                request.setAttribute("totalCost", totalCost);
                 request.getRequestDispatcher("vnpay_pay.jsp").forward(request, response);
                 break;
             default:

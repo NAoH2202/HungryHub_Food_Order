@@ -439,10 +439,10 @@
                 %>
                 <div class="order-item">
                     <div class="item-details">
-                        <img src="<%=oi.getDish().getPicture()%>" class="item-image">
-                        <span class="item-name">Tên món ăn: <%=oi.getDish().getName()%></span>
+                        <img src="<%=oi.getDishPicture()%>" class="item-image">
+                        <span class="item-name">Tên món ăn: <%= oi.getDishName() %></span>
                         <span class="item-quantity">Số lượng: <%=oi.getQuantity()%></span>
-                        <span class="item-price">Giá: <%=oi.getDish().getPrice()%>₫</span>
+                        <span class="item-price">Giá: <%=oi.getDishPrice()%>₫</span>
                     </div>
                     <div class="item-total">
                         <span>Tổng cộng: <%=oi.getPrice()%>₫</span>
@@ -516,7 +516,8 @@
                     }
                 }
 
-                function load () {
+
+                function load() {
                     console.log(<%=currentUserId%>);
                     console.log(<%=recipientId%>);
                     const chatBox = document.getElementById("chatBox");
@@ -537,7 +538,8 @@
                     chatBox.appendChild(messageElement2);
                     chatBox.scrollTop = chatBox.scrollHeight;
                 <% }%>
-                };
+                }
+                ;
 
             </script>
             <div id="chatContainer">
@@ -576,6 +578,36 @@
                 };
             }
 
+            function submitForm(orderId, recipientId, recipientName) {
+                // Tạo một form động
+                var form = document.createElement('form');
+                form.method = 'POST';
+                form.action = 'CustomerTrackingOrder';
+
+                // Tạo các input ẩn và thêm chúng vào form
+                var inputOrderId = document.createElement('input');
+                inputOrderId.type = 'hidden';
+                inputOrderId.name = 'id';
+                inputOrderId.value = orderId;
+                form.appendChild(inputOrderId);
+
+                var inputRecipientId = document.createElement('input');
+                inputRecipientId.type = 'hidden';
+                inputRecipientId.name = 'recipientId';
+                inputRecipientId.value = recipientId;
+                form.appendChild(inputRecipientId);
+
+                var inputRecipientName = document.createElement('input');
+                inputRecipientName.type = 'hidden';
+                inputRecipientName.name = 'recipient';
+                inputRecipientName.value = recipientName;
+                form.appendChild(inputRecipientName);
+
+                // Thêm form vào body và submit
+                document.body.appendChild(form);
+                form.submit();
+            }
+
             function updateTracker(status) {
                 var steps = document.querySelectorAll('.step');
                 steps.forEach(function (step) {
@@ -596,14 +628,12 @@
                     steps[1].classList.add('active');
                     steps[2].classList.add('active');
                     steps[3].classList.add('active');
-                    location.reload();
                 } else if (status === 'Completed') {
                     steps[0].classList.add('active');
                     steps[1].classList.add('active');
                     steps[2].classList.add('active');
                     steps[3].classList.add('active');
                     steps[4].classList.add('active');
-                    location.reload();
                 }
             }
 

@@ -68,7 +68,7 @@ public class OrderItemManager {
      
     public static void main(String[] args) {
         OrderItemManager om = new OrderItemManager();
-        for(OrderItem o : om.getOderItemByOrderId(100009)){
+        for(OrderItem o : om.getList()){
             System.out.println(o);
         }
     }

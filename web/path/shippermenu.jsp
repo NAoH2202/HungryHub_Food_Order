@@ -47,9 +47,9 @@
         </a>
         <%
             if (acc == null) {
-        %>
-        <%
-            } else {
+                response.sendRedirect("LoginServlet");
+                return;
+        } else {
         %>
         <div class="icon_container">
         </div>
@@ -60,9 +60,6 @@
             </div>
             <hr>
         </div>
-        <%
-            }
-        %>
         <div class="profile-image online" onclick="UserSettingToggle()">
             <img src="<%=acc.getProfile_picture()%>" alt="">
         </div>
@@ -93,6 +90,9 @@
                 <a href="LogOutServlet">Log out <img src="images/arrow.png" alt=""></a>
             </div>
         </div>
+        <%
+            }
+        %>
     </div>
 </div>
 <script src="js/function.js"></script>

@@ -189,9 +189,9 @@
                                 <div class="col-sm-12 col-md-4">
                                     <div class="order-summary">
                                         <div class="order-item">
-                                            <img src="<%=odi.getDish().getPicture() != null ? odi.getDish().getPicture() : "default_image_path.jpg"%>" alt="Product Image" class="product-image">
+                                            <img src="<%=odi.getDishPicture() != null ? odi.getDishPicture() : "default_image_path.jpg"%>" alt="Product Image" class="product-image">
                                             <div class="product-info">
-                                                <a href="CustomerChatPage?idO=<%=od.getOrder_id()%>"><p class="product-name"><%=odi.getDish().getName()%></p></a>
+                                                <a href="#"><p class="product-name"><%=odi.getDishName()%></p></a>
                                                 <p class="product-quantity-price">Số lượng: <%=odi.getQuantity()%> | Giá: <%=odi.getPrice()%>₫</p>
                                             </div>
                                         </div>
@@ -225,9 +225,9 @@
                                 <div class="col-sm-12 col-md-4">
                                     <div class="order-summary">
                                         <div class="order-item">
-                                            <img src="<%=odi.getDish().getPicture() != null ? odi.getDish().getPicture() : "default_image_path.jpg"%>" alt="Product Image" class="product-image">
+                                            <img src="<%=odi.getDishPicture() != null ? odi.getDishPicture() : "default_image_path.jpg"%>" alt="Product Image" class="product-image">
                                             <div class="product-info">
-                                                <a href="CustomerChatPage?idO=<%=od.getOrder_id()%>"><p class="product-name"><%=odi.getDish().getName()%></p></a>
+                                                <a href="#"><p class="product-name"><%=odi.getDishName()%></p></a>
                                                 <p class="product-quantity-price">Số lượng: <%=odi.getQuantity()%> | Giá: <%=odi.getPrice()%>₫</p>
                                             </div>
                                         </div>
@@ -261,9 +261,9 @@
                                 <div class="col-sm-12 col-md-4">
                                     <div class="order-summary">
                                         <div class="order-item">
-                                            <img src="<%=odi.getDish().getPicture() != null ? odi.getDish().getPicture() : "default_image_path.jpg"%>" alt="Product Image" class="product-image">
+                                            <img src="<%=odi.getDishPicture() != null ? odi.getDishPicture() : "default_image_path.jpg"%>" alt="Product Image" class="product-image">
                                             <div class="product-info">
-                                                <a href="CustomerChatPage?idO=<%=od.getOrder_id()%>"><p class="product-name"><%=odi.getDish().getName()%></p></a>
+                                                <a href="#"><p class="product-name"><%=odi.getDishName()%></p></a>
                                                 <p class="product-quantity-price">Số lượng: <%=odi.getQuantity()%> | Giá: <%=odi.getPrice()%>₫</p>
                                             </div>
                                         </div>
@@ -297,9 +297,9 @@
                                 <div class="col-sm-12 col-md-4">
                                     <div class="order-summary">
                                         <div class="order-item">
-                                            <img src="<%=odi.getDish().getPicture() != null ? odi.getDish().getPicture() : "default_image_path.jpg"%>" alt="Product Image" class="product-image">
+                                            <img src="<%=odi.getDishPicture() != null ? odi.getDishPicture() : "default_image_path.jpg"%>" alt="Product Image" class="product-image">
                                             <div class="product-info">
-                                                <a href="CustomerChatPage?idO=<%=od.getOrder_id()%>"><p class="product-name"><%=odi.getDish().getName()%></p></a>
+                                                <a href="#"><p class="product-name"><%=odi.getDishName()%></p></a>
                                                 <p class="product-quantity-price">Số lượng: <%=odi.getQuantity()%> | Giá: <%=odi.getPrice()%>₫</p>
                                             </div>
                                         </div>
@@ -338,9 +338,9 @@
                                 <div class="col-sm-12 col-md-4">
                                     <div class="order-summary">
                                         <div class="order-item">
-                                            <img src="<%=odi.getDish().getPicture() != null ? odi.getDish().getPicture() : "default_image_path.jpg"%>" alt="Product Image" class="product-image">
+                                            <img src="<%=odi.getDishPicture() != null ? odi.getDishPicture() : "default_image_path.jpg"%>" alt="Product Image" class="product-image">
                                             <div class="product-info">
-                                                <a href="CustomerChatPage?idO=<%=od.getOrder_id()%>"><p class="product-name"><%=odi.getDish().getName()%></p></a>
+                                                <a href="#"><p class="product-name"><%=odi.getDishName()%></p></a>
                                                 <p class="product-quantity-price">Số lượng: <%=odi.getQuantity()%> | Giá: <%=odi.getPrice()%>₫</p>
                                             </div>
                                         </div>
@@ -374,9 +374,9 @@
                                 <div class="col-sm-12 col-md-4">
                                     <div class="order-summary">
                                         <div class="order-item">
-                                            <img src="<%=odi.getDish().getPicture() != null ? odi.getDish().getPicture() : "default_image_path.jpg"%>" alt="Product Image" class="product-image">
+                                            <img src="<%=odi.getDishPicture() != null ? odi.getDishPicture() : "default_image_path.jpg"%>" alt="Product Image" class="product-image">
                                             <div class="product-info">
-                                                <a href="CustomerChatPage?idO=<%=od.getOrder_id()%>"><p class="product-name"><%=odi.getDish().getName()%></p></a>
+                                                <a href="#"><p class="product-name"><%=odi.getDishName()%></p></a>
                                                 <p class="product-quantity-price">Số lượng: <%=odi.getQuantity()%> | Giá: <%=odi.getPrice()%>₫</p>
                                             </div>
                                         </div>

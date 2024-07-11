@@ -9,6 +9,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -78,13 +79,12 @@ public class OrderDao {
         PreparedStatement statement = null;
         try {
             conn = db.openConnection();
-            String query = "UPDATE [Order] SET order_status = ? WHERE order_id = ?";
+            String query = "UPDATE [Order] SET order_status = ?, updated_at = ? WHERE order_id = ?";
             statement = conn.prepareStatement(query);
             statement.setString(1, order.getOrder_status());
-
-            statement.setInt(2, order.getOrder_id());
+            statement.setTimestamp(2, Timestamp.valueOf(LocalDateTime.now()));
+            statement.setInt(3, order.getOrder_id());
             statement.executeUpdate();
-
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(OrderDao.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
@@ -100,6 +100,7 @@ public class OrderDao {
             }
         }
     }
+    
         public static boolean updateOrderStatus1(int orderId, String newOrderStatus) {
         ConnectDB db = ConnectDB.getInstance();
         Connection conn = null;

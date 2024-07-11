@@ -234,7 +234,7 @@ public class AccountManager {
     public static void main(String[] args) {
         AccountManager am = new AccountManager();
         ArrayList<Account> diner = am.searchDiner("c");
-        for (Account a : diner) {
+        for (Account a : am.getList()) {
             System.out.println(a);
         }
     }

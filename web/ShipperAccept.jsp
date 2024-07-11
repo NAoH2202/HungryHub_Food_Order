@@ -306,7 +306,7 @@
                         orderItemList = (ArrayList<OrderItem>) request.getAttribute("orderItemList");
                         orderItem = orderItemList.get(0);
                         for (OrderItem item : orderItemList) {
-                            total += item.getDish().getPrice() * item.getQuantity();
+                            total += item.getPrice();
                         }
                     }
                     if (orderItem != null) {
@@ -333,9 +333,9 @@
                         <tbody>
                             <c:forEach var="orderItem" items="${orderItemList}">
                                 <tr>
-                                    <td>${orderItem.dish.name}</td>
+                                    <td>${orderItem.dishName}</td>
                                     <td>${orderItem.quantity}</td>
-                                    <td>${orderItem.dish.price * orderItem.quantity}₫</td>
+                                    <td>${orderItem.price}₫</td>
                                 </tr>
                             </c:forEach>
                             <tr>
@@ -355,7 +355,7 @@
                         <form id="completeForm" action="OrderItemServlet" method="GET">
                             <input type="hidden" name="command" value="Complete">
                             <input type="hidden" name="orderId" value="<%=order.getOrder_id()%>">
-                            <button class="ok" type="submit" onclick="submitFormAndRedirect()">OK</button>
+                            <button class="ok" type="submit" onclick="submitFormAndRedirect();sendStatus('Completed')">OK</button>
                             <button class="close" type="button" onclick="closePopup()">Close</button>
                         </form>
                     </div>   
@@ -465,7 +465,7 @@
                 websocket.send(JSON.stringify(messageObj));
                 document.getElementById("message").value = "";
             }
-            window.onload = function () {
+            function load () {
                 console.log(<%=currentUserId%>);
                 console.log(<%=recipientId%>);
                 const chatBox = document.getElementById("chatBox");
@@ -486,7 +486,6 @@
                 chatBox.appendChild(messageElement2);
                 chatBox.scrollTop = chatBox.scrollHeight;
             <% }%>
-                connect();
             };
 
         </script>
@@ -525,5 +524,38 @@
             document.getElementById("cancelForm").submit();
         }
         </script>
+        <script type="text/javascript">
+        var ws;
+
+        function connect2() {
+            ws = new WebSocket("ws://localhost:8080/HungryHub_OrderFood/orderStatus");
+
+            ws.onopen = function() {
+                console.log("Connected to WebSocket");
+            };
+
+            ws.onmessage = function(event) {
+                console.log("Received message: " + event.data);
+            };
+
+            ws.onclose = function() {
+                console.log("Disconnected from WebSocket");
+            };
+        }
+
+        function sendStatus(status) {
+            if (ws && ws.readyState === WebSocket.OPEN) {
+                ws.send(status);
+            } else {
+                console.log("WebSocket is not connected.");
+            }
+        }
+
+        window.onload = function () {
+                connect();
+                connect2();
+                load();
+            };
+    </script>
     </body>
 </html>

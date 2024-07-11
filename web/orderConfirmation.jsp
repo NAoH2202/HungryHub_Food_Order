@@ -192,13 +192,15 @@
                 <p><b>Tên người nhận:   </b> <%=account.getName()%></p>
                 <%
                     String address = account.getAddress();
-                    Provinces provinces = account.getProvinces(); // Assuming this method exists in Account class
-                    Districts district = account.getDistrict(); // Assuming this method exists in Account class
-
+                    Provinces provinces = account.getProvinces(); 
+                    Districts district = account.getDistrict(); 
                     if (address == null || provinces == null || district == null) {
                 %>
                 <div class="alert alert-danger" role="alert">
                     Vui lòng cập nhật đầy đủ thông tin địa chỉ trước khi đặt hàng.
+                    <%= address != null ? address : ""%>
+                    <%= provinces != null ? provinces.getName() : ""%>
+                    <%= district != null ? district.getName() : ""%>
                 </div>
                 <%
                 } else {
@@ -241,7 +243,7 @@
                 </div>
             </div>
         </div>
-            <div id="VNPAYModal" class="modal">
+        <div id="VNPAYModal" class="modal">
             <div class="modal-content">
                 <div class="modal-body">
                     <div class="success-icon">✔</div>

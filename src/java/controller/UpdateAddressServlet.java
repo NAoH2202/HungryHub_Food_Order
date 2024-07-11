@@ -11,10 +11,13 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import model.Account;
 import model.AccountDao;
 import model.Districts;
 import model.DistrictsManager;
+import model.Provinces;
+import model.ProvincesManager;
 
 /**
  *
@@ -60,13 +63,24 @@ public class UpdateAddressServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         
-        Account acc = (Account) request.getSession().getAttribute("account");
+        ProvincesManager pm = new ProvincesManager();
+        DistrictsManager dim = new DistrictsManager();
+        HttpSession session = request.getSession();
+        Account acc = (Account) session.getAttribute("account");
+        
         int city = Integer.parseInt(request.getParameter("city"));
-        int district = Integer.parseInt(request.getParameter("district"));
+        Provinces provinces = pm.getProvincesById(city);
+        int districtid = Integer.parseInt(request.getParameter("district"));
+        Districts district = dim.getDistrictById(districtid);
         String address = request.getParameter("address");
         boolean order = "true".equals(request.getParameter("order"));
         
-        AccountDao.updateAccountLocation(acc.getAccount_id(), city, district, address);
+        acc.setAddress(address);
+        acc.setProvinces(provinces);
+        acc.setDistrict(district);
+        
+        AccountDao.updateAccountLocation(acc.getAccount_id(), city, districtid, address);
+        session.setAttribute("account", acc);
         if(order){
             response.sendRedirect("OrderConfirmationPage");
         }
