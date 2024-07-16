@@ -3,6 +3,7 @@
     Created on : Jul 15, 2024, 7:57:46 PM
     Author     : lenovo
 --%>
+<%@page import="java.time.format.DateTimeFormatter"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="model.OrderItemManager, model.OrderItem, model.OrderItemDao"%>
 <%@page import="model.OrderManager, model.Order, model.OrderDao"%>
@@ -42,8 +43,13 @@
             .order-item {
                 display: flex;
                 align-items: center;
-                border-bottom: 1px solid #eaeaea;
                 padding: 10px 0;
+            }
+            .item_container{
+                display: flex;
+                justify-content: space-between;
+                width: 100%;
+                border-bottom: 1px solid #eaeaea;
             }
             .order-item img {
                 width: 100px;
@@ -79,6 +85,7 @@
             }
             .button {
                 display: inline-block;
+                height: 45px;
                 margin: 20px 0;
                 padding: 10px 20px;
                 background-color: #5cb85c;
@@ -98,11 +105,11 @@
         <%
             String id = request.getParameter("id");
             Account account = (Account) session.getAttribute("account");
-            if(account == null){
+            if (account == null) {
                 response.sendRedirect("LoginServlet");
                 return;
             }
-            if(id == null){
+            if (id == null) {
                 response.sendRedirect("CustomerOrderPage");
                 return;
             }
@@ -110,44 +117,48 @@
             Order currentOrder = om.getOderById(Integer.parseInt(id));
             OrderItemManager oIm = new OrderItemManager();
             ArrayList<OrderItem> oiList = oIm.getOderItemByOrderId(currentOrder.getOrder_id());
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         %>
         <div class="body_local">
             <div class="container_local2">
                 <h1>Chi Tiết Đơn Hàng</h1>
                 <div class="order-info">
                     <h2>Thông Tin Đơn Hàng</h2>
-                    <p>Mã Đơn Hàng: <strong>#123456</strong></p>
-                    <p>Ngày Đặt: <strong>15/07/2024</strong></p>
-                    <p>Trạng Thái Thanh Toán: <strong>Chưa thanh toán</strong></p>
+                    <p>Mã Đơn Hàng: <strong>#<%= currentOrder.getOrder_id()%></strong></p>
+                    <p>Ngày Đặt: <strong><%= currentOrder.getCreated_at().format(formatter)%></strong></p>
+                    <p>Trạng Thái Thanh Toán: <strong><%= currentOrder.isPayment_status() ? "Đã thanh toán" : "Chưa thanh toán"%></strong></p>
                 </div>
 
                 <div class="order-info">
                     <h2>Danh Sách Món Ăn</h2>
-                    <div class="order-item">
-                        <img src="path/to/pizza.jpg" alt="Pizza Margherita">
-                        <div class="item-details">
-                            <div class="item-name">Pizza Margherita</div>
-                            <div class="item-description">Mô tả: Bánh pizza với phô mai mozzarella và cà chua tươi. Một món ăn truyền thống Ý rất ngon và được ưa chuộng khắp thế giới.</div>
-                            <div class="item-price">Giá: 150,000 VNĐ</div>
-                            <div class="item-quantity">Số lượng: 2</div>
+                    <%
+                        for (OrderItem orderItem : oiList) {
+                    %>
+                    <div class="item_container">
+                        <div class="order-item">
+                            <img src="<%= orderItem.getDishPicture()%>" alt="Pizza Margherita">
+                            <div class="item-details">
+                                <div class="item-name"><%= orderItem.getDishName()%></div>
+                                <div class="item-description">Mô tả: <%= orderItem.getDishDescription()%></div>
+                                <div class="item-price">Giá: <%= orderItem.getDishPrice()%> VNĐ</div>
+                                <div class="item-quantity">Số lượng: <%= orderItem.getQuantity()%></div>
+                            </div>
+                        </div>
+                        <div style="display: flex;align-content: center;">
+                            <button class="button" style="background-color: #DD0000"> Xóa </button>
                         </div>
                     </div>
-                    <div class="order-item">
-                        <img src="path/to/salad.jpg" alt="Salad Caesar">
-                        <div class="item-details">
-                            <div class="item-name">Salad Caesar</div>
-                            <div class="item-description">Mô tả: Salad với rau xà lách Romaine, phô mai Parmesan và sốt Caesar. Một lựa chọn tuyệt vời cho bữa ăn nhẹ.</div>
-                            <div class="item-price">Giá: 80,000 VNĐ</div>
-                            <div class="item-quantity">Số lượng: 1</div>
-                        </div>
-                    </div>
+                    <%
+                        }%>
                 </div>
 
                 <div class="total-price">
-                    Tổng Cộng: <strong>380,000 VNĐ</strong>
+                    Tổng Cộng: <strong><%= currentOrder.getTotal_priceString()%></strong>
                 </div>
-
-                <a href="#" class="button">Quay Lại Trang Chính</a>
+                <div style="display: flex; justify-content: space-between">
+                    <a href="CustomerOrderPage" class="button" >Quay Lại Trang Chính</a>
+                    <a href="#" class="button" style="background-color: #0033CC">Đặt hàng</a>
+                </div>
             </div>
         </div>
         <jsp:include page="path/footer.jsp"/>

@@ -431,7 +431,7 @@
                 <div class="order-summary-top">
                     <p>Tên cửa hàng: <%=currentOrder.getDiner().getName()%></p>
                     <p>Ngày đặt hàng: <%=currentOrder.getCreated_at().format(formatter)%></p>
-                    <p>Trạng thái: Đã thanh toán</p>
+                    <p>Trạng thái: <%= currentOrder.isPayment_status()? "Đã thanh toán" : "Chưa thanh toán" %> </p>
                 </div>
                 <%
                     for (OrderItem oi : oiList) {
