@@ -413,34 +413,40 @@
         </div>
         <jsp:include page="path/footer.jsp"/>
         <script type="text/javascript">
-        var ws;
+            var ws;
 
-        function connect() {
-            ws = new WebSocket("ws://localhost:8080/HungryHub_OrderFood/orderStatus");
+            function connect() {
+                ws = new WebSocket("ws://localhost:8080/HungryHub_OrderFood/orderStatus");
 
-            ws.onopen = function() {
-                console.log("Connected to WebSocket");
-            };
+                ws.onopen = function () {
+                    console.log("Connected to WebSocket");
+                };
 
-            ws.onmessage = function(event) {
-                console.log("Received message: " + event.data);
-            };
+                ws.onmessage = function (event) {
+                    console.log("Received message: " + event.data);
+                };
 
-            ws.onclose = function() {
-                console.log("Disconnected from WebSocket");
-            };
-        }
-
-        function sendStatus(status) {
-            if (ws && ws.readyState === WebSocket.OPEN) {
-                ws.send(status);
-            } else {
-                console.log("WebSocket is not connected.");
+                ws.onclose = function () {
+                    console.log("Disconnected from WebSocket");
+                };
             }
-        }
 
-        window.onload = connect;
-    </script>
+            function sendStatus(status) {
+                if (ws && ws.readyState === WebSocket.OPEN) {
+                    const statusData = {
+                        status: status,
+                        shipperId: "1", // Ensure this variable is set correctly in your JSP
+                        shipperName: "mnp" // Ensure this variable is set correctly in your JSP
+                    };
+                    ws.send(JSON.stringify(statusData));
+                } else {
+                    console.log("WebSocket is not connected.");
+                }
+            }
+
+
+            window.onload = connect;
+        </script>
         <script>
             function updateOrderStatus(orderId, newStatus) {
                 var form = document.createElement('form');

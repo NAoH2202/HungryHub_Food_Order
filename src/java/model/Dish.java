@@ -4,8 +4,10 @@
  */
 package model;
 
+import java.text.NumberFormat;
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  *
@@ -18,6 +20,7 @@ public class Dish {
     private String picture; //new
     private String description;
     private int price;
+    private String priceString;
     private String type;
     private String ingredients;
     private LocalDateTime created_at = LocalDateTime.now();
@@ -70,6 +73,11 @@ public class Dish {
         return price;
     }
 
+    public String getPriceString() {
+        NumberFormat numberFormat = NumberFormat.getNumberInstance(Locale.US);
+        return numberFormat.format(price);
+    }
+    
     public void setPrice(int price) {
         this.price = price;
     }

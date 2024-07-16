@@ -1,3 +1,4 @@
+<%@page import="model.Account"%>
 <%@page import="model.OrderManager"%>
 <%@page import="model.OrderItemDao"%>
 <%@page import="model.OrderItem"%>
@@ -227,6 +228,11 @@
             <div class="order-info">
                 <h1 style="font-size: 36px; line-height: 42px;">Order Information</h1>
                 <%
+                    Account acc = (Account) session.getAttribute("account");
+                    if (acc == null) {
+                        response.sendRedirect("LoginServlet");
+                        return;
+                    }
                     // Retrieve the first order item to access customer details
                     OrderItem orderItem = null;
                     ArrayList<OrderItem> orderItemList = null;
@@ -337,7 +343,12 @@
 
             function sendStatus(status) {
                 if (ws && ws.readyState === WebSocket.OPEN) {
-                    ws.send(status);
+                    const statusData = {
+                        status: status,
+                        shipperId: "<%= acc.getAccount_id() %>", // Ensure this variable is set correctly in your JSP
+                        shipperName: "<%= acc.getName() %>" // Ensure this variable is set correctly in your JSP
+                    };
+                    ws.send(JSON.stringify(statusData));
                 } else {
                     console.log("WebSocket is not connected.");
                 }

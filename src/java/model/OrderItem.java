@@ -4,7 +4,9 @@
  */
 package model;
 
+import java.text.NumberFormat;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  *
@@ -109,6 +111,11 @@ public class OrderItem {
     public int getDishPrice() {
         return dishPrice;
     }
+    
+    public String getDishPriceString() {
+        NumberFormat numberFormat = NumberFormat.getNumberInstance(Locale.US);
+        return numberFormat.format(dishPrice);
+    }
 
     public void setDishPrice(int dishPrice) {
         this.dishPrice = dishPrice;
@@ -141,6 +148,11 @@ public class OrderItem {
 
     public int getPrice() {
         return price;
+    }
+    
+    public String getPriceString() {
+        NumberFormat numberFormat = NumberFormat.getNumberInstance(Locale.US);
+        return numberFormat.format(price);
     }
 
     public void setPrice(int price) {

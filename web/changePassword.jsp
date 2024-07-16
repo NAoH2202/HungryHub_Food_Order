@@ -1,11 +1,12 @@
 <%@page import="java.util.Date"%>
 <%@page import="model.Account"%>
 <%@page import="model.AccountManager"%>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
     <head>
         <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0,maximum-scale=1">
 
         <title>Account information</title>
@@ -39,7 +40,7 @@
 
             .midContent {
                 font-family: Arial, sans-serif;
-                background-color: white;      /*M�u n?n t?ng th?*/
+                background-color: white;      /*Màu n?n t?ng th?*/
             }
 
             .container {
@@ -54,7 +55,7 @@
                 display: flex;
                 flex-wrap: wrap;
                 margin-bottom: 20px;
-                justify-content: center; /* C?n gi?a c�c d�ng */
+                justify-content: center; /* C?n gi?a các dòng */
             }
             .box{
                 border-bottom: 3px solid #999999;
@@ -106,12 +107,14 @@
             /* Buttons */
             .buttons-set {
                 margin-top: 20px;
+                display: flex;
+                justify-content: center;
             }
 
             .btn {
                 display: inline-block;
                 padding: 10px 20px;
-                background-color: #007bff;  /*M�u n�t*/
+                background-color: #007bff;  /*Màu nút*/
                 color: #fff;
                 border: none;
                 border-radius: 5px;
@@ -120,7 +123,7 @@
             }
 
             .btn:hover {
-                background-color: #0056b3;  /*M�u hover c?a n�t */
+                background-color: #0056b3;  /*Màu hover c?a nút */
             }
 
             Table
@@ -139,14 +142,14 @@
             }
 
             .table th {
-                background-color: #007bff;  /*M�u n?n header c?a b?ng */
+                background-color: #007bff;  /*Màu n?n header c?a b?ng */
                 color: #fff;
                 font-weight: bold;
                 text-align: left;
             }
 
             .table td {
-                background-color: #fff;  /*M�u n?n c?a c�c � d? li?u */
+                background-color: #fff;  /*Màu n?n c?a các ô d? li?u */
             }
 
             /* Responsive */
@@ -156,79 +159,99 @@
                     max-width: 100%;
                 }
             }
+            #site-content-local{
+                display: flex;
+                justify-content: center;
+                background: #DDDDDD;
+                width: 100%;
+                padding: 0;
+                margin: 0;
+            }
+
+            .local{
+                width: 70%;
+                background-color: white;
+                min-width: 300px;
+                max-width: 600px;
+                margin-top: 20px;
+                margin-bottom: 20px;
+                border-radius: 10px;
+            }
         </style>
     </head>
 
 
     <body>
+        <jsp:include page="path/header.jsp"/>
 
-
-        <div id="site-content" style="background-image: url('dummy/forBG.jpg');">
-            <main class="main-content" style="padding-top: 70px">
-                <div class="container">
-                    <div class="midContent">
-                        <div class="row"style="background-color: white;" >
-                            <div class="col-lg-8 col-md-10 mx-auto">
-                                <div class="my-account">
-                                    <div class="page-title">
-                                        <h1>Information Account</h1>
-                                    </div>
-                                    <%
-                                        Account acc = (Account) request.getSession().getAttribute("account");
-                                        AccountManager am = new AccountManager();
-                                        Account account = am.getAccountById(acc.getAccount_id());
-                                        if (account == null) {
-                                            response.sendRedirect("login.jsp");
-                                        }
-                                        int id = account.getAccount_id();
-                                        String name = account.getName();
-                                        String phone = account.getPhoneNumber();
-                                        String email = account.getEmail();
-                                        Date dob = account.getDate_of_birth();
-                                        String adds = account.getAddress();
-                                    %>
-                                    <div class="box">
-                                        <form action="ChangePasswordServlet" method="post" id="profile-validate"
-                                              class="scaffold-form metiz-edit-account">
-                                            <div class="row">
-                                                <!-- First Column (col-md-3) -->
-                                                <div class="col-md-12">
-                                                    <div class="form-group">
-                                                        <label for="full_name">Old password</label>
-                                                        <input type="password" name="oldpassword" id="oldpassword" class="form-control custom-input">
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label for="full_name">New password</label>
-                                                        <input type="password" name="newpassword" id="newpassword" class="form-control custom-input">
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label for="full_name">Confirm Password</label>
-                                                        <input type="password" name="Cfpassword" id="password" class="form-control custom-input">
+        <div id="site-content-local">
+            <div class="local">
+                <main class="main-content-local" style="padding-top: 70px">
+                    <div class="container">
+                        <div class="midContent">
+                            <div class="row"style="background-color: white;" >
+                                <div class="col-lg-8 col-md-10 mx-auto">
+                                    <div class="my-account">
+                                        <div class="page-title" style="display: flex; justify-content: center">
+                                            <h1>Thay đổi mật khẩu</h1>
+                                        </div>
+                                        <%
+                                            Account acc = (Account) request.getSession().getAttribute("account");
+                                            AccountManager am = new AccountManager();
+                                            Account account = am.getAccountById(acc.getAccount_id());
+                                            if (account == null) {
+                                                response.sendRedirect("login.jsp");
+                                            }
+                                            int id = account.getAccount_id();
+                                            String name = account.getName();
+                                            String phone = account.getPhoneNumber();
+                                            String email = account.getEmail();
+                                            Date dob = account.getDate_of_birth();
+                                            String adds = account.getAddress();
+                                        %>
+                                        <div class="box">
+                                            <form action="ChangePasswordServlet" method="post" id="profile-validate"
+                                                  class="scaffold-form metiz-edit-account">
+                                                <div class="row">
+                                                    <!-- First Column (col-md-3) -->
+                                                    <div class="col-md-12">
+                                                        <div class="form-group">
+                                                            <label for="full_name">Mật khẩu cũ</label>
+                                                            <input type="password" name="oldpassword" id="oldpassword" class="form-control custom-input">
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="full_name">Mật khẩu mới</label>
+                                                            <input type="password" name="newpassword" id="newpassword" class="form-control custom-input">
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="full_name">Xác nhận lại mật khẩu</label>
+                                                            <input type="password" name="Cfpassword" id="password" class="form-control custom-input">
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                            <c:if test="${not empty message}">
-                                                <div class="alert">
-                                                    ${message}
+                                                <c:if test="${not empty message}">
+                                                    <div class="alert">
+                                                        ${message}
+                                                    </div>
+                                                </c:if>
+                                                <div class="buttons-set metiz-edit-btn">
+                                                    <button type="submit" title="Save" class="btn btn-primary"><span><span>Thay đổi mật khẩu</span></span></button>
                                                 </div>
-                                            </c:if>
-                                            <div class="buttons-set metiz-edit-btn">
-                                                <button type="submit" title="Save" class="btn btn-primary"><span><span>Save</span></span></button>
-                                            </div>
 
-                                        </form>
+                                            </form>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="row" style="background-color: white;">
+                            <div class="row" style="background-color: white;">
+                            </div>
                         </div>
                     </div>
-                </div>
-            </main>
+                </main>
+            </div>
         </div>
         <!-- Default snippet for navigation -->
-
+        <jsp:include page="path/footer.jsp"/>
         <script src="js/jquery-1.11.1.min.js"></script>
         <script src="js/plugins.js"></script>
         <script src="js/app.js"></script>

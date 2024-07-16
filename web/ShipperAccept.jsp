@@ -202,7 +202,7 @@
                 transition: background-color 0.3s;
             }
             .popup, .popupcancel {
-                
+
                 height: 350px;
                 background-color: #ffffff;
                 border-radius: 6px;
@@ -249,19 +249,19 @@
                 width: 210px;
                 background: #c3e6cb;
                 margin-top: 20px;
-                 margin-right:  24px;
+                margin-right:  24px;
             }
             .popupcancel button.ok {
                 background: #dc3545;
                 margin-top: 20px;
             }
             .popupcancel button.close {
-                 height: 50px;
+                height: 50px;
                 width: 210px;
                 background: #f8d7da;
                 color: #333;
                 margin-top: 20px;
-                 margin-right:  24px;
+                margin-right:  24px;
             }
             .popupcancel button.close:hover {
                 background: #f5c6cb;
@@ -295,12 +295,16 @@
         <div class="container1">
             <div class="order-info">
                 <h1>Order Information</h1>
-                  <%
+                <%
                     // Retrieve the first order item to access customer details
                     OrderItem orderItem = null;
                     ArrayList<OrderItem> orderItemList = null;
                     OrderManager om = new OrderManager();
-                     
+                    Account acc = (Account) session.getAttribute("account");
+                    if (acc == null) {
+                        response.sendRedirect("LoginServlet");
+                        return;
+                    }
                     int total = 0;
                     if (request.getAttribute("orderItemList") != null) {
                         orderItemList = (ArrayList<OrderItem>) request.getAttribute("orderItemList");
@@ -310,7 +314,7 @@
                         }
                     }
                     if (orderItem != null) {
-                    Order order = om.getOderById(orderItem.getOrder_id());
+                        Order order = om.getOderById(orderItem.getOrder_id());
                 %>
                 <div>
                     <p><strong>Order ID:</strong><%= orderItem.getOrder_id()%></p>
@@ -320,7 +324,7 @@
                     <p><strong>Customer address:</strong> <%= order.getCustomer().getAddress()%></p>
 
                 </div>
-              
+
                 <div class="table-container">
                     <table>
                         <thead>
@@ -346,40 +350,40 @@
                     </table>
 
 
-                <div class="accept-button-container">
-                    <input type="submit" onclick="openPopup()" value="Complete">
-                    <div class="popup">
-                       
-                        <h2>Complete</h2>
-                        <p>Your Order Completed</p>
-                        <form id="completeForm" action="OrderItemServlet" method="GET">
-                            <input type="hidden" name="command" value="Complete">
-                            <input type="hidden" name="orderId" value="<%=order.getOrder_id()%>">
-                            <button class="ok" type="submit" onclick="submitFormAndRedirect();sendStatus('Completed')">OK</button>
-                            <button class="close" type="button" onclick="closePopup()">Close</button>
-                        </form>
-                    </div>   
+                    <div class="accept-button-container">
+                        <input type="submit" onclick="openPopup()" value="Complete">
+                        <div class="popup">
 
-                    <input type="submitCancel" onclick="openPopupCancel()" value="Cancel">
-                    <div class="popupcancel">
-                        
-                        <h2>CANCEL</h2>
-                        <p>Are You Sure !!!</p>
-                        <form id="cancelForm" action="OrderItemServlet" method="GET">
-                            <input type="hidden" name="command" value="Canceled">
-                            <input type="hidden" name="orderId" value="<%=order.getOrder_id()%>">
-                            <textarea name="cancelReason" placeholder="Enter reason for cancellation" required></textarea>
-                            <button class="ok" type="submit" onclick="submitFormCancel()">OK</button>
-                            <button class="close" type="button" onclick="closePopupCancel()">Close</button>
-                        </form>
-                    </div>   
+                            <h2>Complete</h2>
+                            <p>Your Order Completed</p>
+                            <form id="completeForm" action="OrderItemServlet" method="GET">
+                                <input type="hidden" name="command" value="Complete">
+                                <input type="hidden" name="orderId" value="<%=order.getOrder_id()%>">
+                                <button class="ok" type="submit" onclick="submitFormAndRedirect();sendStatus('Completed')">OK</button>
+                                <button class="close" type="button" onclick="closePopup()">Close</button>
+                            </form>
+                        </div>   
+
+                        <input type="submitCancel" onclick="openPopupCancel()" value="Cancel">
+                        <div class="popupcancel">
+
+                            <h2>CANCEL</h2>
+                            <p>Are You Sure !!!</p>
+                            <form id="cancelForm" action="OrderItemServlet" method="GET">
+                                <input type="hidden" name="command" value="Canceled">
+                                <input type="hidden" name="orderId" value="<%=order.getOrder_id()%>">
+                                <textarea name="cancelReason" placeholder="Enter reason for cancellation" required></textarea>
+                                <button class="ok" type="submit" onclick="submitFormCancel()">OK</button>
+                                <button class="close" type="button" onclick="closePopupCancel()">Close</button>
+                            </form>
+                        </div>   
+                    </div>
+
+                    <%
+                        }
+                    %>
                 </div>
-
-                <%
-                    }
-                %>
             </div>
-              </div>
 
             <div class="sidebar">
                 <div class="map">
@@ -421,141 +425,153 @@
                     </div>
                 </div>
             </div>
-      
 
-        <script>
-            let websocket;
-            function connect() {
-                websocket = new WebSocket("ws://localhost:8080/HungryHub_OrderFood/chat");
-                websocket.onopen = function () {
-                    console.log("Connected to the WebSocket server");
-                };
-                websocket.onmessage = function (event) {
-                    try {
-                        const messageData = JSON.parse(event.data);
-                        const messageElement = document.createElement("div");
-                        if (messageData.type === "received") {
-                            if (messageData.recipient === '<%=recipientId%>') {
+
+            <script>
+                let websocket;
+                function connect() {
+                    websocket = new WebSocket("ws://localhost:8080/HungryHub_OrderFood/chat");
+                    websocket.onopen = function () {
+                        console.log("Connected to the WebSocket server");
+                    };
+                    websocket.onmessage = function (event) {
+                        try {
+                            const messageData = JSON.parse(event.data);
+                            const messageElement = document.createElement("div");
+                            if (messageData.type === "received") {
+                                if (messageData.recipient === '<%=recipientId%>') {
+                                    messageElement.classList.add("message");
+                                    messageElement.classList.add("received");
+                                    messageElement.innerText = '<%= recipient%>' + ": " + messageData.message;
+                                }
+                            } else {
                                 messageElement.classList.add("message");
-                                messageElement.classList.add("received");
-                                messageElement.innerText = '<%= recipient%>' + ": " + messageData.message;
+                                messageElement.classList.add("sent");
+                                messageElement.innerText = '<%=currentUser%>' + ": " + messageData.message;
                             }
-                        } else {
-                            messageElement.classList.add("message");
-                            messageElement.classList.add("sent");
-                            messageElement.innerText = '<%=currentUser%>' + ": " + messageData.message;
+                            document.getElementById("chatBox").appendChild(messageElement);
+                            document.getElementById("chatBox").scrollTop = document.getElementById("chatBox").scrollHeight;
+                        } catch (e) {
+                            console.error("Error parsing JSON:", e);
                         }
-                        document.getElementById("chatBox").appendChild(messageElement);
-                        document.getElementById("chatBox").scrollTop = document.getElementById("chatBox").scrollHeight;
-                    } catch (e) {
-                        console.error("Error parsing JSON:", e);
+                    };
+                    websocket.onerror = function (error) {
+                        console.error("WebSocket Error:", error);
+                    };
+                    websocket.onclose = function () {
+                        console.log("WebSocket connection closed");
+                        location.reload();
+                    };
+                }
+                function sendMessage() {
+                    const message = document.getElementById("message").value;
+                    const messageObj = {recipient: "<%=recipientId%>", message: message};
+                    websocket.send(JSON.stringify(messageObj));
+                    document.getElementById("message").value = "";
+                }
+                function load() {
+                    console.log(<%=currentUserId%>);
+                    console.log(<%=recipientId%>);
+                    const chatBox = document.getElementById("chatBox");
+                    var messageElement2 = null;
+                    var message = null;
+                <% for (Chat chat : chatHistory) {
+                %>
+                    messageElement2 = document.createElement("div");
+                    messageElement2.classList.add("message");
+                <%   if (chat.getSender().getAccount_id() == currentUserId) {
+                %>
+                    messageElement2.classList.add("sent");
+                <%} else {%>
+                    messageElement2.classList.add("received");
+                <% }%>
+                    message = '<%=chat.getMessage()%>';
+                    messageElement2.innerText = "<%= chat.getSender().getAccount_id() == currentUserId ? currentUser : recipient%>" + ": " + message;
+                    chatBox.appendChild(messageElement2);
+                    chatBox.scrollTop = chatBox.scrollHeight;
+                <% }%>
+                }
+                ;
+
+            </script>
+
+            <script>
+                function openPopup() {
+                    var popup = document.querySelector('.popup');
+                    popup.classList.add('open-popup');
+                }
+
+                function closePopup() {
+                    var popup = document.querySelector('.popup');
+                    popup.classList.remove('open-popup');
+                }
+
+                function submitFormAndRedirect() {
+                    document.getElementById("completeForm").submit();
+                }
+
+                function openPopupCancel() {
+                    var popupcancel = document.querySelector('.popupcancel');
+                    popupcancel.classList.add('open-popupcancel');
+                }
+
+                function closePopupCancel() {
+                    var popupcancel = document.querySelector('.popupcancel');
+                    popupcancel.classList.remove('open-popupcancel');
+                }
+
+                function submitFormCancel() {
+                    var cancelReason = document.getElementById("cancelReason").value.trim();
+                    if (cancelReason === "") {
+                        alert("Please enter a reason for cancellation.");
+                        return;
                     }
+                    document.getElementById("cancelForm").submit();
+                }
+            </script>
+            <script type="text/javascript">
+                let socket;
+
+                function connect2() {
+                    socket = new WebSocket("ws://localhost:8080/HungryHub_OrderFood/orderStatus");
+
+                    socket.onopen = function (event) {
+                        console.log("WebSocket connection opened:", event);
+                    };
+
+                    socket.onmessage = function (event) {
+                        let message = JSON.parse(event.data);
+                        console.log("Message received:", message);
+                        displayMessage(message);
+                    };
+
+                    socket.onclose = function (event) {
+                        console.log("WebSocket connection closed:", event);
+                    };
+
+                    socket.onerror = function (error) {
+                        console.error("WebSocket error:", error);
+                    };
+                }
+
+                function sendStatus(status) {
+                    if (socket && socket.readyState === WebSocket.OPEN) {
+                        const statusData = {
+                            status: status,
+                            shipperId: "1", // Ensure this variable is set correctly in your JSP
+                            shipperName: "mnp" // Ensure this variable is set correctly in your JSP
+                        };
+                        socket.send(JSON.stringify(statusData));
+                    } else {
+                        console.log("WebSocket is not connected.");
+                    }
+                }
+
+                window.onload = function () {
+                    connect();
+                    connect2();
+                    load();
                 };
-                websocket.onerror = function (error) {
-                    console.error("WebSocket Error:", error);
-                };
-                websocket.onclose = function () {
-                    console.log("WebSocket connection closed");
-                    location.reload();
-                };
-            }
-            function sendMessage() {
-                const message = document.getElementById("message").value;
-                const messageObj = {recipient: "<%=recipientId%>", message: message};
-                websocket.send(JSON.stringify(messageObj));
-                document.getElementById("message").value = "";
-            }
-            function load () {
-                console.log(<%=currentUserId%>);
-                console.log(<%=recipientId%>);
-                const chatBox = document.getElementById("chatBox");
-                var messageElement2 = null;
-                var message = null;
-            <% for (Chat chat : chatHistory) {
-            %>
-                messageElement2 = document.createElement("div");
-                messageElement2.classList.add("message");
-            <%   if (chat.getSender().getAccount_id() == currentUserId) {
-            %>
-                messageElement2.classList.add("sent");
-            <%} else {%>
-                messageElement2.classList.add("received");
-            <% }%>
-                message = '<%=chat.getMessage()%>';
-                messageElement2.innerText = "<%= chat.getSender().getAccount_id() == currentUserId ? currentUser : recipient%>" + ": " + message;
-                chatBox.appendChild(messageElement2);
-                chatBox.scrollTop = chatBox.scrollHeight;
-            <% }%>
-            };
-
-        </script>
-
-        <script>
-            function openPopup() {
-                var popup = document.querySelector('.popup');
-                popup.classList.add('open-popup');
-            }
-
-            function closePopup() {
-                var popup = document.querySelector('.popup');
-                popup.classList.remove('open-popup');
-            }
-
-            function submitFormAndRedirect() {
-                document.getElementById("completeForm").submit();
-            }
-
-            function openPopupCancel() {
-                var popupcancel = document.querySelector('.popupcancel');
-                popupcancel.classList.add('open-popupcancel');
-            }
-
-            function closePopupCancel() {
-                var popupcancel = document.querySelector('.popupcancel');
-                popupcancel.classList.remove('open-popupcancel');
-            }
-
-            function submitFormCancel() {
-            var cancelReason = document.getElementById("cancelReason").value.trim();
-            if (cancelReason === "") {
-                alert("Please enter a reason for cancellation.");
-                return;
-            }
-            document.getElementById("cancelForm").submit();
-        }
-        </script>
-        <script type="text/javascript">
-        var ws;
-
-        function connect2() {
-            ws = new WebSocket("ws://localhost:8080/HungryHub_OrderFood/orderStatus");
-
-            ws.onopen = function() {
-                console.log("Connected to WebSocket");
-            };
-
-            ws.onmessage = function(event) {
-                console.log("Received message: " + event.data);
-            };
-
-            ws.onclose = function() {
-                console.log("Disconnected from WebSocket");
-            };
-        }
-
-        function sendStatus(status) {
-            if (ws && ws.readyState === WebSocket.OPEN) {
-                ws.send(status);
-            } else {
-                console.log("WebSocket is not connected.");
-            }
-        }
-
-        window.onload = function () {
-                connect();
-                connect2();
-                load();
-            };
-    </script>
+            </script>
     </body>
 </html>

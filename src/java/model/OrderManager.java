@@ -32,7 +32,7 @@ public class OrderManager {
         ArrayList<Order> olist = new ArrayList<>();
         for (Order facc : List) {
             if (facc.getShipper() != null) {
-                if (id == facc.getShipper().getAccount_id()&&facc.getOrder_status().equals("OntheWay")) {
+                if (id == facc.getShipper().getAccount_id() && facc.getOrder_status().equals("OntheWay")) {
                     olist.add(facc);
                 }
             }
@@ -83,8 +83,10 @@ public class OrderManager {
 
     public static void main(String[] args) {
         OrderManager om = new OrderManager();
-        for (Order od : om.getOderAcceptByShipperId(0)) {
-            System.out.println(od);
+        for (Order od : om.getList()) {
+            if (od.getOrder_status().equalsIgnoreCase("ready")) {
+                System.out.println(od);
+            }
         }
     }
 }

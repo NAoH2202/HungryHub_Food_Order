@@ -440,7 +440,7 @@
                 <div class="order-item">
                     <div class="item-details">
                         <img src="<%=oi.getDishPicture()%>" class="item-image">
-                        <span class="item-name">Tên món ăn: <%= oi.getDishName() %></span>
+                        <span class="item-name">Tên món ăn: <%= oi.getDishName()%></span>
                         <span class="item-quantity">Số lượng: <%=oi.getQuantity()%></span>
                         <span class="item-price">Giá: <%=oi.getDishPrice()%>₫</span>
                     </div>
@@ -569,8 +569,25 @@
                 };
 
                 ws.onmessage = function (event) {
-                    console.log("Received message: " + event.data);
-                    updateTracker(event.data);
+                    let message = JSON.parse(event.data);
+                    // In ra thông tin về status, shipperId và shipperName trong console
+
+                    console.log("Status:", message.status);
+                    console.log("Shipper ID:", message.shipperId);
+                    console.log("Shipper Name:", message.shipperName);
+                    if (message.status === 'OntheWay') {
+                        setTimeout(function () {
+                            submitForm(<%= id%>, message.shipperId, message.shipperName);
+                        }, 5000);
+                    } else
+                    if (message.status === 'Completed') {
+                        setTimeout(function () {
+                            window.location.href = 'CustomerTrackingOrder?id=<%= id%>';
+                        }, 5000);
+                    } else {
+                        updateTracker(message.status);
+                    }
+
                 };
 
                 ws.onclose = function () {

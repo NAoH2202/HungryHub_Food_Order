@@ -44,12 +44,13 @@ public class OrderDao {
                 Account shipper = am.getAccountById(shipper_id);
                 String order_status = rs.getString("order_status");
                 String payment_method = rs.getString("payment_method");
+                boolean paymentStatus = rs.getBoolean("payment_status");
                 String reason = rs.getString("reason");
                 LocalDateTime created_at = rs.getTimestamp("created_at").toLocalDateTime();
                 LocalDateTime updated_at = rs.getTimestamp("updated_at").toLocalDateTime();
                  
                  int total_price =  (int) otm.getTotalPriceOrderId(order_id);
-                Order order = new Order(order_id, customer, diner, shipper, order_status, payment_method, reason, total_price);
+                Order order = new Order(order_id, customer, diner, shipper, order_status,paymentStatus, payment_method, total_price, reason);
                 order.setCreated_at(created_at);
                 order.setUpdated_at(updated_at);
                 OrderList.add(order);
