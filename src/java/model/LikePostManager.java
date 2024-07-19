@@ -25,6 +25,16 @@ public class LikePostManager {
         }
         return null;
     }
+    public int CountLikeByPostId(int id){
+        int result =0 ;
+        for (LikePost facc : List) {
+            if (id == facc.getPost().getAd_id()) {
+                result +=1;
+            }
+        }
+        return result;
+    }
+    
     
     public static void main(String[] args) {
         LikePostManager lm = new LikePostManager();

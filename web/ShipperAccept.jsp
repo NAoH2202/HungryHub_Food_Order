@@ -355,7 +355,7 @@
                         <form id="completeForm" action="OrderItemServlet" method="GET">
                             <input type="hidden" name="command" value="Complete">
                             <input type="hidden" name="orderId" value="<%=order.getOrder_id()%>">
-                            <button class="ok" type="submit" onclick="submitFormAndRedirect()">OK</button>
+                            <button class="ok complete" type="submit" onclick="submitFormAndRedirect()">OK</button>
                             <button class="close" type="button" onclick="closePopup()">Close</button>
                         </form>
                     </div>   
@@ -369,7 +369,7 @@
                             <input type="hidden" name="command" value="Canceled">
                             <input type="hidden" name="orderId" value="<%=order.getOrder_id()%>">
                             <textarea name="cancelReason" placeholder="Enter reason for cancellation" required></textarea>
-                            <button class="ok" type="submit" onclick="submitFormCancel()">OK</button>
+                            <button class="ok cancel" type="submit" onclick="submitFormCancel()">OK</button>
                             <button class="close" type="button" onclick="closePopupCancel()">Close</button>
                         </form>
                     </div>   

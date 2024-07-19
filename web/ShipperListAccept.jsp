@@ -82,18 +82,22 @@
             height: 40px;
             width: 150px;
             padding: 10px 20px;
-            background-color: #45a049;
+            background-color: #007bff; /* Blue background for View details button */
             color: #fff;
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            transition: background-color 0.3s;
+            transition: background-color 0.3s, transform 0.3s;
             text-align: center;
         }
         .actions input[type="submit"]:hover {
             background-color: #0056b3;
+            transform: translateY(-2px);
         }
-         
+        .actions input[type="submit"]:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
     </style>
 </head>
 <jsp:include page="path/shipperheader.jsp"/>

@@ -247,8 +247,8 @@
                     <p><strong>Order ID:</strong><%= orderItem.getOrder_id()%></p>
                     <p><strong>Name Customer:</strong> <%= order.getCustomer().getName()%></p>
                     <p><strong>Phone Number:</strong> <%= order.getCustomer().getPhoneNumber()%></p>
-                    <p><strong>Diner address:</strong> <%= order.getDiner().getAddress()%></p>
-                    <p><strong>Customer address:</strong> <%= order.getCustomer().getAddress()%></p>
+                  
+                   
 
                 </div>
               

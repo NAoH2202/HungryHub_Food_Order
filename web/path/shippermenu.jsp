@@ -42,9 +42,7 @@
         <a href="<%=urlacc%>" class="user_link">
             <i class="fa fa-user" aria-hidden="true"></i>
         </a>
-        <a href="ShipperHistoryPage" class="user_link">
-            <i class="fa fa-bell"></i>
-        </a>
+         
         <%
             if (acc == null) {
         %>
@@ -87,6 +85,10 @@
             <div class="settings-links">
                 <img src="images/help.png" alt="" class="settings-icon">
                 <a href="#">Support <img src="images/arrow.png" alt=""></a>
+            </div>
+            <div class="settings-links">
+                <img  alt="" class="settings-icon">
+                <a href="ShipperHistoryPage">View History <img src="images/arrow.png" alt=""></a>
             </div>
             <div class="settings-links">
                 <img src="images/logout.png" alt="" class="settings-icon">

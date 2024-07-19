@@ -335,12 +335,22 @@
                     FoodAdManager fam = new FoodAdManager();
                     LikePostManager lpm = new LikePostManager();
                     ArrayList<FoodAd> fas = FoodAdDao.getAllFoodAds();
-
-                    if (fas != null) {
+                     ArrayList<Follower> allFollower = FollowerDao.getAllFollowers();
+                     ArrayList<Follower> followedDiner = new ArrayList<>();
+                    if (fas != null ) {
                         for (FoodAd foodAd : fas) {
                             // Assume each FoodAd has a related Account object
                             Account diner = foodAd.getDinner_manager();
                             int countLike = lpm.CountLikeByPostId(foodAd.getAd_id());
+                            
+                             boolean isFollowed = false;
+            for (Follower follower : allFollower) {
+                if (diner.getAccount_id() == follower.getAccount().getAccount_id()) {
+                    followedDiner.add(follower);
+                    isFollowed = true;
+                    break; // Nếu tìm thấy, thoát khỏi vòng lặp
+                }}
+                             
 
 
                 %>
@@ -372,13 +382,13 @@
 
                     </div>
                     <div class="post-profile-picture">
-                          <a href="CustomerSocialDetailPage?ad_id=<%= foodAd.getAd_id() %>&check=false" class="btn-link">Xem thông tin chi tiết</a>
+                          <a href="CustomerSocialDetailPage?ad_id=<%= foodAd.getAd_id() %>&check=true" class="btn-link">Xem thông tin chi tiết</a>
                     </div>
 
                 </div>
-                <%
-                            }
-                        }%>  
+                <% }
+                            
+                        %>  
 
 
                 <button type="button" class="btn-LoadMore" onclick="LoadMoreToggle()">Load More</button>
@@ -419,6 +429,7 @@
                     <span><%= diner.getName()%></span>
                 </div>
                 <%
+                    }
                 }
             }
         } else { %>
