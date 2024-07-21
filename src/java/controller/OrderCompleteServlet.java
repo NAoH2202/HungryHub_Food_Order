@@ -63,7 +63,7 @@ public class OrderCompleteServlet extends HttpServlet {
     }
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+    protected  void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
     }
@@ -130,7 +130,7 @@ public class OrderCompleteServlet extends HttpServlet {
                         oiList.add(new OrderItem(0, ci.getDish().getDish_id(), ci.getDish().getName(), ci.getDish().getPicture(), ci.getDish().getDescription(), ci.getDish().getPrice(), ci.getDish().getType(), ci.getDish().getIngredients(), ci.getQuantity(), ci.getDish().getPrice() * ci.getQuantity()));
                     }
 
-                    Order order = new Order(0, account, diner, null, "Checking", paymentMethod, null, totalCost);
+                    Order order = new Order(0, account, diner, null, "Checking", false, paymentMethod, totalCost, null);
                     int orderId = OrderDao.addOrder(order);
                     for (OrderItem oi : oiList) {
                         oi.setOrder_id(orderId);
@@ -140,11 +140,16 @@ public class OrderCompleteServlet extends HttpServlet {
                     oiList.clear();
                     OrderPrice = 0;
                 }
+              
+             for (int orderId : orderIds) {
+                OrderDao.updatePaymentStatus(orderId, true);  
+            }
 
                 CartItemDao.removeCartItemByAccountId(account.getAccount_id());
                 request.setAttribute("orderIds", orderIds);
                 request.setAttribute("totalCost", totalCost);
                 request.getRequestDispatcher("vnpay_pay.jsp").forward(request, response);
+                
                 break;
             default:
                 throw new AssertionError();
