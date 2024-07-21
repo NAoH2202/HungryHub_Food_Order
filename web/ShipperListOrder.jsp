@@ -134,9 +134,9 @@
                         <tr>
                             <td>${order.order_id}</td>
                             <td>${order.customer.name}</td>
-                            <td>${order.customer.address} - ${order.customer.provinces}</td>
+                            <td>${order.customer.address} - ${order.customer.provinces.name}</td>
                             <td>${order.diner.name}</td>
-                            <td>${order.diner.address}-${order.diner.provinces}</td>
+                            <td>${order.diner.address}-${order.diner.provinces.name}</td>
                             
                             <td>${order.payment_method}</td>
                             <td class="actions">

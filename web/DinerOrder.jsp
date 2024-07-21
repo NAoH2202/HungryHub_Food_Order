@@ -221,7 +221,7 @@
                                         </div>
                                         <div class="order-total">
                                             <p>Tổng số lượng món: <%=totalQuantity%></p>
-                                            <p>Tổng tiền: <%=totalPrice%>₫</p>
+                                            <p>Tổng tiền: <%= od.getTotal_priceString() %>₫</p>
                                         </div>
                                         <div class="order-actions">
                                             <button class="accept-button" onclick="updateOrderStatus('<%=od.getOrder_id()%>', 'Ready');sendStatus('Ready')">Chấp nhận</button>
@@ -265,7 +265,7 @@
                                         </div>
                                         <div class="order-total">
                                             <p>Tổng số lượng món: <%=totalQuantity%></p>
-                                            <p>Tổng tiền: <%=totalPrice%>₫</p>
+                                            <p>Tổng tiền: <%= od.getTotal_priceString() %>₫</p>
                                         </div>
 <!--                                        <div class="order-actions">
                                             <button class="accept-button" onclick="updateOrderStatus('<%=od.getOrder_id()%>', 'InProcess');sendStatus('InProcess')">Chuẩn bị</button>
@@ -309,7 +309,7 @@
                                         </div>
                                         <div class="order-total">
                                             <p>Tổng số lượng món: <%=totalQuantity%></p>
-                                            <p>Tổng tiền: <%=totalPrice%>₫</p>
+                                            <p>Tổng tiền: <%= od.getTotal_priceString() %>₫</p>
                                         </div>
 <!--                                        <div class="order-actions">
                                             <button class="cancel-button" onclick="updateOrderStatus('<%=od.getOrder_id()%>', 'Canceled')">Hủy bỏ</button>
@@ -352,7 +352,7 @@
                                         </div>
                                         <div class="order-total">
                                             <p>Tổng số lượng món: <%=totalQuantity%></p>
-                                            <p>Tổng tiền: <%=totalPrice%>₫</p>
+                                            <p>Tổng tiền: <%= od.getTotal_priceString() %>₫</p>
                                         </div>
 <!--                                        <div class="order-actions">
                                             <button class="detail-button" onclick="location.href = 'DinerDetailOrder?orderId=<%=od.getOrder_id()%>'">Chi tiết đơn hàng</button>
@@ -394,7 +394,7 @@
                                         </div>
                                         <div class="order-total">
                                             <p>Tổng số lượng món: <%=totalQuantity%></p>
-                                            <p>Tổng tiền: <%=totalPrice%>₫</p>
+                                            <p>Tổng tiền: <%= od.getTotal_priceString() %>₫</p>
                                         </div>
 <!--                                        <div class="order-actions">
                                             <button class="detail-button" onclick="location.href = 'DinerDetailOrder?orderId=<%=od.getOrder_id()%>'">Chi tiết đơn hàng</button>

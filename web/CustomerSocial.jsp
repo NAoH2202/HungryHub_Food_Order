@@ -43,6 +43,7 @@
         <link href="css/style.css" rel="stylesheet" />
         <!-- responsive style -->
         <link href="css/responsive.css" rel="stylesheet" />
+        
         <style>
             * {
                 padding: 0px;
@@ -175,8 +176,8 @@
                 color: #c9c9c9;
                 font-size: 18px;
             }
-         
-            
+
+
             .write-post-container {
                 color: #626262;
                 background-color: var(--bg-color);
@@ -292,68 +293,68 @@
             }
             .like-btn {
                 background-color: #ffffff; /* Màu nền của nút like */
-    color: white;
-    cursor: pointer;
-}
+                color: white;
+                cursor: pointer;
+            }
 
-.unlike-btn {
-    background-color: #ffffff; /* Màu nền của nút unlike */
-    color: white;
-    cursor: pointer;
-}
+            .unlike-btn {
+                background-color: #ffffff; /* Màu nền của nút unlike */
+                color: white;
+                cursor: pointer;
+            }
 
-/* CSS cho các biểu tượng như like */
-.activity-icons img {
-    cursor: pointer; /* Đảm bảo con trỏ chuột thay đổi khi di chuột qua biểu tượng */
-}
+            /* CSS cho các biểu tượng như like */
+            .activity-icons img {
+                cursor: pointer; /* Đảm bảo con trỏ chuột thay đổi khi di chuột qua biểu tượng */
+            }
 
-/* CSS cho các thông báo trạng thái không có món ăn nào */
-.heading-link h4 {
-    text-align: center;
-    color: #999;
-    font-size: 16px;
-    margin: 20px 0;
-}
+            /* CSS cho các thông báo trạng thái không có món ăn nào */
+            .heading-link h4 {
+                text-align: center;
+                color: #999;
+                font-size: 16px;
+                margin: 20px 0;
+            }
 
-/* CSS cho nút Load More */
-.btn-LoadMore {
-    background-color: #ff9900; /* Màu nền của nút Load More */
-    color: white;
-    border: none;
-    border-radius: 4px;
-    font-size: 14px;
-    cursor: pointer;
-}
+            /* CSS cho nút Load More */
+            .btn-LoadMore {
+                background-color: #ff9900; /* Màu nền của nút Load More */
+                color: white;
+                border: none;
+                border-radius: 4px;
+                font-size: 14px;
+                cursor: pointer;
+            }
 
-.btn-LoadMore:hover {
-    background-color: #e68a00; /* Màu nền khi hover */
-}
+            .btn-LoadMore:hover {
+                background-color: #e68a00; /* Màu nền khi hover */
+            }
 
-/* CSS cho hình ảnh của các món ăn */
-.food-ad-image {
-    width: 100%; /* Chiều rộng tối đa của hình ảnh */
-    height: auto; /* Đảm bảo tỉ lệ hình ảnh không bị thay đổi */
-    border-radius: 6px; /* Bo tròn góc hình ảnh */
-    margin-top: 10px; /* Khoảng cách phía trên hình ảnh */
-}
+            /* CSS cho hình ảnh của các món ăn */
+            .food-ad-image {
+                width: 100%; /* Chiều rộng tối đa của hình ảnh */
+                height: auto; /* Đảm bảo tỉ lệ hình ảnh không bị thay đổi */
+                border-radius: 6px; /* Bo tròn góc hình ảnh */
+                margin-top: 10px; /* Khoảng cách phía trên hình ảnh */
+            }
 
-/* CSS cho hình ảnh của các câu chuyện */
-.story img {
-    border: 2px solid var(--nav-color); /* Đường viền quanh hình ảnh */
-}
+            /* CSS cho hình ảnh của các câu chuyện */
+            .story img {
+                border: 2px solid var(--nav-color); /* Đường viền quanh hình ảnh */
+            }
 
-/* CSS cho khung người dùng và các liên kết */
-.user-profile-box {
-    border-bottom: 1px solid #ddd; /* Đường viền dưới của khung người dùng */
-    padding-bottom: 10px; /* Khoảng cách dưới khung người dùng */
-}
+            /* CSS cho khung người dùng và các liên kết */
+            .user-profile-box {
+                border-bottom: 1px solid #ddd; /* Đường viền dưới của khung người dùng */
+                padding-bottom: 10px; /* Khoảng cách dưới khung người dùng */
+            }
 
-/* CSS cho phần nội dung của bài viết */
-.status-field p {
-    font-size: 16px; /* Kích thước chữ của nội dung bài viết */
-    line-height: 1.5; /* Khoảng cách giữa các dòng */
-    color: #333; /* Màu chữ của nội dung bài viết */
-}
+            /* CSS cho phần nội dung của bài viết */
+            .status-field p {
+                font-size: 16px; /* Kích thước chữ của nội dung bài viết */
+                line-height: 1.5; /* Khoảng cách giữa các dòng */
+                color: #333; /* Màu chữ của nội dung bài viết */
+            }
         </style>
     </head>
 

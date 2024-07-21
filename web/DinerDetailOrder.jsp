@@ -175,7 +175,7 @@
             </div>
 
             <div class="total-price">
-                Tổng Cộng: <strong><%= totalPrice %>₫</strong>
+                Tổng Cộng: <strong><%= order.getTotal_priceString() %>₫</strong>
             </div>
             <div style="display: flex; justify-content: space-between">
                 <a href="DinerOrderPage" class="button">Quay Lại Danh Sách Đơn Hàng</a>

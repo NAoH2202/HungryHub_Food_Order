@@ -528,7 +528,8 @@ Author     : MSIGAMING
                     <div id="cart" style="background-color: #fff;">
                         <h2></h2>
                         <div class="social-container">
-                            <form action="#" method="GET">
+                            <form action="CustomerDinerFanpagePage" method="Post">
+                                <input type="hidden" name="dinerId" value="<%= id %>" >
                                 <button type="submit" class="btn-diner">Trang cộng đồng</button>
                             </form>
                         </div>

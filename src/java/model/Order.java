@@ -21,12 +21,12 @@ public class Order {
     private String order_status;
     private boolean payment_status;
     private String payment_method;
-    private double total_price;
+    private int total_price;
     private String reason; 
     private LocalDateTime created_at = LocalDateTime.now();
     private LocalDateTime updated_at = LocalDateTime.now();
 
-    public Order(int order_id, Account customer, Account diner, Account shipper, String order_status, boolean payment_status, String payment_method, double total_price, String reason) {
+    public Order(int order_id, Account customer, Account diner, Account shipper, String order_status, boolean payment_status, String payment_method, int total_price, String reason) {
         this.order_id = order_id;
         this.customer = customer;
         this.diner = diner;
@@ -38,7 +38,7 @@ public class Order {
         this.reason = reason;
     }
 
-    public Order(int order_id, Account customer, Account diner, Account shipper, String order_status, String payment_method,String reason, double total_price) {
+    public Order(int order_id, Account customer, Account diner, Account shipper, String order_status, String payment_method,String reason, int total_price) {
         this.order_id = order_id;
         this.customer = customer;
         this.diner = diner;
@@ -114,7 +114,7 @@ public class Order {
         this.reason = reason;
     }
 
-    public double getTotal_price() {
+    public int getTotal_price() {
         return total_price;
     }
     
@@ -123,7 +123,7 @@ public class Order {
         return numberFormat.format(total_price);
     }
 
-    public void setTotal_price(double total_price) {
+    public void setTotal_price(int total_price) {
         this.total_price = total_price;
     }
 
