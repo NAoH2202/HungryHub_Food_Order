@@ -11,7 +11,12 @@ import java.util.ArrayList;
  * @author lenovo
  */
 public class FollowerManager {
-    ArrayList<Follower> List;
+   private ArrayList<Follower> List;
+
+    public ArrayList<Follower> getList() {
+        return List;
+    }
+    
 
     public FollowerManager() {
         List = FollowerDao.getAllFollowers();
@@ -24,5 +29,21 @@ public class FollowerManager {
             }
         }
         return null;
+    }
+     public ArrayList<Follower> getFollowerByAccountId(int id) {
+         ArrayList<Follower> Flist = new ArrayList<>();
+        for (Follower facc : List) {
+            if (id == facc.getFollowerUser().getAccount_id()) {
+                Flist.add(facc);
+            }
+        }
+        return Flist;
+    }
+    public static void main(String[] args) {
+        FollowerManager fm = new FollowerManager();
+        for(Follower f : fm.getList()){
+            System.out.println(f);
+        }
+        
     }
 }

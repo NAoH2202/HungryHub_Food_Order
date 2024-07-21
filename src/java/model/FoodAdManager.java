@@ -11,7 +11,11 @@ import java.util.ArrayList;
  * @author lenovo
  */
 public class FoodAdManager {
-    ArrayList<FoodAd> List;
+   private ArrayList<FoodAd> List;
+
+    public ArrayList<FoodAd> getList() {
+        return List;
+    }
 
     public FoodAdManager() {
         List = FoodAdDao.getAllFoodAds();
@@ -24,5 +28,12 @@ public class FoodAdManager {
             }
         }
         return null;
+    }
+    public static void main(String[] args) {
+        FoodAdManager fm = new FoodAdManager();
+        for(FoodAd fa : fm.getList()){
+            System.out.println(fa);
+        }
+        
     }
 }

@@ -148,7 +148,7 @@
                 cursor: pointer;
                 color: black;
             }
-            
+
             .back-arrow span:hover {
                 color: blue;
             }
@@ -162,6 +162,7 @@
         <%
             int id = Integer.parseInt(request.getParameter("id"));
             DishManager dm = new DishManager();
+            CommentManager cm = new CommentManager();
             Dish dish = dm.getDishById(id);
             int Diner = dish.getAccount().getAccount_id();
         %>
@@ -178,6 +179,7 @@
                             <h1 id="dishName"><%=dish.getName()%></h1>
                             <p>Description: <%=dish.getDescription()%></p>
                             <p>Price: <%=dish.getPrice()%>₫</p>
+                            <p>Rate <%=dish.getPrice()%>₫</p>
                             <div>
                                 <label for="quantity">Quantity:</label>
                                 <input type="number" id="quantity_<%=dish.getDish_id()%>" name="quantity" min="1" max="100">
@@ -242,7 +244,6 @@
                                 likeList = lm.getLikesByAccountId(account.getAccount_id());
                                 accId = account.getAccount_id();
                             }
-                            CommentManager cm = new CommentManager();
                             for (Comment comment : cm.getList()) {
                                 Boolean check = false;
                                 if (comment.getDish() != null && comment.getDish().getDish_id() == id) {

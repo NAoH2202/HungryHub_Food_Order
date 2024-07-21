@@ -238,14 +238,13 @@
                     ArrayList<OrderItem> orderItemList = null;
                     OrderManager om = new OrderManager();
 
-                    int total = 0;
+                     
                     if (request.getAttribute("orderItemList") != null) {
                         orderItemList = (ArrayList<OrderItem>) request.getAttribute("orderItemList");
                         orderItem = orderItemList.get(0);
-                        for (OrderItem item : orderItemList) {
-                            total += item.getPrice();
-                        }
+                         
                     }
+                    
                     if (orderItem != null) {
                         Order order = om.getOderById(orderItem.getOrder_id());
                 %>
@@ -253,8 +252,8 @@
                     <p><strong>Order ID:</strong><%= orderItem.getOrder_id()%></p>
                     <p><strong>Name Customer:</strong> <%= order.getCustomer().getName()%></p>
                     <p><strong>Phone Number:</strong> <%= order.getCustomer().getPhoneNumber()%></p>
-                    <p><strong>Diner address:</strong> <%= order.getDiner().getAddress()%></p>
-                    <p><strong>Customer address:</strong> <%= order.getCustomer().getAddress()%></p>
+
+
 
                 </div>
 
@@ -277,7 +276,7 @@
                             </c:forEach>
                             <tr>
                                 <td colspan="2" style="text-align: right;"><strong>Total:</strong></td>
-                                <td><%= total%>₫</td>
+                                <td><%= order.getTotal_priceString() %>₫</td>
                             </tr>
                         </tbody>
                     </table>
@@ -296,12 +295,12 @@
                                    %>
                                    >
                         </form>
-
                     </div>
-                    <%
-                        }
-                    %>
                 </div>
+                <%
+                    }
+                %>
+
             </div>
             <div class="sidebar">
                 <div class="map">
@@ -345,8 +344,8 @@
                 if (ws && ws.readyState === WebSocket.OPEN) {
                     const statusData = {
                         status: status,
-                        shipperId: "<%= acc.getAccount_id() %>", // Ensure this variable is set correctly in your JSP
-                        shipperName: "<%= acc.getName() %>" // Ensure this variable is set correctly in your JSP
+                        shipperId: "<%= acc.getAccount_id()%>", // Ensure this variable is set correctly in your JSP
+                        shipperName: "<%= acc.getName()%>" // Ensure this variable is set correctly in your JSP
                     };
                     ws.send(JSON.stringify(statusData));
                 } else {

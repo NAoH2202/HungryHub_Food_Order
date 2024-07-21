@@ -14,6 +14,7 @@ import java.util.Locale;
  * @author lenovo
  */
 public class Dish {
+
     private int dish_id;
     private Account account;
     private String name;
@@ -49,6 +50,15 @@ public class Dish {
         this.price = price;
         this.type = type;
         this.ingredients = ingredients;
+    }
+
+
+    public boolean isDislocal() {
+        return dislocal;
+    }
+
+    public void setDislocal(boolean dislocal) {
+        this.dislocal = dislocal;
     }
 
     public int getDish_id() {
@@ -91,7 +101,7 @@ public class Dish {
         NumberFormat numberFormat = NumberFormat.getNumberInstance(Locale.US);
         return numberFormat.format(price);
     }
-    
+
     public void setPrice(int price) {
         this.price = price;
     }
@@ -110,14 +120,6 @@ public class Dish {
 
     public void setIngredients(String ingredients) {
         this.ingredients = ingredients;
-    }
-
-    public boolean isDislocal() {
-        return dislocal;
-    }
-
-    public void setDislocal(boolean dislocal) {
-        this.dislocal = dislocal;
     }
 
     

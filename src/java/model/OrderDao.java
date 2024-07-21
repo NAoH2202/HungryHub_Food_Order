@@ -48,9 +48,9 @@ public class OrderDao {
                 String reason = rs.getString("reason");
                 LocalDateTime created_at = rs.getTimestamp("created_at").toLocalDateTime();
                 LocalDateTime updated_at = rs.getTimestamp("updated_at").toLocalDateTime();
-                 
-                 int total_price =  (int) otm.getTotalPriceOrderId(order_id);
-                Order order = new Order(order_id, customer, diner, shipper, order_status,paymentStatus, payment_method, total_price, reason);
+
+                int total_price = (int) otm.getTotalPriceOrderId(order_id);
+                Order order = new Order(order_id, customer, diner, shipper, order_status, paymentStatus, payment_method, total_price, reason);
                 order.setCreated_at(created_at);
                 order.setUpdated_at(updated_at);
                 OrderList.add(order);
@@ -73,7 +73,6 @@ public class OrderDao {
         }
         return OrderList;
     }
-
     public void updateOrderStatus(Order order) {
         ConnectDB db = ConnectDB.getInstance();
         Connection conn = null;
@@ -101,8 +100,8 @@ public class OrderDao {
             }
         }
     }
-    
-        public static boolean updateOrderStatus1(int orderId, String newOrderStatus) {
+
+    public static boolean updateOrderStatus1(int orderId, String newOrderStatus) {
         ConnectDB db = ConnectDB.getInstance();
         Connection conn = null;
         PreparedStatement statement = null;
@@ -221,8 +220,44 @@ public class OrderDao {
                 }
             } catch (SQLException e) {
                 Logger.getLogger(OrderDao.class.getName()).log(Level.SEVERE, null, e);
+                }
+        }
+    }
+
+     public static boolean updatePaymentStatus(int orderId, boolean paymentStatus) {
+        ConnectDB db = ConnectDB.getInstance();
+        Connection conn = null;
+        PreparedStatement statement = null;
+        try {
+            conn = db.openConnection();
+            String query = "UPDATE [Order] SET payment_status = ? WHERE order_id = ?";
+            statement = conn.prepareStatement(query);
+            statement.setBoolean(1, paymentStatus);
+            statement.setInt(2, orderId);
+            int rowsUpdated = statement.executeUpdate();
+            return rowsUpdated > 0;
+        } catch (ClassNotFoundException | SQLException ex) {
+            Logger.getLogger(OrderDao.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            closeResources(null, statement, conn);
+        }
+        return false;
+    }
+       private static void closeResources(ResultSet rs, PreparedStatement statement, Connection conn) {
+        try {
+            if (rs != null) {
+                rs.close();
             }
+            if (statement != null) {
+                statement.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
+        } catch (SQLException e) {
+            Logger.getLogger(OrderDao.class.getName()).log(Level.SEVERE, null, e);
         }
     }
 
 }
+

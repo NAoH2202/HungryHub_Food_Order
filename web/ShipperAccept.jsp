@@ -305,16 +305,18 @@
                         response.sendRedirect("LoginServlet");
                         return;
                     }
-                    int total = 0;
+                    
                     if (request.getAttribute("orderItemList") != null) {
                         orderItemList = (ArrayList<OrderItem>) request.getAttribute("orderItemList");
                         orderItem = orderItemList.get(0);
-                        for (OrderItem item : orderItemList) {
-                            total += item.getPrice();
-                        }
+                         
                     }
+                  
+                   
+                                   
                     if (orderItem != null) {
                         Order order = om.getOderById(orderItem.getOrder_id());
+                     
                 %>
                 <div>
                     <p><strong>Order ID:</strong><%= orderItem.getOrder_id()%></p>
@@ -336,6 +338,7 @@
                         </thead>
                         <tbody>
                             <c:forEach var="orderItem" items="${orderItemList}">
+                              
                                 <tr>
                                     <td>${orderItem.dishName}</td>
                                     <td>${orderItem.quantity}</td>
@@ -344,12 +347,13 @@
                             </c:forEach>
                             <tr>
                                 <td colspan="2" style="text-align: right;"><strong>Total:</strong></td>
-                                <td><%= total%>₫</td>
+                                <td><%= order.getTotal_priceString() %>₫</td>
                             </tr>
                         </tbody>
                     </table>
 
 
+ 
                     <div class="accept-button-container">
                         <input type="submit" onclick="openPopup()" value="Complete">
                         <div class="popup">
@@ -382,6 +386,7 @@
                     <%
                         }
                     %>
+ 
                 </div>
             </div>
 

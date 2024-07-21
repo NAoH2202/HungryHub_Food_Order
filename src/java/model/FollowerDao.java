@@ -28,16 +28,16 @@ public class FollowerDao {
         ResultSet rs = null;
         try {
             conn = db.openConnection();
-            String query = "SELECT * FROM [User]";
+            String query = "SELECT * FROM Followers";
             statement = conn.prepareStatement(query);
             rs = statement.executeQuery();
             while (rs.next()) {
-                int follower_id = rs.getInt("follower_id");
-                int account_id = rs.getInt("account_id");
+                int follower_id = rs.getInt("Follower_id");
+                int account_id = rs.getInt("Account_id");
                 Account account = am.getAccountById(account_id);
-                int followerUser_id = rs.getInt("followerUser_id");
+                int followerUser_id = rs.getInt("FollowerUser_id");
                 Account follower = am.getAccountById(followerUser_id);
-                LocalDateTime created_at = rs.getTimestamp("created_at").toLocalDateTime();
+                LocalDateTime created_at = rs.getTimestamp("CreatedAt").toLocalDateTime();
 
                 Follower fl = new Follower(follower_id, account, follower);
                 fl.setCreated_at(created_at);
