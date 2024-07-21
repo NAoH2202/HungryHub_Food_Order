@@ -84,9 +84,7 @@ public class OrderManager {
     public static void main(String[] args) {
         OrderManager om = new OrderManager();
         for (Order od : om.getList()) {
-            if (od.getOrder_status().equalsIgnoreCase("ready")) {
                 System.out.println(od);
-            }
         }
     }
 }

@@ -352,7 +352,7 @@
                 } else {
                 %>
                 <form id="orderForm" action="OrderCompleteServlet" method="post">
-                    <input type="hidden" name="totalCost" value="<%=totalPrice%>">
+                    <input type="hidden" name="totalCost" value="<%=totalPrice+totalShipFee%>">
                     <label for="paymentMethod"><b>Chọn phương thức thanh toán:</b></label>
                     <select id="paymentMethod" name="paymentMethod" class="form-control">
                         <option value="receipt">Trả sau khi nhận hàng</option>

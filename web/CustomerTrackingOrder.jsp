@@ -451,7 +451,7 @@
                 <%
                     }%>
                 <div class="order-summary">
-                    <span>Tổng đơn hàng: <%=Price%>₫</span>
+                    <span>Tổng đơn hàng: <%= currentOrder.getTotal_priceString() %>₫</span>
                 </div>
                 <div class="back_list">
                     <button onclick="window.location.href = 'CustomerOrderPage'">Trở về danh sách đơn hàng</button>

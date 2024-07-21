@@ -49,7 +49,7 @@ public class OrderDao {
                 LocalDateTime created_at = rs.getTimestamp("created_at").toLocalDateTime();
                 LocalDateTime updated_at = rs.getTimestamp("updated_at").toLocalDateTime();
 
-                int total_price = (int) otm.getTotalPriceOrderId(order_id);
+                int total_price = rs.getInt("TotalPrice");
                 Order order = new Order(order_id, customer, diner, shipper, order_status, paymentStatus, payment_method, total_price, reason);
                 order.setCreated_at(created_at);
                 order.setUpdated_at(updated_at);
@@ -73,6 +73,7 @@ public class OrderDao {
         }
         return OrderList;
     }
+
     public void updateOrderStatus(Order order) {
         ConnectDB db = ConnectDB.getInstance();
         Connection conn = null;
@@ -137,15 +138,16 @@ public class OrderDao {
         ResultSet rs = null;
         try {
             conn = db.openConnection();
-            String query = "INSERT INTO [Order] (customer_id, diner_id, order_status, payment_method, created_at, updated_at) "
-                    + "VALUES (?, ?, ?, ?, ?, ?)";
+            String query = "INSERT INTO [Order] (customer_id, diner_id, order_status, payment_method,TotalPrice, created_at, updated_at) "
+                    + "VALUES (?, ?, ?, ?,?, ?, ?)";
             statement = conn.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
             statement.setInt(1, order.getCustomer().getAccount_id());
             statement.setInt(2, order.getDiner().getAccount_id());
             statement.setString(3, order.getOrder_status());
             statement.setString(4, order.getPayment_method());
-            statement.setTimestamp(5, java.sql.Timestamp.valueOf(order.getCreated_at()));
-            statement.setTimestamp(6, java.sql.Timestamp.valueOf(order.getUpdated_at()));
+            statement.setInt(5, order.getTotal_price());
+            statement.setTimestamp(6, java.sql.Timestamp.valueOf(order.getCreated_at()));
+            statement.setTimestamp(7, java.sql.Timestamp.valueOf(order.getUpdated_at()));
             statement.executeUpdate();
             rs = statement.getGeneratedKeys();
             if (rs.next()) {
@@ -220,11 +222,11 @@ public class OrderDao {
                 }
             } catch (SQLException e) {
                 Logger.getLogger(OrderDao.class.getName()).log(Level.SEVERE, null, e);
-                }
+            }
         }
     }
 
-     public static boolean updatePaymentStatus(int orderId, boolean paymentStatus) {
+    public static boolean updatePaymentStatus(int orderId, boolean paymentStatus) {
         ConnectDB db = ConnectDB.getInstance();
         Connection conn = null;
         PreparedStatement statement = null;
@@ -243,7 +245,8 @@ public class OrderDao {
         }
         return false;
     }
-       private static void closeResources(ResultSet rs, PreparedStatement statement, Connection conn) {
+
+    private static void closeResources(ResultSet rs, PreparedStatement statement, Connection conn) {
         try {
             if (rs != null) {
                 rs.close();
@@ -260,4 +263,3 @@ public class OrderDao {
     }
 
 }
-

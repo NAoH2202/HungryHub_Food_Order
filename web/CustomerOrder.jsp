@@ -199,7 +199,7 @@
                                         <div class="order-details">
                                             <div class="total-info">
                                                 <div>Tổng số lượng món: <%=totalQuantity%></div>
-                                                <div>Tổng giá: <%= numberFormat.format(totalPrice)%>₫</div>
+                                                <div>Tổng giá: <%= numberFormat.format(od.getTotal_price())%>₫</div>
                                             </div>
                                             <div class="item">
                                                 <img src="<%=odi.getDishPicture() != null ? odi.getDishPicture() : "images/avtDefault.jpg"%>" alt="Item Image">
@@ -246,7 +246,7 @@
                                         <div class="order-details">
                                             <div class="total-info">
                                                 <div>Tổng số lượng món: <%=totalQuantity%></div>
-                                                <div>Tổng giá: <%= numberFormat.format(totalPrice)%>₫</div>
+                                                <div>Tổng giá: <%= numberFormat.format(od.getTotal_price())%>₫</div>
                                             </div>
                                             <div class="item">
                                                 <img src="<%=odi.getDishPicture() != null ? odi.getDishPicture() : "images/avtDefault.jpg"%>" alt="Item Image">
@@ -280,7 +280,6 @@
                                             if (oiList != null && !oiList.isEmpty()) {
                                                 OrderItem odi = oiList.get(0);
                                                 int totalQuantity = oiList.size();
-                                                int totalPrice = oim.getTotalPrice(oiList);
                                 %>
                                 <div class="col-sm-12 col-md-4">
                                     <div class="order-container">
@@ -294,7 +293,7 @@
                                         <div class="order-details">
                                             <div class="total-info">
                                                 <div>Tổng số lượng món: <%=totalQuantity%></div>
-                                                <div>Tổng giá: <%= numberFormat.format(totalPrice)%>₫</div>
+                                                <div>Tổng giá: <%= numberFormat.format(od.getTotal_price())%>₫</div>
                                             </div>
                                             <div class="item">
                                                 <img src="<%=odi.getDishPicture() != null ? odi.getDishPicture() : "images/avtDefault.jpg"%>" alt="Item Image">
@@ -346,7 +345,7 @@
                                         <div class="order-details">
                                             <div class="total-info">
                                                 <div>Tổng số lượng món: <%=totalQuantity%></div>
-                                                <div>Tổng giá: <%= numberFormat.format(totalPrice)%>₫</div>
+                                                <div>Tổng giá: <%= numberFormat.format(od.getTotal_price())%>₫</div>
                                             </div>
                                             <div class="item">
                                                 <img src="<%=odi.getDishPicture() != null ? odi.getDishPicture() : "images/avtDefault.jpg"%>" alt="Item Image">
@@ -393,7 +392,7 @@
                                         <div class="order-details">
                                             <div class="total-info">
                                                 <div>Tổng số lượng món: <%=totalQuantity%></div>
-                                                <div>Tổng giá: <%= numberFormat.format(totalPrice)%>₫</div>
+                                                <div>Tổng giá: <%= numberFormat.format(od.getTotal_price())%>₫</div>
                                             </div>
                                             <div class="item">
                                                 <img src="<%=odi.getDishPicture() != null ? odi.getDishPicture() : "images/avtDefault.jpg"%>" alt="Item Image">

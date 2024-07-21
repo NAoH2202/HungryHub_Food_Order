@@ -38,7 +38,7 @@
                     <div class="col-md-4 footer-col">
                         <div class="footer_detail">
                             <a href="" class="footer-logo">
-                                Feane
+                                HungryHub
                             </a>
                             <p>
                                 Necessary, making this the first true generator on the Internet. It uses a dictionary of over 200 Latin words, combined with
@@ -77,9 +77,9 @@
                 <div class="footer-info">
                     <p>
                         &copy; <span id="displayYear"></span> All Rights Reserved By
-                        <a href="https://html.design/">Free Html Templates</a><br><br>
+                        <a href="https://html.design/">DangVinhXuanHai</a><br><br>
                         &copy; <span id="displayYear"></span> Distributed By
-                        <a href="https://themewagon.com/" target="_blank">ThemeWagon</a>
+                        <a href="https://themewagon.com/" target="_blank">Group4</a>
                     </p>
                 </div>
             </div>

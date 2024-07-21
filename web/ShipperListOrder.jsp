@@ -29,6 +29,7 @@
                 border-radius: 8px;
                 box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             }
+ 
 
             h1 {
                 text-align: center;
@@ -151,7 +152,7 @@
                                 </c:choose>
                                 <td>${order.total_price}</td>
                                 <td class="actions">
-
+ 
                                     <form action="OrderItemServlet" method="GET">
                                         <input type="hidden" name="command" value="Accept">
                                         <input type="hidden" name="orderId" value="${order.order_id}">

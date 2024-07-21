@@ -264,10 +264,7 @@
                 <a href="CustomerContactPage">Giúp đỡ và hỗ trợ <img src="images/arrow.png" alt=""></a>
             </div>
 
-            <div class="settings-links">
-                <img src="images/voucher.png" alt="" class="settings-icon">
-                <a href="#">Mã giảm giá của bạn <img src="images/arrow.png" alt=""></a>
-            </div>
+
 
             <div class="settings-links">
                 <img src="images/logout.png" alt="" class="settings-icon">

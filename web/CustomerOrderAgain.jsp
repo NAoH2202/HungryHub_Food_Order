@@ -300,7 +300,7 @@
                     </div>
                     <%
                     } else {
-                        totalPrice += dish.getPrice();
+                        totalPrice += dish.getPrice()*orderItem.getQuantity();
                     %>
                     <div class="item_container" data-item-id="<%= orderItem.getOrder_item_id()%>">
                         <div class="order-item">
@@ -436,8 +436,9 @@
 
                             // Xử lý trừ tiền vào totalPrice
                             const itemPrice = parseFloat(this.closest('.item_container').querySelector('.item-price').textContent.replace(/\D/g, ''));
+                            const itemQuantity = parseFloat(this.closest('.item_container').querySelector('.item-quantity').textContent.replace(/\D/g, ''));
                             console.log('Item price:', itemPrice);
-                            totalPrice -= itemPrice;
+                            totalPrice -= itemPrice*itemQuantity;
                             document.querySelector('.total-price strong').textContent = numberFormat.format(totalPrice);
 
                             // Kiểm tra và disable nút đặt hàng nếu totalPrice = 0
