@@ -55,32 +55,63 @@
                 display: flex;
                 justify-content: center;
                 margin: 20px 0;
+                width: 100%;
             }
+
 
             .restaurant-detail {
                 display: flex;
-                align-items: center;
-                max-width: 1300px;
-                width: 100%;
-                padding: 20px;
-                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                flex-direction: row;
                 background-color: #fff;
+                border-radius: 10px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                margin: 20px;
+                overflow: hidden;
+                width: 100%;
+                max-width: 1300px;
             }
 
             .restaurant-img {
-                max-width: 400px;
-                height: auto;
-                margin-right: 20px;
+                width: 35%;
+                height: 300px;
+                object-fit: cover;
             }
 
             .restaurant-info {
-                max-width: 500px;
+                padding: 20px;
+                flex-grow: 1;
             }
 
-            .restaurant-name, .restaurant-address, .restaurant-rating, .restaurant-opening-time {
-                margin: 10px 0;
+            .restaurant-name {
+                font-size: 4em;
+                color: #333;
+                margin-bottom: 10px;
             }
 
+            .restaurant-address,
+            .restaurant-rating,
+            .restaurant-opening-time {
+                font-size: 1.2em;
+                color: #666;
+                margin-bottom: 10px;
+            }
+
+            .restaurant-address:before,
+            .restaurant-rating:before,
+            .restaurant-opening-time:before {
+                content: attr(data-label);
+                font-weight: bold;
+                color: #333;
+                margin-right: 5px;
+            }
+
+            .restaurant-rating {
+                color: #FFD700; /* Gold color for rating */
+            }
+
+            .restaurant-opening-time {
+                color: #008000; /* Green color for opening time */
+            }
             #container {
                 display: flex;
                 justify-content: center;
@@ -293,7 +324,7 @@
         </style>
     </head>
 
-    <body>
+    <body style="background-color: #dddddd">
         <div>
             <!-- Include header -->
             <jsp:include page="path/dinerheader.jsp"/>
@@ -314,17 +345,16 @@
             ArrayList<Dish> listDish = dm.getDishByDinerId(id);
         %>
 
-        <div style="background-color: #dddddd">
-            <a href="index.jsp" class="back-link">BACK</a>
+        <div >
             <div class="restaurant">
                 <section class="restaurant-detail">
-                    <img src="https://down-cvs-vn.img.susercontent.com/vn-11134513-7r98o-lsv21q8k90uxa6@resize_ss640x400!@crop_w640_h400_cT" class="restaurant-img" alt="Restaurant Image"/>
+                    <img src="<%= diner.getProfile_picture()%>" class="restaurant-img" alt="Restaurant Image"/>
                     <div class="restaurant-info">
                         <h1 class="restaurant-name"><%=diner.getName()%></h1>
-                        <h3 class="restaurant-address"><%=diner.getAddress()%></h3>
-                        <h4 class="restaurant-rating">Rating</h4>
-                        <h5 class="restaurant-opening-time">Opening Time</h5>
-                    </div>
+                        <div class="restaurant-address"><%=diner.getAddress()%></div>
+                        <div class="restaurant-rating">Rating</div>
+                        <div class="restaurant-opening-time">Opening Time</div>   
+                    </div> 
                 </section>
             </div>
 
@@ -423,6 +453,5 @@
                                             updateCart();
                                         };
         </script>
-
     </body>
 </html>

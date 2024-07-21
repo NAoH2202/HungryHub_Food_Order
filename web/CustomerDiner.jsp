@@ -69,30 +69,62 @@ Author     : MSIGAMING
                 display: flex;
                 justify-content: center;
                 margin: 20px 0;
+                width: 100%;
             }
+
 
             .restaurant-detail {
                 display: flex;
-                align-items: center;
-                max-width: 1300px;
-                width: 100%;
-                padding: 20px;
-                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                flex-direction: row;
                 background-color: #fff;
+                border-radius: 10px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                margin: 20px;
+                overflow: hidden;
+                width: 100%;
+                max-width: 1300px;
             }
 
             .restaurant-img {
-                max-width: 400px;
-                height: auto;
-                margin-right: 20px;
+                width: 35%;
+                height: 300px;
+                object-fit: cover;
             }
 
             .restaurant-info {
-                max-width: 500px;
+                padding: 20px;
+                flex-grow: 1;
             }
 
-            .restaurant-name, .restaurant-address, .restaurant-rating, .restaurant-opening-time {
-                margin: 10px 0;
+            .restaurant-name {
+                font-size: 4em;
+                color: #333;
+                margin-bottom: 10px;
+            }
+
+            .restaurant-address,
+            .restaurant-rating,
+            .restaurant-opening-time {
+                font-size: 1.2em;
+                color: #666;
+                margin-bottom: 10px;
+            }
+
+            .restaurant-address:before,
+            .restaurant-rating:before,
+            .restaurant-opening-time:before {
+                content: attr(data-label);
+                font-weight: bold;
+                color: #333;
+                margin-right: 5px;
+            }
+
+            .restaurant-rating {
+                color: #FFD700; /* Gold color for rating */
+            }
+
+            .restaurant-opening-time {
+                color: #008000; /* Green color for opening time */
             }
 
             #container {
@@ -180,6 +212,41 @@ Author     : MSIGAMING
                 text-align: center;
             }
             /*comment*/
+            .btn-diner {
+                background-color: #ff6347;
+                color: white;
+                border: none;
+                border-radius: 10px;
+                padding: 15px;
+                width: 100%;
+                font-size: 18px;
+                font-weight: bold;
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+                transition: all 0.3s ease;
+                position: relative;
+                overflow: hidden;
+                margin-bottom: 20px;
+            }
+            .btn-diner::before {
+                content: '';
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                width: 200%;
+                height: 200%;
+                background-color: rgba(255, 255, 255, 0.3);
+                transform: translate(-50%, -50%) rotate(45deg);
+                transition: all 0.75s ease;
+            }
+            .btn-diner:hover::before {
+                width: 0;
+                height: 0;
+            }
+            .btn-diner:hover {
+                background-color: #ff4500;
+                box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+                transform: translateY(-2px);
+            }
         </style>
     </head>
 
@@ -208,13 +275,13 @@ Author     : MSIGAMING
             <a href="index.jsp" class="back-link">BACK</a>
             <div class="restaurant">
                 <section class="restaurant-detail">
-                    <img src="https://down-cvs-vn.img.susercontent.com/vn-11134513-7r98o-lsv21q8k90uxa6@resize_ss640x400!@crop_w640_h400_cT" class="restaurant-img" alt="Restaurant Image"/>
+                    <img src="<%= diner.getProfile_picture()%>" class="restaurant-img" alt="Restaurant Image"/>
                     <div class="restaurant-info">
                         <h1 class="restaurant-name"><%=diner.getName()%></h1>
-                        <h3 class="restaurant-address"><%=diner.getAddress()%></h3>
-                        <h4 class="restaurant-rating">Rating</h4>
-                        <h5 class="restaurant-opening-time">Opening Time</h5>
-                    </div>     
+                        <div class="restaurant-address"><%=diner.getAddress()%></div>
+                        <div class="restaurant-rating">Rating</div>
+                        <div class="restaurant-opening-time">Opening Time</div>   
+                    </div> 
                 </section>
             </div>
 
@@ -423,15 +490,17 @@ Author     : MSIGAMING
 
                     </div>
                     <div id="cart" style="background-color: #fff;">
-                        <h2>Cart</h2>
-                        <div id="cartContent"></div>
-                        <form action="OrderServlet" method="post" id="orderForm">
-                            <input type="hidden" id="dishId" name="dishId" value="<%=id%>">
-                            <input type="hidden" id="dishQuantity" name="dishQuantity">
-                            <input type="hidden" id="totalCost" name="totalCost">
-                            <input type="hidden" id="accountId" name="accountId" value="<%=accountId%>"> 
-                            <input type="submit" value="Order">                        
-                        </form>
+                        <h2></h2>
+                        <div class="social-container">
+                            <form action="#" method="GET">
+                                <button type="submit" class="btn-diner">Trang cộng đồng</button>
+                            </form>
+                        </div>
+                        <div class="voucher-container">
+                            <form action="#" method="GET" >
+                                <button type="submit" class="btn-diner">Voucher của quán</button>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -651,7 +720,7 @@ Author     : MSIGAMING
                         data: {action: action, commentId: commentId},
                         success: function (response) {
                             if (response.status === 'reply') {
-                                var replyInput = '<div><form action="RepCommentServlet" class="reply-input" method="post"><input type="hidden" name="dishId" value="<%=id%>"><input type="hidden" name="status" value="dish"><input type="hidden" name="commentId" value="' + commentId + '"><textarea class="reply-comment" name="replyContent" placeholder="Nhập suy nghĩ của bạn..." ></textarea><button class="submit-reply-btn" type="submit">Submit</button></form></div>';
+                                var replyInput = '<div><form action="RepCommentServlet" class="reply-input" method="post"><input type="hidden" name="dinerId" value="<%=id%>"><input type="hidden" name="status" value="comment"><input type="hidden" name="commentId" value="' + commentId + '"><textarea class="reply-comment" name="replyContent" placeholder="Nhập suy nghĩ của bạn..." ></textarea><button class="submit-reply-btn" type="submit">Submit</button></form></div>';
                                 $('button[data-rep-comment-id="' + commentId + '"]').removeClass('rep-btn').addClass('rm-rep-btn');
                                 $('div[data-rep-comment-id="' + commentId + '"]').append(replyInput);
                             } else if (response.status === 'rm-reply') {

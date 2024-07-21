@@ -125,7 +125,6 @@
                     <th>Customer Address</th>
                     <th>Diner Name</th>
                     <th>Diner Address</th>
-                    <th>Status Order</th>
                     <th>Payment</th>
                 </tr>
             </thead>
@@ -135,10 +134,10 @@
                         <tr>
                             <td>${order.order_id}</td>
                             <td>${order.customer.name}</td>
-                            <td>${order.customer.address}</td>
+                            <td>${order.customer.address} - ${order.customer.provinces}</td>
                             <td>${order.diner.name}</td>
-                            <td>${order.diner.address}</td>
-                            <td>${order.order_status}</td>
+                            <td>${order.diner.address}-${order.diner.provinces}</td>
+                            
                             <td>${order.payment_method}</td>
                             <td class="actions">
                                 

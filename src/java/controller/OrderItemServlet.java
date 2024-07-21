@@ -116,6 +116,8 @@ public class OrderItemServlet extends HttpServlet {
         OrderDao orderDao = new OrderDao();
         Order orderToUpdate = oM.getOderById(orderItemId);
         orderToUpdate.setOrder_status("Completed");
+//        orderToUpdate.setPayment_status(true);
+        orderDao.updatePaymentStatus(orderItemId,true);
         orderDao.updateOrderStatus(orderToUpdate); // Update order_status
         request.setAttribute("orderItemList", otm.getOderItemByOrderId(orderItemId));
         request.getRequestDispatcher("ShipperListOrderPage").forward(request, response);

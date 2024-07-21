@@ -60,4 +60,65 @@ public class LikePostDao {
         }
         return LikeList;
     }
+     public static boolean removeLike(int PostID, int userID) {
+        ConnectDB db = ConnectDB.getInstance();
+        Connection conn = null;
+        PreparedStatement statement = null;
+        boolean isSuccess = false;
+
+        try {
+            conn = db.openConnection();
+            String query = "DELETE FROM [Likes] WHERE PostID = ? AND UserID = ?";
+            statement = conn.prepareStatement(query);
+            statement.setInt(1, PostID);
+            statement.setInt(2, userID);
+            int rowsDeleted = statement.executeUpdate();
+            isSuccess = rowsDeleted > 0;
+        } catch (ClassNotFoundException | SQLException ex) {
+            Logger.getLogger(LikePostDao.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if (statement != null) {
+                    statement.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+            }
+        }
+
+        return isSuccess;
+    }
+
+    public static boolean addLike(int postID, int userID) {
+        ConnectDB db = ConnectDB.getInstance();
+        Connection conn = null;
+        PreparedStatement statement = null;
+        boolean isSuccess = false;
+
+        try {
+            conn = db.openConnection();
+            String query = "INSERT INTO [LikesPost] ([PostID], UserID) VALUES (?, ?)";
+            statement = conn.prepareStatement(query);
+            statement.setInt(1, postID);
+            statement.setInt(2, userID);
+            int rowsInserted = statement.executeUpdate();
+            isSuccess = rowsInserted > 0;
+        } catch (ClassNotFoundException | SQLException ex) {
+            Logger.getLogger(LikePostDao.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if (statement != null) {
+                    statement.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+            }
+        }
+
+        return isSuccess;
+    }
 }

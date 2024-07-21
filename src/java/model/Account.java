@@ -289,7 +289,8 @@ public class Account {
 
     @Override
     public String toString() {
-        return "Account{" + "account_id=" + account_id + ", username=" + username + ", password=" + password + ", name=" + name + ", Detail=" + Detail + ", email=" + email + ", phoneNumber=" + phoneNumber + ", address=" + address + ", date_of_birth=" + date_of_birth + ", active_status=" + active_status + ", profile_picture=" + profile_picture + ", role=" + role + ", created_at=" + created_at + ", updated_at=" + updated_at + ", maxacthuc=" + maxacthuc + ", trangthaixacthuc=" + trangthaixacthuc + ", thoigianhieuluc=" + thoigianhieuluc + '}';
+        return "Account{" + "username=" + username + ", password=" + password + ", name=" + name + ", address=" + address + ", provinces=" + provinces + ", district=" + district + '}';
     }
-    
+
+
 }

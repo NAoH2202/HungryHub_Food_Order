@@ -14,10 +14,10 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  *
- * @author PC
+ * @author lenovo
  */
-@WebServlet(name = "DinerOrderPage", urlPatterns = {"/DinerOrderPage"})
-public class DinerOrderPage extends HttpServlet {
+@WebServlet(name = "CustomerOrderAgainPage", urlPatterns = {"/CustomerOrderAgainPage"})
+public class CustomerOrderAgainPage extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -36,10 +36,10 @@ public class DinerOrderPage extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet DinerOrderPage</title>");            
+            out.println("<title>Servlet CustomerOrderAgainPage</title>");            
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet DinerOrderPage at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet CustomerOrderAgainPage at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -48,15 +48,13 @@ public class DinerOrderPage extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-         request.getRequestDispatcher("DinerOrder.jsp").forward(request, response);
-
+        request.getRequestDispatcher("CustomerOrderAgain.jsp").forward(request, response);
     }
-
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        request.getRequestDispatcher("CustomerOrderAgain.jsp").forward(request, response);
     }
 
     /**

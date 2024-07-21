@@ -131,7 +131,7 @@ public class CommentDao {
             statement.setInt(2, cm.getPost().getAd_id());
             statement.setString(3, cm.getContent());
             statement.setTimestamp(4, Timestamp.valueOf(now));
-            statement.setTimestamp(6, Timestamp.valueOf(now));
+            statement.setTimestamp(5, Timestamp.valueOf(now));
 
             int rowsInserted = statement.executeUpdate();
             return rowsInserted > 0;

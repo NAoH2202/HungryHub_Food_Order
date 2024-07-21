@@ -20,6 +20,8 @@ import model.Comment;
 import model.CommentDao;
 import model.Dish;
 import model.DishManager;
+import model.FoodAd;
+import model.FoodAdManager;
 
 /**
  *
@@ -67,7 +69,11 @@ public class RateServlet extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         response.setContentType("text/html;charset=UTF-8");
         String ratingString = request.getParameter("rating");
-        int rating = Integer.parseInt(ratingString);
+        int rating=0;
+        if(ratingString != null){
+             rating = Integer.parseInt(ratingString);
+        }
+        
         String comment = request.getParameter("comment");
         Account account = (Account) request.getSession().getAttribute("account");
         String status = request.getParameter("status");
@@ -90,6 +96,19 @@ public class RateServlet extends HttpServlet {
                 CommentDao.addCommentDish(currentComment2);
 
                 response.sendRedirect("CustomerDishPage?id=" + dishId);
+                break;
+            
+            case "Post":
+                String postIdString = request.getParameter("ad_id");
+                String check = request.getParameter("check");
+             
+                int ad_id = Integer.parseInt(postIdString);
+                 FoodAdManager fam = new FoodAdManager();
+                FoodAd foodAd = fam.getFoodAdById(ad_id);
+                Comment currentComment3 = new Comment(0, account, null, null,foodAd , comment, rating);
+                CommentDao.addCommentPost(currentComment3);
+
+                response.sendRedirect("CustomerSocialDetailPage?ad_id=" + ad_id +"&check="+check);
                 break;
             // Có thể thêm các case khác để xử lý cho các giá trị khác của 'status'
             default:

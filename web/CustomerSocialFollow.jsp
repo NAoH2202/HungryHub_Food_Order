@@ -318,6 +318,7 @@
         <jsp:include page="path/header.jsp"/>
 
         <div class="container_content">
+             
             <div class="left-sidebar">
                 <div class="important-links">
                     <a href="CustomerSocialPage"><img src="images/news.png" alt="">Dành cho bạn</a>

@@ -4,7 +4,9 @@
  */
 package model;
 
+import java.text.NumberFormat;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  *
@@ -14,7 +16,14 @@ public class OrderItem {
     private int order_item_id;
     private int order_id;
      
-    private Dish dish;
+    private int dishId;
+    private String dishName;
+    private String dishPicture;
+    private String dishDescription;
+    private int dishPrice;
+    private String dishType;
+    private String dishIngredients;
+    
     private int quantity;
     private int price;
     private Date created_at = new Date();
@@ -23,27 +32,29 @@ public class OrderItem {
     public OrderItem() {
     }
 
-    public OrderItem(int order_item_id, int order_id, Dish dish, int quantity, int price) {
+    public OrderItem(int order_item_id, int order_id,int dishId, String dishName, String dishPicture, String dishDescription, int dishPrice, String dishType, String dishIngredients, int quantity, int price) {
         this.order_item_id = order_item_id;
+        this.dishId = dishId;
         this.order_id = order_id;
-        this.dish = dish;
+        this.dishName = dishName;
+        this.dishPicture = dishPicture;
+        this.dishDescription = dishDescription;
+        this.dishPrice = dishPrice;
+        this.dishType = dishType;
+        this.dishIngredients = dishIngredients;
         this.quantity = quantity;
         this.price = price;
     }
  
-
-    public OrderItem(int order_item_id, int order_id, Dish dish, int quantity) {
+    public OrderItem(int order_item_id,int dishId, String dishName, String dishPicture, String dishDescription, int dishPrice, String dishType, String dishIngredients, int quantity, int price) {
         this.order_item_id = order_item_id;
-        this.order_id = order_id;
-        this.dish = dish;
-        this.quantity = quantity;
-    }
-    
-
- 
-    public OrderItem(int order_item_id, Dish dish, int quantity, int price) {
-        this.order_item_id = order_item_id;
-        this.dish = dish;
+        this.dishId = dishId;
+        this.dishName = dishName;
+        this.dishPicture = dishPicture;
+        this.dishDescription = dishDescription;
+        this.dishPrice = dishPrice;
+        this.dishType = dishType;
+        this.dishIngredients = dishIngredients;
         this.quantity = quantity;
         this.price = price;
     }
@@ -65,18 +76,67 @@ public class OrderItem {
         this.order_id = order_id;
     }
 
-    
-
-    
-    public Dish getDish() {
-        return dish;
+    public int getDishId() {
+        return dishId;
     }
 
-    public void setDish(Dish dish) {
-        this.dish = dish;
+    public void setDishId(int dishId) {
+        this.dishId = dishId;
+    }
+    
+    public String getDishName() {
+        return dishName;
     }
 
+    public void setDishName(String dishName) {
+        this.dishName = dishName;
+    }
+
+    public String getDishPicture() {
+        return dishPicture;
+    }
+
+    public void setDishPicture(String dishPicture) {
+        this.dishPicture = dishPicture;
+    }
+
+    public String getDishDescription() {
+        return dishDescription;
+    }
+
+    public void setDishDescription(String dishDescription) {
+        this.dishDescription = dishDescription;
+    }
+
+    public int getDishPrice() {
+        return dishPrice;
+    }
     
+    public String getDishPriceString() {
+        NumberFormat numberFormat = NumberFormat.getNumberInstance(Locale.US);
+        return numberFormat.format(dishPrice);
+    }
+
+    public void setDishPrice(int dishPrice) {
+        this.dishPrice = dishPrice;
+    }
+
+    public String getDishType() {
+        return dishType;
+    }
+
+    public void setDishType(String dishType) {
+        this.dishType = dishType;
+    }
+
+    public String getDishIngredients() {
+        return dishIngredients;
+    }
+
+    public void setDishIngredients(String dishIngredients) {
+        this.dishIngredients = dishIngredients;
+    }
+
 
     public int getQuantity() {
         return quantity;
@@ -88,6 +148,11 @@ public class OrderItem {
 
     public int getPrice() {
         return price;
+    }
+    
+    public String getPriceString() {
+        NumberFormat numberFormat = NumberFormat.getNumberInstance(Locale.US);
+        return numberFormat.format(price);
     }
 
     public void setPrice(int price) {
@@ -112,7 +177,6 @@ public class OrderItem {
 
     @Override
     public String toString() {
-        return "OrderItem{" + "order_item_id=" + order_item_id + ", order_id=" + order_id + ", dish=" + dish + ", quantity=" + quantity + ", price=" + price + ", created_at=" + created_at + ", updated_at=" + updated_at + '}';
+        return "OrderItem{" + "order_item_id=" + order_item_id + ", order_id=" + order_id + ", dishName=" + dishName + ", dishPicture=" + dishPicture + ", dishDescription=" + dishDescription + ", dishPrice=" + dishPrice + ", dishType=" + dishType + ", dishIngredients=" + dishIngredients + ", quantity=" + quantity + ", price=" + price + ", created_at=" + created_at + ", updated_at=" + updated_at + '}';
     }
-
 }

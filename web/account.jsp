@@ -3,23 +3,20 @@
 <%@page import="model.AccountManager"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
     <head>
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0,maximum-scale=1">
 
-        <title>Account information</title>
+        <title>Thông tin tài khoản</title>
 
-        <!-- Loading third party fonts -->
+        <!-- Đang tải các phông chữ của bên thứ ba -->
         <link href="http://fonts.googleapis.com/css?family=Roboto:300,400,700|" rel="stylesheet" type="text/css">
         <link href="fonts/font-awesome.min.css" rel="stylesheet" type="text/css">
 
-        <!-- Loading main css file -->
+        <!-- Đang tải tệp css chính -->
         <link rel="stylesheet" href="style.css">
-
-
-
 
         <style>
             .login{
@@ -40,7 +37,7 @@
 
             .midContent {
                 font-family: Arial, sans-serif;
-                background-color: white;      /*Màu n?n t?ng th?*/
+                background-color: white;      /* Màu nền tầng thô */
             }
 
             .container {
@@ -55,7 +52,7 @@
                 display: flex;
                 flex-wrap: wrap;
                 margin-bottom: 20px;
-                justify-content: center; /* C?n gi?a các dòng */
+                justify-content: center; /* Căn giữa các dòng */
             }
             .box{
                 border-bottom: 3px solid #999999;
@@ -69,7 +66,7 @@
                 padding-left: 15px;
             }
 
-            /* Page Title */
+            /* Tiêu đề trang */
             .page-title {
                 margin-bottom: 20px;
             }
@@ -104,7 +101,7 @@
                 width: auto;
             }
 
-            /* Buttons */
+            /* Nút */
             .buttons-set {
                 margin-top: 20px;
             }
@@ -112,7 +109,7 @@
             .btn {
                 display: inline-block;
                 padding: 10px 20px;
-                background-color: #007bff;  /*Màu nút*/
+                background-color: #007bff;  /* Màu nút */
                 color: #fff;
                 border: none;
                 border-radius: 5px;
@@ -121,10 +118,10 @@
             }
 
             .btn:hover {
-                background-color: #0056b3;  /*Màu hover c?a nút */
+                background-color: #0056b3;  /* Màu hover của nút */
             }
 
-            Table
+            /* Bảng */
             .table {
                 width: 100%;
                 border-collapse: collapse;
@@ -140,14 +137,14 @@
             }
 
             .table th {
-                background-color: #007bff;  /*Màu n?n header c?a b?ng */
+                background-color: #007bff;  /* Màu nền header của bảng */
                 color: #fff;
                 font-weight: bold;
                 text-align: left;
             }
 
             .table td {
-                background-color: #fff;  /*Màu n?n c?a các ô d? li?u */
+                background-color: #fff;  /* Màu nền của các ô dữ liệu */
             }
 
             /* Responsive */
@@ -180,7 +177,6 @@
             String email = account.getEmail();
             Date dob = account.getDate_of_birth();
             String adds = account.getAddress();
-
         %>
         <jsp:include page="path/header.jsp"/>
         <div id="site-content" style="background-color: #DDDDDD">
@@ -194,13 +190,13 @@
                             <div class="col-md-7 mx-auto">
                                 <div class="my-account">
                                     <div class="page-title">
-                                        <h1 style="font-family: Roboto;">Information Account</h1>
+                                        <h1 style="font-family: Roboto;">Thông tin tài khoản</h1>
                                     </div>
                                     <div class="box">
                                         <form action="UpdateAccountServlet" method="post" enctype="multipart/form-data" id="profile-validate"
                                               class="scaffold-form metiz-edit-account">
                                             <div class="row">
-                                                <!-- First Column (col-md-3) -->
+                                                <!-- Cột thứ nhất (col-md-3) -->
                                                 <div class="col-md-6">
                                                     <div class="form-group">
                                                         <label for="id">ID</label>
@@ -208,24 +204,24 @@
                                                                value="<%=id%>">
                                                     </div>
                                                     <div class="form-group">
-                                                        <label for="username">Username</label>
+                                                        <label for="username">Tên người dùng</label>
                                                         <input type="text" name="username" id="username" class="form-control custom-input"
                                                                value="<%=account.getUsername()%>" disabled>
                                                     </div>
                                                     <div class="form-group">
-                                                        <label for="full_name">Name</label>
+                                                        <label for="full_name">Họ và tên</label>
                                                         <input type="text" name="full_name" id="full_name" class="form-control custom-input"
                                                                value="<%=name%>">
                                                     </div>
                                                     <div class="form-group">
-                                                        <label for="avt">Avatar</label>
-                                                        <input type="file" name="avt" id="avt" placeholder="Enter phôt" class="form-control custom-input">
+                                                        <label for="avt">Ảnh đại diện</label>
+                                                        <input type="file" name="avt" id="avt" placeholder="Nhập ảnh" class="form-control custom-input">
                                                     </div>
                                                 </div>
-                                                <!-- Second Column (col-md-3) -->
+                                                <!-- Cột thứ hai (col-md-3) -->
                                                 <div class="col-md-6">
                                                     <div class="form-group">
-                                                        <label>Phone Number</label>
+                                                        <label>Số điện thoại</label>
                                                         <div class="form-group " >
                                                             <div class="inline">
                                                                 <div class="country-code"></div>
@@ -240,14 +236,14 @@
                                                                value="<%=email%>" class="form-control custom-input">
                                                     </div>
                                                     <div class="form-group form-birthday" >
-                                                        <label>Birthday</label>
+                                                        <label>Ngày sinh</label>
                                                         <div class="input-group" >
                                                             <input type="date" name="birth_date" id="birth_date"
                                                                    value="<%=dob%>" class="form-control custom-input">
                                                         </div>
                                                     </div>
                                                     <div class="form-group form-birthday" >
-                                                        <label>Address</label>
+                                                        <label>Địa chỉ</label>
                                                         <div class="input-group" >
                                                             <input type="text" name="address" id="address"
                                                                    value="<%=adds%>" class="form-control custom-input">
@@ -261,10 +257,10 @@
                                                 </div>
                                             </c:if>
                                             <div class="buttons-set metiz-edit-btn">
-                                                <button type="submit" title="Save" class="btn btn-primary"><span><span>Save</span></span></button>
+                                                <button type="submit" title="Lưu" class="btn btn-primary"><span><span>Lưu</span></span></button>
                                             </div>
                                             <div class="buttons-set metiz-edit-btn">
-                                                <a href="ChangePasswordPage" class="btn btn-primary">Change Password</a>
+                                                <a href="ChangePasswordPage" class="btn btn-primary">Đổi mật khẩu</a>
                                             </div>
                                         </form>
                                     </div>
@@ -274,22 +270,22 @@
                         <div class="row" style="background-color: white;">
                             <!--                <div class="col-lg-8 col-md-10 mx-auto">
                                                 <div class="my-account">
-                                                     Existing form code goes here 
+                                                     Mã form hiện có đi vào đây 
                             
                                                     <div class="page-title">
-                                                        <h2>Additional Information Table</h2>
+                                                        <h2>Bảng thông tin bổ sung</h2>
                                                     </div>
                             
-                                                     Additional table 
+                                                     Bảng bổ sung 
                                                     <table class="table">
                                                         <thead>
                                                             <tr>
                                                                 <th>ID</th>
                                                                 <th>ID Phim</th>
-                                                                <th>Xuat Chieu</th>
-                                                                <th>Ma Phong</th>
-                                                                <th>So Luong Ve</th>
-                                                                <th>Thoi Gian</th>
+                                                                <th>Xuất Chiếu</th>
+                                                                <th>Mã Phòng</th>
+                                                                <th>Số Lượng Vé</th>
+                                                                <th>Thời Gian</th>
                                                             </tr>
                                                         </thead>
                                                         <tbody>
@@ -301,7 +297,7 @@
                                                                 <td></td>
                                                                 <td></td>
                                                             </tr>
-                                                             Add more rows as needed 
+                                                             Thêm nhiều hàng khi cần 
                                                         </tbody>
                                                     </table>
                                                 </div>
@@ -312,11 +308,10 @@
             </main>
         </div>
         <jsp:include page="path/footer.jsp"/>
-        <!-- Default snippet for navigation -->
+        <!-- Đoạn mã mặc định cho điều hướng -->
 
         <script src="js/jquery-1.11.1.min.js"></script>
         <script src="js/plugins.js"></script>
         <script src="js/app.js"></script>
     </body>
-
 </html>

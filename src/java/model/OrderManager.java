@@ -12,12 +12,13 @@ import java.util.ArrayList;
  * @author PC
  */
 public class OrderManager {
+
     private ArrayList<Order> List;
 
     public OrderManager() {
         List = OrderDao.getAllOrders();
     }
-    
+
     public Order getOderById(int id) {
         for (Order facc : List) {
             if (id == facc.getOrder_id()) {
@@ -26,6 +27,19 @@ public class OrderManager {
         }
         return null;
     }
+
+    public ArrayList<Order> getOderAcceptByShipperId(int id) {
+        ArrayList<Order> olist = new ArrayList<>();
+        for (Order facc : List) {
+            if (facc.getShipper() != null) {
+                if (id == facc.getShipper().getAccount_id() && facc.getOrder_status().equals("OntheWay")) {
+                    olist.add(facc);
+                }
+            }
+        }
+        return olist;
+    }
+
     public int searchOrderId(int customer, int diner, String order_status, String payment_method, double total_price, LocalDateTime created_at) {
         for (Order order : List) {
             boolean matches = true;
@@ -63,16 +77,16 @@ public class OrderManager {
         return -1;
     }
 
-
     public ArrayList<Order> getList() {
         return List;
     }
-    
-    
+
     public static void main(String[] args) {
         OrderManager om = new OrderManager();
-        for(Order od : om.getList()){
-            System.out.println(od);
+        for (Order od : om.getList()) {
+            if (od.getOrder_status().equalsIgnoreCase("ready")) {
+                System.out.println(od);
+            }
         }
     }
 }

@@ -1,5 +1,6 @@
 　
 
+<%@page import="model.LikePost"%>
 <%@page import="model.LikePostManager"%>
 <%@page import="java.time.format.DateTimeFormatter"%>
 <%@page import="model.FoodAdDao"%>
@@ -174,29 +175,8 @@
                 color: #c9c9c9;
                 font-size: 18px;
             }
-            .story.story1 {
-                background: linear-gradient(transparent, rgba(0, 0, 0, 0.5)), url(images/status-1.png) no-repeat center center /cover;
-            }
-            .story.story2 {
-                background: linear-gradient(transparent, rgba(0, 0, 0, 0.5)), url(images/status-2.png) no-repeat center center /cover;
-            }
-            .story.story3 {
-                background: linear-gradient(transparent, rgba(0, 0, 0, 0.5)), url(images/status-3.png) no-repeat center center /cover;
-            }
-            .story.story4 {
-                background: linear-gradient(transparent, rgba(0, 0, 0, 0.5)), url(images/status-4.png) no-repeat center center /cover;
-            }
-            .story.story5 {
-                background: linear-gradient(transparent, rgba(0, 0, 0, 0.5)), url(images/status-5.png) no-repeat center center /cover;
-            }
-            .story.story1 img {
-                top: unset;
-                left: 50%;
-                bottom: 40px;
-                transform: translateX(-50%);
-                border: 0;
-                width: 35px;
-            }
+         
+            
             .write-post-container {
                 color: #626262;
                 background-color: var(--bg-color);
@@ -305,11 +285,75 @@
                 background: transparent;
                 border-radius: 4px;
             }
-             .status-field .food-ad-image {
-        max-width: 100%;  /* Giới hạn chiều rộng tối đa của ảnh */
-        max-height: 200px;  /* Giới hạn chiều cao tối đa của ảnh */
-        object-fit: cover;  /* Điều chỉnh ảnh để vừa với khung */
-    }
+            .status-field .food-ad-image {
+                max-width: 100%;  /* Giới hạn chiều rộng tối đa của ảnh */
+                max-height: 200px;  /* Giới hạn chiều cao tối đa của ảnh */
+                object-fit: cover;  /* Điều chỉnh ảnh để vừa với khung */
+            }
+            .like-btn {
+                background-color: #ffffff; /* Màu nền của nút like */
+    color: white;
+    cursor: pointer;
+}
+
+.unlike-btn {
+    background-color: #ffffff; /* Màu nền của nút unlike */
+    color: white;
+    cursor: pointer;
+}
+
+/* CSS cho các biểu tượng như like */
+.activity-icons img {
+    cursor: pointer; /* Đảm bảo con trỏ chuột thay đổi khi di chuột qua biểu tượng */
+}
+
+/* CSS cho các thông báo trạng thái không có món ăn nào */
+.heading-link h4 {
+    text-align: center;
+    color: #999;
+    font-size: 16px;
+    margin: 20px 0;
+}
+
+/* CSS cho nút Load More */
+.btn-LoadMore {
+    background-color: #ff9900; /* Màu nền của nút Load More */
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.btn-LoadMore:hover {
+    background-color: #e68a00; /* Màu nền khi hover */
+}
+
+/* CSS cho hình ảnh của các món ăn */
+.food-ad-image {
+    width: 100%; /* Chiều rộng tối đa của hình ảnh */
+    height: auto; /* Đảm bảo tỉ lệ hình ảnh không bị thay đổi */
+    border-radius: 6px; /* Bo tròn góc hình ảnh */
+    margin-top: 10px; /* Khoảng cách phía trên hình ảnh */
+}
+
+/* CSS cho hình ảnh của các câu chuyện */
+.story img {
+    border: 2px solid var(--nav-color); /* Đường viền quanh hình ảnh */
+}
+
+/* CSS cho khung người dùng và các liên kết */
+.user-profile-box {
+    border-bottom: 1px solid #ddd; /* Đường viền dưới của khung người dùng */
+    padding-bottom: 10px; /* Khoảng cách dưới khung người dùng */
+}
+
+/* CSS cho phần nội dung của bài viết */
+.status-field p {
+    font-size: 16px; /* Kích thước chữ của nội dung bài viết */
+    line-height: 1.5; /* Khoảng cách giữa các dòng */
+    color: #333; /* Màu chữ của nội dung bài viết */
+}
         </style>
     </head>
 
@@ -335,12 +379,28 @@
                     FoodAdManager fam = new FoodAdManager();
                     LikePostManager lpm = new LikePostManager();
                     ArrayList<FoodAd> fas = FoodAdDao.getAllFoodAds();
-
+                    ArrayList<LikePost> likeP = new ArrayList<LikePost>();
+                    int accId = -1;
+                    if (session.getAttribute("account") != null) {
+                        // Lấy accountId của người dùng từ session
+                        Account account = (Account) session.getAttribute("account");
+                        likeP = lpm.getLikePostByAccountId(account.getAccount_id());
+                        accId = account.getAccount_id();
+                    }
                     if (fas != null) {
                         for (FoodAd foodAd : fas) {
+                            Boolean check = false;
                             // Assume each FoodAd has a related Account object
                             Account diner = foodAd.getDinner_manager();
                             int countLike = lpm.CountLikeByPostId(foodAd.getAd_id());
+                            if (likeP != null) {
+                                for (LikePost lp : likeP) {
+                                    if (lp.getPost().getAd_id() == foodAd.getAd_id()) {
+                                        check = true;
+                                        break;
+                                    }
+                                }
+                            }
 
 
                 %>
@@ -365,20 +425,24 @@
                     </div>
                     <div class="post-reaction">
                         <div class="activity-icons">
-                            <div><img src="images/like.png" alt=""><%= countLike%></div>
-                            <!--                            <div><img src="images/comments.png" alt="">52</div>
-                                                        <div><img src="images/share.png" alt="">35</div>-->
+                            <div>
+                                <img src="images/like.png" alt=""
+                                     data-post-id="<%= foodAd.getAd_id()%>"
+                                     class="<%= check ? "unlike-btn" : "like-btn"%>"
+                                     data-liked="<%= check ? "true" : "false"%>">
+                                <span class="like-count"><%= countLike%></span>
+                            </div>
                         </div>
 
                     </div>
                     <div class="post-profile-picture">
-                          <a href="CustomerSocialDetailPage?ad_id=<%= foodAd.getAd_id() %>&check=false" class="btn-link">Xem thông tin chi tiết</a>
+                        <a href="CustomerSocialDetailPage?ad_id=<%= foodAd.getAd_id()%>&check=false" class="btn-link">Xem thông tin chi tiết</a>
                     </div>
 
                 </div>
                 <%
-                            }
-                        }%>  
+                        }
+                    }%>  
 
 
                 <button type="button" class="btn-LoadMore" onclick="LoadMoreToggle()">Load More</button>
@@ -419,9 +483,9 @@
                     <span><%= diner.getName()%></span>
                 </div>
                 <%
-                }
-            }
-        } else { %>
+                        }
+                    }
+                } else { %>
                 <div class="heading-link">
                     <h4>You are not following any diners.</h4>
                 </div>
@@ -433,5 +497,46 @@
         <!-- footer section -->
 
         <script src="js/function.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script>
+                    $(document).ready(function () {
+                    // Hàm để cập nhật trạng thái của nút like/unlike
+                    function toggleLikeButton(button, liked) {
+                    if (liked) {
+                    button.removeClass('like-btn').addClass('unlike-btn');
+                            button.removeClass('btn').addClass('liked').text('Liked');
+                            button.attr('data-liked', 'true');
+                    } else {
+                    button.addClass('like-btn').removeClass('unlike-btn');
+                            button.addClass('btn').removeClass('liked').text('Like');
+                            button.attr('data-liked', 'false');
+                    }
+                    }
+                    // Xử lý sự kiện nhấn nút like/unlike
+                    $(document).on('click', '.like-btn, .unlike-btn', function () {
+                    var button = $(this);
+                            var postId = button.data('post-id'); // Thay đổi từ 'comment-id' thành 'post-id'
+                            var isLiked = button.attr('data-liked') === 'true';
+                            var action = isLiked ? 'unlike' : 'like';
+                            console.log(postId);
+                            console.log(action);
+                            $.ajax({
+                            type: 'POST',
+                                    url: 'LikePostServlet',
+                                    data: {action: action, postId : postId},
+                                    success: function (response) {
+                                    if (response.status === 'liked') {
+                                    toggleLikeButton(button, true);
+                                    } else if (response.status === 'unliked') {
+                                    toggleLikeButton(button, false);
+                                    } else {
+                                    alert(response.message);
+                                    }
+                                    }
+                            });
+                    }};
+
+
+        </script>
     </body>
 </html>

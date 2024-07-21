@@ -202,9 +202,9 @@
                                 <div class="col-sm-12 col-md-4">
                                     <div class="order-summary">
                                         <div class="order-item">
-                                            <img src="<%=odi.getDish().getPicture()%>" alt="Product Image" class="product-image">
+                                            <img src="<%=odi.getDishPicture()%>" alt="Product Image" class="product-image">
                                             <div class="product-info">
-                                                <a href="CustomerChatPage?idO=<%=od.getOrder_id()%>"><p class="product-name"><%=odi.getDish().getName()%></p></a>
+                                                <a href="#"><p class="product-name"><%=odi.getDishName()%></p></a>
                                                 <p class="product-quantity-price">Số lượng: <%=odi.getQuantity()%> | Giá: <%=odi.getPrice()%>₫</p>
                                             </div>
                                         </div>
@@ -213,7 +213,7 @@
                                             <p>Tổng tiền: <%=totalPrice%>₫</p>
                                         </div>
                                         <div class="order-actions">
-                                            <button class="accept-button" onclick="updateOrderStatus('<%=od.getOrder_id()%>', 'Preparing')">Chấp nhận</button>
+                                            <button class="accept-button" onclick="updateOrderStatus('<%=od.getOrder_id()%>', 'Preparing');sendStatus('Preparing')">Chấp nhận</button>
                                             <button class="cancel-button" onclick="updateOrderStatus('<%=od.getOrder_id()%>', 'Canceled')">Hủy bỏ</button>
                                         </div>
                                     </div>
@@ -239,9 +239,9 @@
                                 <div class="col-sm-12 col-md-4">
                                     <div class="order-summary">
                                         <div class="order-item">
-                                            <img src="<%=odi.getDish().getPicture()%>" alt="Product Image" class="product-image">
+                                            <img src="<%=odi.getDishPicture()%>" alt="Product Image" class="product-image">
                                             <div class="product-info">
-                                                <a href="CustomerChatPage?idO=<%=od.getOrder_id()%>"><p class="product-name"><%=odi.getDish().getName()%></p></a>
+                                                <a href="#"><p class="product-name"><%=odi.getDishName()%></p></a>
                                                 <p class="product-quantity-price">Số lượng: <%=odi.getQuantity()%> | Giá: <%=odi.getPrice()%>₫</p>
                                             </div>
                                         </div>
@@ -251,7 +251,7 @@
                                         </div>
                                         <div class="order-actions">
 
-                                            <button class="accept-button"onclick="updateOrderStatus('<%=od.getOrder_id()%>', 'Ready')">Đã Nấu Xong</button>
+                                            <button class="accept-button"onclick="updateOrderStatus('<%=od.getOrder_id()%>', 'Ready');sendStatus('Ready')">Đã Nấu Xong</button>
                                         </div>
                                     </div>
                                 </div>
@@ -276,9 +276,9 @@
                                 <div class="col-sm-12 col-md-4">
                                     <div class="order-summary">
                                         <div class="order-item">
-                                            <img src="<%=odi.getDish().getPicture()%>" alt="Product Image" class="product-image">
+                                            <img src="<%=odi.getDishPicture()%>" alt="Product Image" class="product-image">
                                             <div class="product-info">
-                                                <a href="CustomerChatPage?idO=<%=od.getOrder_id()%>"><p class="product-name"><%=odi.getDish().getName()%></p></a>
+                                                <a href="#"><p class="product-name"><%=odi.getDishName()%></p></a>
                                                 <p class="product-quantity-price">Số lượng: <%=odi.getQuantity()%> | Giá: <%=odi.getPrice()%>₫</p>
                                             </div>
                                         </div>
@@ -313,9 +313,9 @@
                                 <div class="col-sm-12 col-md-4"> 
                                     <div class="order-summary">
                                         <div class="order-item">
-                                            <img src="<%=odi.getDish().getPicture()%>" alt="Product Image" class="product-image">
+                                            <img src="<%=odi.getDishPicture()%>" alt="Product Image" class="product-image">
                                             <div class="product-info">
-                                                <a href="CustomerChatPage?idO=<%=od.getOrder_id()%>"><p class="product-name"><%=odi.getDish().getName()%></p></a>
+                                                <a href="#"><p class="product-name"><%=odi.getDishName()%></p></a>
                                                 <p class="product-quantity-price">Số lượng: <%=odi.getQuantity()%> | Giá: <%=odi.getPrice()%>₫</p>
                                             </div>
                                         </div>
@@ -349,9 +349,9 @@
                                 <div class="col-sm-12 col-md-4">
                                     <div class="order-summary">
                                         <div class="order-item">
-                                            <img src="<%=odi.getDish().getPicture()%>" alt="Product Image" class="product-image">
+                                            <img src="<%=odi.getDishPicture()%>" alt="Product Image" class="product-image">
                                             <div class="product-info">
-                                                <a href="CustomerChatPage?idO=<%=od.getOrder_id()%>"><p class="product-name"><%=odi.getDish().getName()%></p></a>
+                                                <a href="#"><p class="product-name"><%=odi.getDishName()%></p></a>
                                                 <p class="product-quantity-price">Số lượng: <%=odi.getQuantity()%> | Giá: <%=odi.getPrice()%>₫</p>
                                             </div>
                                         </div>
@@ -385,9 +385,9 @@
                                 <div class="col-sm-12 col-md-4">
                                     <div class="order-summary">
                                         <div class="order-item">
-                                            <img src="<%=odi.getDish().getPicture()%>" alt="Product Image" class="product-image">
+                                            <img src="<%=odi.getDishPicture()%>" alt="Product Image" class="product-image">
                                             <div class="product-info">
-                                                <a href="CustomerChatPage?idO=<%=od.getOrder_id()%>"><p class="product-name"><%=odi.getDish().getName()%></p></a>
+                                                <a href="#"><p class="product-name"><%=odi.getDishName()%></p></a>
                                                 <p class="product-quantity-price">Số lượng: <%=odi.getQuantity()%> | Giá: <%=odi.getPrice()%>₫</p>
                                             </div>
                                         </div>
@@ -412,6 +412,41 @@
             </div>
         </div>
         <jsp:include page="path/footer.jsp"/>
+        <script type="text/javascript">
+            var ws;
+
+            function connect() {
+                ws = new WebSocket("ws://localhost:8080/HungryHub_OrderFood/orderStatus");
+
+                ws.onopen = function () {
+                    console.log("Connected to WebSocket");
+                };
+
+                ws.onmessage = function (event) {
+                    console.log("Received message: " + event.data);
+                };
+
+                ws.onclose = function () {
+                    console.log("Disconnected from WebSocket");
+                };
+            }
+
+            function sendStatus(status) {
+                if (ws && ws.readyState === WebSocket.OPEN) {
+                    const statusData = {
+                        status: status,
+                        shipperId: "1", // Ensure this variable is set correctly in your JSP
+                        shipperName: "mnp" // Ensure this variable is set correctly in your JSP
+                    };
+                    ws.send(JSON.stringify(statusData));
+                } else {
+                    console.log("WebSocket is not connected.");
+                }
+            }
+
+
+            window.onload = connect;
+        </script>
         <script>
             function updateOrderStatus(orderId, newStatus) {
                 var form = document.createElement('form');

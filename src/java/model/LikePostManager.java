@@ -34,7 +34,16 @@ public class LikePostManager {
         }
         return result;
     }
-    
+ 
+     public ArrayList<LikePost> getLikePostByAccountId(int id) {
+        ArrayList<LikePost> likeList = new ArrayList<>();
+        for (LikePost facc : List) {
+            if (id == facc.getUser().getAccount_id()) {
+                likeList.add(facc);
+            }
+        }
+        return likeList;
+    }
     
     public static void main(String[] args) {
         LikePostManager lm = new LikePostManager();
