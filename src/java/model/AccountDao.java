@@ -37,7 +37,7 @@ public class AccountDao {
         int proId, disId;
         Date date_of_birth;
         boolean active_status;
-        String profile_picture;
+        String profile_picture,Background_picture;
         String role;
         ConnectDB db = ConnectDB.getInstance();
         Connection conn = null;
@@ -65,6 +65,7 @@ public class AccountDao {
                 date_of_birth = rs.getDate("date_of_birth");
                 active_status = rs.getBoolean("active_status");
                 profile_picture = rs.getString("profile_picture");
+                Background_picture = rs.getString("BackGround_picture");
                 String maxacthuc = rs.getString("maxacthuc");
                 Timestamp thoigianhieuluc = rs.getTimestamp("thoigianhieuluc");
                 LocalDateTime tghl;
@@ -75,7 +76,7 @@ public class AccountDao {
                 }
                 boolean trangthaixacthuc = rs.getBoolean("trangthaixacthuc");
 
-                Account Acc = new Account(account_id, username, password, name, detail, email, phoneNumber, address, provinces, districts, date_of_birth, active_status, profile_picture, role, maxacthuc, trangthaixacthuc, tghl);
+                Account Acc = new Account(account_id, username, password, name, detail, email, phoneNumber, address, provinces, districts, date_of_birth, active_status, profile_picture,Background_picture, role, maxacthuc, trangthaixacthuc, tghl);
                 AccountList.add(Acc);
             }
         } catch (ClassNotFoundException | SQLException ex) {

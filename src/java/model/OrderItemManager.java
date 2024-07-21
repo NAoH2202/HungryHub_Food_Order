@@ -68,8 +68,9 @@ public class OrderItemManager {
      
     public static void main(String[] args) {
         OrderItemManager om = new OrderItemManager();
-        for(OrderItem o : om.getList()){
-            System.out.println(o);
+        for(OrderItem o : om.getOderItemByOrderId(100001)){
+            System.out.println(o.getPrice());
         }
+        System.out.println(om.getTotalPriceOrderId(100001));
     }
 }

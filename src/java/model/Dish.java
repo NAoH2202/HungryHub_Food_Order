@@ -23,8 +23,22 @@ public class Dish {
     private String priceString;
     private String type;
     private String ingredients;
+    private boolean dislocal;
     private LocalDateTime created_at = LocalDateTime.now();
     private LocalDateTime updated_at = LocalDateTime.now();
+
+    public Dish(int dish_id, Account account, String name, String picture, String description, int price, String priceString, String type, String ingredients, boolean dislocal) {
+        this.dish_id = dish_id;
+        this.account = account;
+        this.name = name;
+        this.picture = picture;
+        this.description = description;
+        this.price = price;
+        this.priceString = priceString;
+        this.type = type;
+        this.ingredients = ingredients;
+        this.dislocal = dislocal;
+    }
 
     public Dish(int dish_id, Account account, String name,String picture, String description, int price, String type, String ingredients) {
         this.dish_id = dish_id;
@@ -98,6 +112,16 @@ public class Dish {
         this.ingredients = ingredients;
     }
 
+    public boolean isDislocal() {
+        return dislocal;
+    }
+
+    public void setDislocal(boolean dislocal) {
+        this.dislocal = dislocal;
+    }
+
+    
+    
     public LocalDateTime getCreated_at() {
         return created_at;
     }

@@ -39,10 +39,8 @@
 
             #container {
                 /*background-color: #ffffcc;*/
+                width: 100%;
                 background-color: #dddddd;
-                display: flex;
-                justify-content: center;
-                align-content: flex-start;
             }
 
             .back-link {
@@ -55,9 +53,8 @@
 
             #content {
                 display: flex;
-                max-width: 1300px;
                 width: 100%;
-                justify-content: space-between;
+                justify-content: center;
             }
 
             #cart {
@@ -75,7 +72,6 @@
             }
 
             #dish {
-                margin-top: 50px;
                 margin-bottom: 50px;
                 background-color: white;
                 width: 70%;
@@ -147,6 +143,19 @@
                 font-size: 1.2rem;
                 margin-top: 20px;
             }
+            .back-arrow {
+                font-size: 20px;
+                cursor: pointer;
+                color: black;
+            }
+            
+            .back-arrow span:hover {
+                color: blue;
+            }
+
+            .back-arrow span {
+                margin-left: 8px;
+            }
         </style>
     </head>
     <body>
@@ -159,8 +168,8 @@
 
         <jsp:include page="path/header.jsp"/>
         <div id="container">
+            <a href="CustomerDinerPage?id=<%=dish.getAccount().getAccount_id()%>" class="back-arrow">&#8592; <span>Quay lại</span></a>
             <div id="content">
-                <a href="CustomerDinerPage?id=<%=dish.getAccount().getAccount_id()%>" class="back-link">BACK</a>
                 <div id="dish">
 
                     <div style="display: flex;">
@@ -354,17 +363,6 @@
                                 }
                             }%>
                     </div>
-                </div>
-                <div id="cart">
-                    <h2>Cart</h2>
-                    <div id="cartContent"></div>
-                    <form action="OrderServlet" method="post" id="orderForm">
-                        <input type="hidden" id="dishId" name="dishId" value="<%=id%>">
-                        <input type="hidden" id="dishQuantity" name="dishQuantity">
-                        <input type="hidden" id="totalCost" name="totalCost">
-                        <input type="hidden" id="accountId" name="accountId" value="<%=Diner%>">
-                        <input type="submit" value="Order">
-                    </form>
                 </div>
             </div>
         </div>
@@ -581,7 +579,7 @@
                         data: {action: action, commentId: commentId},
                         success: function (response) {
                             if (response.status === 'reply') {
-                                var replyInput = '<div><form action="RepCommentServlet" class="reply-input" method="post"><input type="hidden" name="dishId" value="<%=id%>"><input type="hidden" name="status" value="dish"><input type="hidden" name="commentId" value="' + commentId + '"><textarea class="reply-comment" name="replyContent" placeholder="Nhập suy nghĩ của bạn..." ></textarea><button class="submit-reply-btn" type="submit">Submit</button></form></div>';
+                                var replyInput = '<div><form action="RepCommentServlet" class="reply-input" method="post"><input type="hidden" name="dishId" value="<%=id%>"><input type="hidden" name="status" value="dish"><input type="hidden" name="commentId" value="' + commentId + '"><textarea class="reply-comment" name="replyContent" placeholder="Nhập suy nghĩ của bạn..." ></textarea><button class="submit-reply-btn" type="submit">Gửi</button></form></div>';
                                 $('button[data-rep-comment-id="' + commentId + '"]').removeClass('rep-btn').addClass('rm-rep-btn');
                                 $('div[data-rep-comment-id="' + commentId + '"]').append(replyInput);
                             } else if (response.status === 'rm-reply') {
@@ -634,6 +632,15 @@
                         if (response.status === 'notLoginYet') {
                             alert(response.message);
                         } else {
+                            var notificationDot = document.querySelector('.notification-dot.cart');
+
+                            if (!notificationDot) {
+                                // Nếu chưa có notification-dot cart, thêm nó vào
+                                var iconContainer = document.querySelector('.icon_container');
+                                var notificationSpan = document.createElement('span');
+                                notificationSpan.className = 'notification-dot cart';
+                                iconContainer.appendChild(notificationSpan);
+                            }
                             var cartItemsContainer = document.querySelector('.cart-items');
                             cartItemsContainer.innerHTML = '';
                             // Thêm nội dung mới vào cart-items

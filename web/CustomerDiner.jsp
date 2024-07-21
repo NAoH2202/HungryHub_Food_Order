@@ -31,7 +31,7 @@ Author     : MSIGAMING
         <meta name="author" content="" />
         <link rel="shortcut icon" href="images/favicon.png" type="">
 
-        <title> HungryHub </title>
+        <title>Thông Tin Nhà Hàng</title>
 
         <!-- bootstrap core css -->
         <link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
@@ -66,57 +66,80 @@ Author     : MSIGAMING
             }
 
             .restaurant {
-                display: flex;
-                justify-content: center;
-                margin: 20px 0;
-                width: 100%;
-            }
-
-
-            .restaurant-detail {
-                display: flex;
-                flex-direction: row;
-                background-color: #fff;
-                border-radius: 10px;
-                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-                margin: 20px;
-                overflow: hidden;
-                width: 100%;
+                width: 88%;
                 max-width: 1300px;
+                margin: 20px auto;
+                background-color: #fff;
+                border-radius: 8px;
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+                overflow: hidden;
+                font-family: Arial, sans-serif;
             }
 
-            .restaurant-img {
-                width: 35%;
-                height: 300px;
+            .restaurant-bg {
+                width: 100%;
+                height: 200px;
                 object-fit: cover;
             }
 
-            .restaurant-info {
+            .restaurant-detail {
+                display: flex;
+                align-items: center;
                 padding: 20px;
-                flex-grow: 1;
+                position: relative;
+                margin-left: 50px;
+                top: -140px;
             }
 
+            .restaurant-img {
+                width: 150px;
+                height: 150px;
+                border-radius: 50%;
+                border: 5px solid #fff;
+                object-fit: cover;
+                margin-right: 20px;
+            }
+
+            .restaurant-info {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                position: relative;
+                margin-left: 50px;
+                top: 130px;
+            }
             .restaurant-name {
-                font-size: 4em;
+                font-size: 2em;
                 color: #333;
                 margin-bottom: 10px;
             }
-
+            .restaurant-description{
+                margin-bottom: 20px;
+                width: 900px;
+                display: -webkit-box;
+                -webkit-line-clamp: 3;
+                -webkit-box-orient: vertical;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                font-size: 1.2em;
+                color: #666;
+            }
             .restaurant-address,
             .restaurant-rating,
             .restaurant-opening-time {
                 font-size: 1.2em;
                 color: #666;
-                margin-bottom: 10px;
+                margin-bottom: 5px;
             }
 
-            .restaurant-address:before,
-            .restaurant-rating:before,
-            .restaurant-opening-time:before {
-                content: attr(data-label);
-                font-weight: bold;
-                color: #333;
-                margin-right: 5px;
+            .restaurant-address::before {
+                content: "📍 ";
+            }
+            .restaurant-rating::before {
+                content: "⭐ ";
+            }
+            .restaurant-opening-time::before {
+                content: "⏰ ";
             }
 
             .restaurant-rating {
@@ -140,6 +163,7 @@ Author     : MSIGAMING
                 padding-bottom: 20px
             }
             #cart {
+                border-radius: 8px;
                 background-color: white;
                 box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
                 width: 30%;
@@ -153,6 +177,7 @@ Author     : MSIGAMING
             }
 
             #dish {
+                border-radius: 8px;
                 margin-top: 0px;
                 margin-bottom: 50px;
                 background-color: white;
@@ -247,6 +272,19 @@ Author     : MSIGAMING
                 box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
                 transform: translateY(-2px);
             }
+            .back-arrow {
+                font-size: 20px;
+                cursor: pointer;
+                color: black;
+            }
+            
+            .back-arrow span:hover {
+                color: blue;
+            }
+
+            .back-arrow span {
+                margin-left: 8px;
+            }
         </style>
     </head>
 
@@ -266,21 +304,20 @@ Author     : MSIGAMING
             }
             AccountManager am = new AccountManager();
             Account diner = am.getAccountById(id);
-            DishManager em = new DishManager();
-            Dish dish = em.getDishById(id);
-            int accountId = dish.getAccount().getAccount_id();
-
+            CommentManager cm = new CommentManager();
         %>
         <div style="background-color: #dddddd">
-            <a href="index.jsp" class="back-link">BACK</a>
+            <a href="index.jsp" class="back-arrow">&#8592; <span>Quay lại</span></a>
             <div class="restaurant">
+                <img src="<%= diner.getBackground_picture()%>" class="restaurant-bg" alt="Restaurant Image"/>
                 <section class="restaurant-detail">
                     <img src="<%= diner.getProfile_picture()%>" class="restaurant-img" alt="Restaurant Image"/>
                     <div class="restaurant-info">
-                        <h1 class="restaurant-name"><%=diner.getName()%></h1>
-                        <div class="restaurant-address"><%=diner.getAddress()%></div>
-                        <div class="restaurant-rating">Rating</div>
-                        <div class="restaurant-opening-time">Opening Time</div>   
+                        <div class="restaurant-name"><%=diner.getName()%></div>
+                        <div class="restaurant-description"><%=diner.getDetail()%></div>
+                        <div class="restaurant-address"><%=diner.getAddress()%> - <%= diner.getDistrict()!=null?diner.getDistrict().getName(): "Chưa thiết lập"%> - <%= diner.getProvinces()!=null? diner.getProvinces().getName(): "Chưa thiết lập"%></div>
+                        <div class="restaurant-rating">Rating: <%=cm.ratingTotal(id)%> / 5★</div>
+                        <div class="restaurant-opening-time">Opening Time: overtime</div>   
                     </div> 
                 </section>
             </div>
@@ -365,7 +402,6 @@ Author     : MSIGAMING
                                     likeList = lm.getLikesByAccountId(account.getAccount_id());
                                     accId = account.getAccount_id();
                                 }
-                                CommentManager cm = new CommentManager();
                                 for (Comment comment : cm.getList()) {
                                     Boolean check = false;
                                     if (comment.getDiner() != null && comment.getDiner().getAccount_id() == id) {
@@ -497,7 +533,9 @@ Author     : MSIGAMING
                             </form>
                         </div>
                         <div class="voucher-container">
-                            <form action="#" method="GET" >
+                            <form action="CustomerDinerVoucherPage" method="POST" >
+                                <input type="hidden" name="check" value="false">
+                                <input type="hidden" name="dinerId" value="<%= id %>" >
                                 <button type="submit" class="btn-diner">Voucher của quán</button>
                             </form>
                         </div>
@@ -720,7 +758,7 @@ Author     : MSIGAMING
                         data: {action: action, commentId: commentId},
                         success: function (response) {
                             if (response.status === 'reply') {
-                                var replyInput = '<div><form action="RepCommentServlet" class="reply-input" method="post"><input type="hidden" name="dishId" value="<%=id%>"><input type="hidden" name="status" value="dish"><input type="hidden" name="commentId" value="' + commentId + '"><textarea class="reply-comment" name="replyContent" placeholder="Nhập suy nghĩ của bạn..." ></textarea><button class="submit-reply-btn" type="submit">Submit</button></form></div>';
+                                var replyInput = '<div><form action="RepCommentServlet" class="reply-input" method="post"><input type="hidden" name="dinerId" value="<%=id%>"><input type="hidden" name="status" value="comment"><input type="hidden" name="commentId" value="' + commentId + '"><textarea class="reply-comment" name="replyContent" placeholder="Nhập suy nghĩ của bạn..." ></textarea><button class="submit-reply-btn" type="submit">Gửi</button></form></div>';
                                 $('button[data-rep-comment-id="' + commentId + '"]').removeClass('rep-btn').addClass('rm-rep-btn');
                                 $('div[data-rep-comment-id="' + commentId + '"]').append(replyInput);
                             } else if (response.status === 'rm-reply') {

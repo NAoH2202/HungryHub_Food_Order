@@ -16,8 +16,8 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author lenovo
  */
-@WebServlet(name = "OrderConfirmationPage", urlPatterns = {"/OrderConfirmationPage"})
-public class OrderConfirmationPage extends HttpServlet {
+@WebServlet(name = "CustomerDinerVoucherPage", urlPatterns = {"/CustomerDinerVoucherPage"})
+public class CustomerDinerVoucherPage extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -36,10 +36,10 @@ public class OrderConfirmationPage extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet OrderConfirmaionPage</title>");            
+            out.println("<title>Servlet CustomerDinerVoucherPage</title>");            
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet OrderConfirmaionPage at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet CustomerDinerVoucherPage at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -48,21 +48,13 @@ public class OrderConfirmationPage extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.getRequestDispatcher("orderConfirmation.jsp").forward(request, response);
+        request.getRequestDispatcher("CustomerDinerVoucher.jsp").forward(request, response);
     }
 
-    /**
-     * Handles the HTTP <code>POST</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.getRequestDispatcher("orderConfirmation.jsp").forward(request, response);
+        request.getRequestDispatcher("CustomerDinerVoucher.jsp").forward(request, response);
     }
 
     /**

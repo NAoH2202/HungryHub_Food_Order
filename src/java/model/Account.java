@@ -25,6 +25,7 @@ public class Account {
     private Districts district;
     private Date date_of_birth;
     private boolean active_status;
+    private String background_picture;
     private String profile_picture;
     private String role;
     private LocalDateTime created_at = LocalDateTime.now();
@@ -33,7 +34,7 @@ public class Account {
     private boolean trangthaixacthuc;
     private LocalDateTime thoigianhieuluc;
 
-    public Account(int account_id, String username, String password, String name, String Detail, String email, String phoneNumber, String address, Provinces provinces, Districts district, Date date_of_birth, boolean active_status, String profile_picture, String role, String maxacthuc, boolean trangthaixacthuc, LocalDateTime thoigianhieuluc) {
+    public Account(int account_id, String username, String password, String name, String Detail, String email, String phoneNumber, String address, Provinces provinces, Districts district, Date date_of_birth, boolean active_status, String profile_picture,String Background_picture, String role, String maxacthuc, boolean trangthaixacthuc, LocalDateTime thoigianhieuluc) {
         this.account_id = account_id;
         this.username = username;
         this.password = password;
@@ -47,6 +48,7 @@ public class Account {
         this.date_of_birth = date_of_birth;
         this.active_status = active_status;
         this.profile_picture = profile_picture;
+        this.background_picture = Background_picture;
         this.role = role;
         this.maxacthuc = maxacthuc;
         this.trangthaixacthuc = trangthaixacthuc;
@@ -205,6 +207,16 @@ public class Account {
         this.profile_picture = profile_picture;
     }
 
+    public String getBackground_picture() {
+        return background_picture;
+    }
+
+    public void setBackground_picture(String background_picture) {
+        this.background_picture = background_picture;
+    }
+
+    
+    
     public String getRole() {
         return role;
     }

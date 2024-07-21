@@ -1,3 +1,8 @@
+<%@page import="util.CheckLocation"%>
+<%@page import="model.Voucher"%>
+<%@page import="model.VoucherManager"%>
+<%@page import="java.text.NumberFormat"%>
+<%@page import="java.util.Locale"%>
 <%@page import="model.Districts"%>
 <%@page import="model.Provinces"%>
 <%@page import="controller.AddToCartServlet"%>
@@ -122,6 +127,112 @@
             .btn-success:hover {
                 background-color: darkgreen;
             }
+            .order-item {
+                display: flex;
+                align-items: center;
+                padding: 10px 0;
+            }
+
+            .item_container {
+                display: flex;
+                justify-content: space-between;
+                width: 100%;
+                margin-bottom: 20px;
+                border-bottom: 1px solid #eaeaea;
+            }
+
+            .order-item img {
+                width: 100px;
+                height: 100px;
+                border-radius: 8px;
+                margin-right: 20px;
+            }
+
+            .item-details {
+                flex-grow: 1;
+            }
+
+            .item-name {
+                font-weight: bold;
+                color: #333;
+                font-size: 1.2em;
+            }
+
+            .item-description {
+                color: #777;
+                margin: 5px 0;
+                overflow: hidden;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                max-width: 500px; /* Bạn có thể điều chỉnh giá trị này */
+            }
+
+            .item-price {
+                color: #d9534f;
+                font-weight: bold;
+            }
+            .title{
+                font-size:  20px;
+            }
+            .price{
+                text-align: right;
+            }
+            .input-container {
+                display: flex;
+                align-items: center;
+                background-color: #fff;
+                border-radius: 5px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                padding: 10px;
+            }
+
+            #myInput {
+                width: 60%;
+                border-radius: 4px;
+                font-size: 16px;
+                flex: 1;
+            }
+            .input-voucher{
+                display: flex;
+                align-items: center;
+                background-color: #fff;
+                border-radius: 5px;
+                padding: 10px;
+            }
+            .input-voucher label {
+                margin-right: 10px;
+                font-size: 16px;
+                color: #333;
+                white-space: nowrap;
+            }
+            #addButton {
+                width: 200px;
+                background-color: #28a745;
+                border: none;
+                color: white;
+                padding: 5px 20px;
+                font-size: 16px;
+                cursor: pointer;
+                margin-left: 10px;
+            }
+
+            #addButton:hover {
+                background-color: #218838;
+            }
+            .notification-bar {
+                background-color: #ffcc00;
+                color: white;
+                padding: 5px;
+                padding-left: 10px;
+                /*text-align: center;*/
+                font-size: 14px;
+                width: auto;
+                max-width: 70%;
+                border-radius: 5px;
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                z-index: 1000;
+                margin-top: 40px;
+            }
         </style>
     </head>
     <body>
@@ -136,7 +247,6 @@
                 return;
             }
             Account account = (Account) request.getSession().getAttribute("account");
-
         %>
         <div class="center-container">
             <div class="card">
@@ -152,55 +262,91 @@
                 <%
                     int OrderPrice = 0;
                     int totalPrice = 0;
+                    int totalShipFee = 0;
                     CartItemManager cim = new CartItemManager();
                     ArrayList<CartItem> ciList = cim.getCartItemByAccountId(account.getAccount_id());
                     ArrayList<Account> dinerList = AddToCartServlet.getUniqueDinersFromCartItems(ciList);
                     ArrayList<CartItem> ciListByDiner;
+                    NumberFormat numberFormat = NumberFormat.getNumberInstance(Locale.US);
+                    VoucherManager vm = new VoucherManager();
+                    boolean checkLocation = false;
                     for (Account diner : dinerList) {
+                        if (CheckLocation.CheckDinerLocation(diner, account)) {
+                            totalShipFee += 15000;
+                        } else {
+                            totalShipFee += 30000;
+                        }
                 %>
-                <h2><%=diner.getName()%></h2>
-                <table class="center-table">
-                    <thead>
-                        <tr>
-                            <th>Tên món ăn</th>
-                            <th>Số lượng</th>
-                            <th>Giá</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <%
-                            ciListByDiner = AddToCartServlet.getCartItemsByDiner(diner.getAccount_id(), ciList);
-                            for (CartItem ci : ciListByDiner) {
-                                OrderPrice += ci.getDish().getPrice() * ci.getQuantity();
-                        %>
-                        <tr>
-                            <td><%= ci.getDish().getName()%></td>
-                            <td><%= ci.getQuantity()%></td>
-                            <td><%=ci.getDish().getPrice() * ci.getQuantity()%></td>
-                        </tr>
-                        <%
-                            }%>
-                    </tbody>
-                </table>
-                <p class="total-cost"><b>Tổng :</b> <%=OrderPrice%> VNĐ</p>
+                <div class="title"><b>Tên cửa hàng:</b> <%=diner.getName()%></div>
+
+                <%
+                    ciListByDiner = AddToCartServlet.getCartItemsByDiner(diner.getAccount_id(), ciList);
+                    for (CartItem ci : ciListByDiner) {
+                        OrderPrice += ci.getDish().getPrice() * ci.getQuantity();
+                        checkLocation = !CheckLocation.CheckDishLocation(ci.getDish(), account);
+                        if (!CheckLocation.CheckDishLocation(ci.getDish(), account)) {
+                %>
+                <div class="notification-bar"><%= ci.getDish().getName()%> là món ăn không phù hợp để giao ngoại thành.</div>
+                <%
+                    }
+                %>
+                <div class="item_container">
+                    <div class="order-item">
+                        <img src="<%= ci.getDish().getPicture()%>" alt="Pizza Margherita">
+                        <div class="item-details">
+                            <div class="item-name"><%= ci.getDish().getName()%></div>
+                            <div class="item-description">Mô tả: <%= ci.getDish().getDescription()%></div>
+                            <div class="item-price">Giá: <%= numberFormat.format(ci.getDish().getPrice())%> ₫</div>
+                            <div class="item-quantity">Số lượng: <%= ci.getQuantity()%></div>
+                        </div>
+                    </div>
+                </div>
+
+                <%
+                    }
+                    String voucherCode;
+                    int voucherId;
+                    if (session.getAttribute("voucherId_" + diner.getAccount_id()) != null && session.getAttribute("voucherCode_" + diner.getAccount_id()) != null) {
+                        voucherId = (int) session.getAttribute("voucherId_" + diner.getAccount_id());
+                        voucherCode = (String) session.getAttribute("voucherCode_" + diner.getAccount_id());
+                    } else {
+                        voucherId = -1;
+                        voucherCode = "";
+                    }
+                    Voucher voucher = vm.getVoucherById(voucherId);
+                    Double percent = voucher == null ? 0 : voucher.getDiscount_percentage() / 100.0;
+                    int discountAmount = (int) Math.round(OrderPrice * percent);
+                    OrderPrice = OrderPrice - discountAmount;
+                %>
+                <div class="input-voucher">
+                    <label for="myInput" > Mã giảm giá : </label>
+                    <input type="text" id="myInput" value="<%= voucherCode%>" disabled>
+                    <form action="CustomerDinerVoucherPage" method="Post" style="margin: 0;">
+                        <input type="hidden" name="dinerId" value="<%= diner.getAccount_id()%>">
+                        <input type="hidden" name="check" value="true">
+                        <button id="addButton">Thêm mã</button>
+                    </form>
+                </div>
+                <div class="price" style="margin-bottom: 0">
+                    <p class="total-cost"><b>Tổng :</b> <%=numberFormat.format(OrderPrice)%> ₫</p>
+                </div>
                 <%totalPrice += OrderPrice;
                         OrderPrice = 0;
                     }%>
-                <!-- Display total cost of the order -->
-                <p class="total-cost"><b>Tổng giá tiền:</b>   <%=totalPrice%> VNĐ</p>
+                <div class="price">
+                    <p class="total-cost"><b>Tổng tiền ship:</b> <%= numberFormat.format(totalShipFee)%> ₫</p>
+                    <p class="total-cost"><b>Tổng giá tiền:</b> <%= numberFormat.format(totalPrice+totalShipFee)%> ₫</p>
 
-                <p><b>Tên người nhận:   </b> <%=account.getName()%></p>
+                    <p><b>Tên người nhận:   </b> <%=account.getName()%></p>
+                </div>
                 <%
                     String address = account.getAddress();
-                    Provinces provinces = account.getProvinces(); 
-                    Districts district = account.getDistrict(); 
-                    if (address == null || provinces == null || district == null) {
+                    Provinces provinces = account.getProvinces();
+                    Districts district = account.getDistrict();
+                    if (address == null || provinces == null || district == null || checkLocation) {
                 %>
                 <div class="alert alert-danger" role="alert">
-                    Vui lòng cập nhật đầy đủ thông tin địa chỉ trước khi đặt hàng.
-                    <%= address != null ? address : ""%>
-                    <%= provinces != null ? provinces.getName() : ""%>
-                    <%= district != null ? district.getName() : ""%>
+                    Có lẽ bạn chưa nhập địa chỉ trước khi đặt hàng hoặc món ăn không phù hợp.
                 </div>
                 <%
                 } else {

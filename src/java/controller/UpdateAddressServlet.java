@@ -43,7 +43,7 @@ public class UpdateAddressServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet UpdateAddressServlet</title>");            
+            out.println("<title>Servlet UpdateAddressServlet</title>");
             out.println("</head>");
             out.println("<body>");
             out.println("<h1>Servlet UpdateAddressServlet at " + request.getContextPath() + "</h1>");
@@ -62,33 +62,43 @@ public class UpdateAddressServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        
+
         ProvincesManager pm = new ProvincesManager();
         DistrictsManager dim = new DistrictsManager();
         HttpSession session = request.getSession();
         Account acc = (Account) session.getAttribute("account");
-        
+
         int city = Integer.parseInt(request.getParameter("city"));
         Provinces provinces = pm.getProvincesById(city);
         int districtid = Integer.parseInt(request.getParameter("district"));
         Districts district = dim.getDistrictById(districtid);
         String address = request.getParameter("address");
-        boolean order = "true".equals(request.getParameter("order"));
-        
+        boolean order = false;
+        if (request.getParameter("order") != null) {
+            order = "true".equals(request.getParameter("order"));
+        }
+        boolean again = false;
+        if (request.getParameter("again") != null) {
+            again = "true".equals(request.getParameter("again"));
+        }
+        int id = 0;
+        if (request.getParameter("odid") != null) {
+            id = Integer.parseInt(request.getParameter("odid"));
+        }
         acc.setAddress(address);
         acc.setProvinces(provinces);
         acc.setDistrict(district);
-        
+
         AccountDao.updateAccountLocation(acc.getAccount_id(), city, districtid, address);
         session.setAttribute("account", acc);
-        if(order){
+        if (order) {
             response.sendRedirect("OrderConfirmationPage");
-        }
-        else{
+        } else if (again) {
+            response.sendRedirect("CustomerOrderAgainPage?id=" + id);
+        } else {
             response.sendRedirect("AccountPage");
         }
     }
-
 
     @Override
     public String getServletInfo() {

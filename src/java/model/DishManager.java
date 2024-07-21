@@ -59,10 +59,19 @@ public class DishManager {
         }
     }
     public boolean deleteDish(int dishId) {
-        String sql = "DELETE FROM Dish WHERE Dish_id = ?";
+        String sql = """
+                     DELETE FROM Likes WHERE CommentID IN (SELECT comment_id FROM Comment WHERE dish_id = ?);
+                     DELETE FROM LikeReps WHERE CommentID IN (SELECT replycomment_id FROM ReplyComment WHERE comment_id IN (SELECT comment_id FROM Comment WHERE dish_id = ?));
+                     DELETE FROM ReplyComment WHERE comment_id IN (SELECT comment_id FROM Comment WHERE dish_id = ?);
+                     DELETE FROM Comment WHERE dish_id = ?;
+                     DELETE FROM Dish WHERE dish_id = ?;""";
         try (Connection conn = ConnectDB.getInstance().openConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setInt(1, dishId);
+            pstmt.setInt(2, dishId);
+            pstmt.setInt(3, dishId);
+            pstmt.setInt(4, dishId);
+            pstmt.setInt(5, dishId);
             int rowsAffected = pstmt.executeUpdate();
 
             // Xóa thành công nếu có ít nhất một dòng bị ảnh hưởng

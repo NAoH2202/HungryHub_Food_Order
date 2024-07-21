@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-package Path;
+package controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -11,13 +11,14 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
  * @author lenovo
  */
-@WebServlet(name = "OrderConfirmationPage", urlPatterns = {"/OrderConfirmationPage"})
-public class OrderConfirmationPage extends HttpServlet {
+@WebServlet(name = "SaveVoucherToSessionServlet", urlPatterns = {"/SaveVoucherToSessionServlet"})
+public class SaveVoucherToSessionServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -36,10 +37,10 @@ public class OrderConfirmationPage extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet OrderConfirmaionPage</title>");            
+            out.println("<title>Servlet SaveVoucherToSessionServlet</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet OrderConfirmaionPage at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet SaveVoucherToSessionServlet at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -48,21 +49,30 @@ public class OrderConfirmationPage extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.getRequestDispatcher("orderConfirmation.jsp").forward(request, response);
+        processRequest(request, response);
     }
 
-    /**
-     * Handles the HTTP <code>POST</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.getRequestDispatcher("orderConfirmation.jsp").forward(request, response);
+        String dinerId = request.getParameter("dinerId");
+        String voucherIdString = request.getParameter("voucherId");
+        String voucherCode = request.getParameter("code");
+
+        if (voucherIdString != null && voucherCode != null) {
+            try {
+                int voucherId = Integer.parseInt(voucherIdString);
+                HttpSession session = request.getSession();
+                session.setAttribute("voucherId_" + dinerId, voucherId);
+                session.setAttribute("voucherCode_" + dinerId, voucherCode);
+            } catch (NumberFormatException e) {
+                // Xử lý lỗi chuyển đổi số
+                e.printStackTrace();
+            }
+        }
+
+        // Chuyển hướng đến trang JSP cần hiển thị hoặc xử lý tiếp
+        response.sendRedirect("OrderConfirmationPage");
     }
 
     /**

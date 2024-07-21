@@ -118,6 +118,12 @@
                     <% if ("true".equals(request.getParameter("order"))) {%>
                     <input type="hidden" name="order" value="<%=request.getParameter("order")%>">
                     <% } %>
+                    <% if ("true".equals(request.getParameter("again"))) {%>
+                    <input type="hidden" name="again" value="<%=request.getParameter("again")%>">
+                    <% } %>
+                    <% if (request.getParameter("odid")!=null) {%>
+                    <input type="hidden" name="odid" value="<%=request.getParameter("odid")%>">
+                    <% } %>
 
                     <div class="form-group-address">
                         <label for="city">Thành Phố:</label>
