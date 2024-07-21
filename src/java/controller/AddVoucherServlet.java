@@ -37,7 +37,7 @@ public class AddVoucherServlet extends HttpServlet {
             // Tạo đối tượng Voucher mới
             Timestamp validFromTimestamp = Timestamp.valueOf(validFrom.atStartOfDay());
             Timestamp validToTimestamp = Timestamp.valueOf(validTo.atStartOfDay());
-            Voucher newVoucher = new Voucher(0, code, discountPercentage, validFromTimestamp, validToTimestamp, account);
+            Voucher newVoucher = new Voucher(1, code, discountPercentage, validToTimestamp, validToTimestamp, account);
 
             // Lấy hoặc tạo mới VoucherManager từ application scope
             VoucherManager vm = (VoucherManager) getServletContext().getAttribute("voucherManager");

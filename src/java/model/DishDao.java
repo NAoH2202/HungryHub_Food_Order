@@ -41,9 +41,10 @@ public class DishDao {
                 int price = rs.getInt("price");
                 String type = rs.getString("type");
                 String ingredients = rs.getString("ingredients");
+                boolean dislocal = rs.getBoolean("dislocal");
                 LocalDateTime created_at = rs.getTimestamp("created_at").toLocalDateTime();
                 LocalDateTime updated_at = rs.getTimestamp("updated_at").toLocalDateTime();
-                Dish dish = new Dish(dish_id, account, name,picture, description, price, type, ingredients);
+                Dish dish = new Dish(dish_id, account, name, picture, description, price, picture, type, ingredients, dislocal);
                 dish.setCreated_at(created_at);
                 dish.setUpdated_at(updated_at);
 

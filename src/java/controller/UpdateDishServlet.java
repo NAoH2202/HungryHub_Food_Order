@@ -49,6 +49,7 @@ public class UpdateDishServlet extends HttpServlet {
         String ingredients = null;
         String filename = null;
         int dishId = -1;
+        boolean dislocal = false;
 
         // Tạo một nhà máy cho các mục tệp dựa trên đĩa
         DiskFileItemFactory factory = new DiskFileItemFactory();
@@ -76,13 +77,17 @@ public class UpdateDishServlet extends HttpServlet {
                             description = fieldValue;
                             break;
                         case "price":
-                            price = Integer.parseInt(fieldValue);;
+                            price = Integer.parseInt(fieldValue);
+                            ;
                             break;
                         case "type":
                             type = fieldValue;
                             break;
                         case "ingredients":
                             ingredients = fieldValue;
+                            break;
+                        case "dislocal":
+                            dislocal = true; // Nếu checkbox được chọn, đặt giá trị là true
                             break;
                     }
                 } else {
@@ -109,6 +114,7 @@ public class UpdateDishServlet extends HttpServlet {
                     }
                 }
             }
+            
         } catch (Exception ex) {
             Logger.getLogger(UpdateDishServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -124,6 +130,7 @@ public class UpdateDishServlet extends HttpServlet {
                 currentDish.setPrice(price);
                 currentDish.setType(type);
                 currentDish.setIngredients(ingredients);
+                currentDish.setDislocal(dislocal);
                 if (filename != null && !filename.isEmpty()) {
                     currentDish.setPicture(filename);
                 } else {
@@ -137,6 +144,8 @@ public class UpdateDishServlet extends HttpServlet {
                 // Thiết lập thông báo kết quả
                 if (isUpdated) {
                     request.setAttribute("message", "Dish updated successfully!");
+                    Dish updatedDish = dishManager.getDishById(dishId); // Lấy thông tin món ăn đã cập nhật
+                    request.setAttribute("dish", updatedDish); // Đặt món ăn đã cập nhật vào thuộc tính request
                 } else {
                     request.setAttribute("message", "Failed to update dish. Please try again.");
                 }

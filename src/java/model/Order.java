@@ -22,7 +22,7 @@ public class Order {
     private boolean payment_status;
     private String payment_method;
     private double total_price;
-    private String reason;
+    private String reason; 
     private LocalDateTime created_at = LocalDateTime.now();
     private LocalDateTime updated_at = LocalDateTime.now();
 

@@ -38,6 +38,7 @@ public class AddNewDishServlet extends HttpServlet {
             String description = null;
             String ingredients = null;
             String picture = null;
+            boolean dislocal = false;
 
             // Get current logged-in account from session
             HttpSession session = request.getSession();
@@ -80,6 +81,9 @@ public class AddNewDishServlet extends HttpServlet {
                             case "ingredients":
                                 ingredients = fieldValue;
                                 break;
+                                 case "dislocal":
+                                dislocal = "on".equals(fieldValue); // Checkbox value is "on" if checked
+                                break;
                         }
                     } else {
                         // Process uploaded file (image)
@@ -105,8 +109,8 @@ public class AddNewDishServlet extends HttpServlet {
                 }
 
                 // Create a new Dish object with the parsed data
-                Dish newDish = new Dish(0, currentAccount, name, picture, description, price, type, ingredients);
-
+//                Dish newDish = new Dish(0, currentAccount, name, picture, description, price, type, ingredients);
+                Dish newDish = new Dish(0, currentAccount, name, picture, description, price, picture, type, ingredients, dislocal);
                 // Add the new dish to the database
                 DishManager dishManager = new DishManager();
                 dishManager.addDish(newDish);

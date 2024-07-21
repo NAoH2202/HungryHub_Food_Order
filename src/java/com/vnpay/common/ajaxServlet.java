@@ -22,6 +22,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import model.OrderDao;
 
 /**
  *
@@ -108,6 +109,17 @@ public class ajaxServlet extends HttpServlet {
         job.addProperty("data", paymentUrl);
         Gson gson = new Gson();
         resp.getWriter().write(gson.toJson(job));
+//        int orderId = Integer.parseInt(req.getParameter("orderId"));
+//        boolean paymentStatus = true; // Assume payment is successful
+//
+//        OrderDao orderDao = new OrderDao(); // Replace with your actual initialization method
+//        boolean updated = orderDao.updatePaymentStatus(orderId, paymentStatus);
+//
+//        if (updated) {
+//            System.out.println("Payment status updated successfully for orderId: " + orderId);
+//        } else {
+//            System.out.println("Failed to update payment status for orderId: " + orderId);
+//        }
     }
 
 }
