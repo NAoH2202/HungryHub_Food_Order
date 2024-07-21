@@ -345,6 +345,15 @@
                                     <td>${orderItem.price}₫</td>
                                 </tr>
                             </c:forEach>
+                                <tr>
+                                <td colspan="2" style="text-align: right;"><strong>Shipping Fee:</strong></td>
+                                 <% if(order.getCustomer().getProvinces() == order.getDiner().getProvinces()){
+                                        %>
+                                        <td>15,000₫</td>
+                                        <%}else{ %>
+                                        <td>30,000₫</td>
+                                        <% } %>
+                                        </tr>
                             <tr>
                                 <td colspan="2" style="text-align: right;"><strong>Total:</strong></td>
                                 <td><%= order.getTotal_priceString() %>₫</td>

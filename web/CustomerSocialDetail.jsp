@@ -32,6 +32,7 @@
         <meta name="description" content="" />
         <meta name="author" content="" />
         <link rel="shortcut icon" href="images/favicon.png" type="">
+
         <title> HungryHub </title>
 
         <!-- bootstrap core css -->
@@ -362,6 +363,7 @@
                 display: flex;
                 align-items: flex-start;
                 margin-bottom: 10px;
+                position: relative;
             }
 
             .comment .user-avatar {
@@ -422,6 +424,64 @@
             #submitRatingBtn:hover {
                 background-color: #0056b3;
             }
+            .comment-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 10px;
+                position: relative;
+            }
+            .options-btn {
+                background: none;
+                border: none;
+                width: 30px;
+                color: #333;
+                font-size: 20px;
+                cursor: pointer;
+                padding: 0;
+                margin: 0;
+                position: absolute;
+                top: 0;
+                right: 0;
+            }
+
+            .options-menu {
+                display: none;
+                position: absolute;
+                width: 100px;
+                top: 30px;
+                right: 0;
+                background-color: #fff;
+                border: 1px solid #ddd;
+                border-radius: 5px;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                z-index: 1000;
+            }
+
+            .options-menu ul {
+                list-style: none;
+                margin: 0;
+                padding: 10px 0;
+            }
+
+            .options-menu ul li {
+                padding: 10px 8px;
+                text-align: center;
+                cursor: pointer;
+                color: #333;
+            }
+
+            .options-menu ul li:hover {
+                background-color: #f0f0f0;
+            }
+
+            .delete_btn{
+                border: none;
+                background: none;
+                padding: 0px;
+                width: 15px;
+                height: 10px;
+            }
         </style>
     </head>
 
@@ -430,17 +490,17 @@
         <jsp:include page="path/header.jsp"/>
 
 
-        <% 
+        <%
             String check = request.getParameter("check");
-                    String url;
-                    if (check.equalsIgnoreCase("true")) {
-                        url = "CustomerSocialFollowPage";
-                    } else {
-                        url = "CustomerSocialPage";
-                    }
+            String url;
+            if (check.equalsIgnoreCase("true")) {
+                url = "CustomerSocialFollowPage";
+            } else {
+                url = "CustomerSocialPage";
+            }
         %>
         <div class="container_content">
-            <a href="<%= url %>" class="back-link">BACK</a>
+            <a href="<%= url%>" class="back-link">BACK</a>
 
             <!-- main-content------- -->
 
@@ -458,7 +518,6 @@
                     int adIdInt = Integer.parseInt(adId);
                     FoodAdManager fam = new FoodAdManager();
                     FoodAd foodAd = fam.getFoodAdById(adIdInt);
-                    
 
                     if (foodAd != null) {
                         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
@@ -492,7 +551,7 @@
                     </div>
                     <div class="comments-section">
 
-                        <h2>Comments</h2>
+                        <hr/><!-- comment -->
                         <div class="comment-box">
                             <div class="user-avatar">
                                 <img src="<%=account.getProfile_picture()%>" alt="<%= account.getName()%>">
@@ -545,6 +604,29 @@
                                     <p><strong><%= comment.getAccount().getName()%></strong></p>
                                     <p><strong></strong><%= comment.getContent()%></p>
                                 </div>
+                                <%
+                                    if (comment.getAccount().getAccount_id() == accId) {
+                                %>
+                                <div class="comment-options">
+                                    <button class="options-btn">⋮</button>
+                                    <div class="options-menu">
+                                        <ul>
+
+                                            <li class="delete-option">
+                                                <form action="deleteCommentServlet" method="POST">
+                                                    <input type="hidden" name="status" value="post">
+                                                    <input type="hidden" name="ad_id" value="<%=id%>">
+                                                    <input type="hidden" id="check" name="check" value="<%= check%>">
+                                                    <input type="hidden" name="commentID" value="<%=comment.getCommentId()%>">
+                                                    <button type="submit" value="" name="deleteBtn" class="delete_btn">Xóa</button>
+                                                </form>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+
+
+                                <%}%>
                             </div>
                             <!-- Repeat for more comments -->
                             <% }
@@ -570,7 +652,34 @@
 
 
 </script>
+<!--js nut 3 cham cua comment -->
+<script>
+    document.querySelectorAll('.options-btn').forEach(button => {
+        button.addEventListener('click', (e) => {
+            // Ẩn tất cả các menu khác
+            document.querySelectorAll('.options-menu').forEach(menu => {
+                menu.style.display = 'none';
+            });
 
+            // Hiển thị menu hiện tại
+            const menu = button.nextElementSibling;
+            if (menu.style.display === 'block') {
+                menu.style.display = 'none';
+            } else {
+                menu.style.display = 'block';
+            }
+        });
+    });
+
+    // Đóng menu khi nhấn ra ngoài
+    window.addEventListener('click', (e) => {
+        if (!e.target.matches('.options-btn')) {
+            document.querySelectorAll('.options-menu').forEach(menu => {
+                menu.style.display = 'none';
+            });
+        }
+    });
+</script>
 
 <script src="js/function.js"></script>
 </body>

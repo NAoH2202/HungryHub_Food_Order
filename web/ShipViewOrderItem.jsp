@@ -252,6 +252,9 @@
                     <p><strong>Order ID:</strong><%= orderItem.getOrder_id()%></p>
                     <p><strong>Name Customer:</strong> <%= order.getCustomer().getName()%></p>
                     <p><strong>Phone Number:</strong> <%= order.getCustomer().getPhoneNumber()%></p>
+                    <p><strong>Address:</strong><%= order.getCustomer().getAddress()%></p>
+                    <p><strong>Diner Address</strong><%= order.getDiner().getAddress() %></p>
+                    
 
 
 
@@ -264,6 +267,7 @@
                                 <th>Name of Dish</th>
                                 <th>Quantity</th>
                                 <th>Price</th>
+                                 
                             </tr>
                         </thead>
                         <tbody>
@@ -272,9 +276,19 @@
                                     <td>${orderItem.dishName}</td>
                                     <td>${orderItem.quantity}</td>
                                     <td>${orderItem.price}₫</td>
+                                   
                                 </tr>
                             </c:forEach>
-                            <tr>
+                                <tr>
+                                <td colspan="2" style="text-align: right;"><strong>Shipping Fee:</strong></td>
+                                 <% if(order.getCustomer().getProvinces() == order.getDiner().getProvinces()){
+                                        %>
+                                        <td>15,000₫</td>
+                                        <%}else{ %>
+                                        <td>30,000₫</td>
+                                        <% } %>
+                                        </tr>
+                            <tr>            
                                 <td colspan="2" style="text-align: right;"><strong>Total:</strong></td>
                                 <td><%= order.getTotal_priceString() %>₫</td>
                             </tr>

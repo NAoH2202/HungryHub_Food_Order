@@ -93,6 +93,15 @@ public class deleteCommentServlet extends HttpServlet {
                     response.sendRedirect("CustomerDishPage?id=" + dishId2);
                 }
                 break;
+                case "post":
+                String postIdString = request.getParameter("ad_id");
+                String check = request.getParameter("check");
+                int ad_id = Integer.parseInt(postIdString);
+                String commentIDString3 = request.getParameter("commentID");
+                int commentId3 = Integer.parseInt(commentIDString3);
+                CommentDao.deleteComment(commentId3);
+                response.sendRedirect("CustomerSocialDetailPage?ad_id=" + ad_id +"&check="+check);
+                break;
             // Có thể thêm các case khác để xử lý cho các giá trị khác của 'status'
             default:
                 response.getWriter().write("Invalid status!");
